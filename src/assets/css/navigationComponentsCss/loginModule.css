@@ -1,0 +1,87 @@
+.navigationMain-icon{
+    width: 15px;
+    height: 15px;
+    color: #606266;
+    cursor: pointer;
+}
+.shiftPwd{
+    width: 25px;
+    height: 31px;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.navigationMain-cover{
+    background-color: rgba(0, 0, 0, 0.8);
+    color: azure;
+    width: 300px;
+    height: 276px;
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    border-radius: 1px;
+}
+.navigationMain-cover p{
+    text-align: center;
+    position: relative;
+    top: 130px;
+}
+.is-loading{
+    position: absolute;
+    top: 45%;
+    left: 143px;
+}
+.navigationMain-dialog-bottom{
+    cursor: pointer;
+    text-align: center;
+    font-size: 10px;
+    position: relative;
+    top: 10px;
+    left: 7px;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently*/
+}
+.navigationMain-dialog-bottom a:hover{
+    color: #c6cdff;
+}
+.navigationMain-QRCode{
+    width: 180px;
+    height: 206px;
+    margin: 0 auto;
+    line-height: 12px;
+    text-align: center;
+}
+.navigationMain-QRCode img{
+    width: 100%;
+}
+#QRCode_cover{
+    background-color: rgba(0, 0, 0, 0.08);
+    width: 190px;
+    height: 190px;
+    position: absolute;
+    top: 110px;
+}
+#QRCode_cover p{
+    padding-top: 70px;
+}
+.navigationMain-verification{
+    width: 80px;
+    height: 32px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 15px;
+    text-align: center;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently*/
+}
+.navigationMain-verification p{
+    line-height: 5px;
+}

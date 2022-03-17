@@ -6,12 +6,8 @@
 </div>
 </template>
 
-<script>
-import Navigation from "@/components/navigation";
-export default {
-  name: "mainPage",
-  components: {Navigation}
-}
+<script setup>
+import Navigation from "./navigation";
 </script>
 
 <style scoped>

@@ -1,10 +1,10 @@
 import {createRouter,createWebHistory} from "vue-router";
-const main = () => import("../components/main")
+const searchResultPage = () => import("../components/rightModules/searchResultPage")
 const routes = [
     {
-      path: '/',
-      name: 'main',
-      component: main
+        path: '/searchResultPage/:inp',
+        name: 'searchResultPage',
+        component: searchResultPage
     }
 ]
 

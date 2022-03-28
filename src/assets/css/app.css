@@ -5,7 +5,7 @@ body{
 #app{
     width: 100vw;
     height: 100vh;
-    background-color:  #f8e3c5;
+    background-color: #686c85;
     background-size: cover;
     -webkit-background-size: cover;
     -o-background-size: cover;
@@ -18,7 +18,7 @@ body{
 .playerPage{
     width: 1100px;
     height: 600px;
-    background-color: #f3d19e;
+    background-color: #ffffff;
     border-radius: 5px;
     position: absolute;
     top: 50%;
@@ -53,7 +53,7 @@ body{
     background-color: #212121;
 }
 .searchResult{
-    background-color: white;
+    background-color: #2b2b2b;
     width: 920px;
     height: 500px;
     position: absolute;
@@ -92,7 +92,7 @@ body{
 .playerBar{
     width: 920px;
     height: 50px;
-    background-color: #606266;
+    background-color: #212121;
     position: absolute;
     top: 550px;
     left: 180px;
@@ -110,10 +110,6 @@ body{
     border: none;
     border-radius: 5px;
     outline: none;
-    transition: 0.1s linear;
-}
-.topBar-searchInput:focus{
-    box-shadow: 0 0 10px #eebe77;
     transition: 0.1s linear;
 }
 .topBar-search{
@@ -160,4 +156,20 @@ body{
     font-size: 15px;
     position: relative;
     top: -7px;
+}
+.playerBar-audioContent{
+    width: 700px;
+    height: 50px;
+    position: absolute;
+    left: 30px;
+}
+.playerBar-audioContent-panel{
+    width: 700px;
+    height: 25px;
+    border: 1px solid #e8e5e5;
+}
+.playerBar-audioContent-progressBar{
+    width: 700px;
+    height: 25px;
+    border: 1px solid #e8e5e5;
 }

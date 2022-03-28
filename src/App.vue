@@ -69,12 +69,23 @@
 
 <!--      中间结果栏-->
       <div class="searchResult">
-        <router-view @closeResultList="closeResultList"></router-view>
+        <router-view @closeResultList="closeResultList" @songID="playSong"></router-view>
       </div>
 
 <!--      底部播放栏-->
       <div class="playerBar">
+        <audio ref="audioRef" :src="song.src"></audio>
+        <div class="playerBar-audioContent">
+          <div class="playerBar-audioContent-panel">
+            <svg-icon name="previous" style="margin-left: 290px;cursor: pointer"></svg-icon>
+            <svg-icon name="pause" style="margin-left: 20px;cursor: pointer" @click="playOrPause(isPlay)" v-show="isPlay"></svg-icon>
+            <svg-icon name="play" style="margin-left: 20px;cursor: pointer" @click="playOrPause(isPlay)" v-show="!isPlay"></svg-icon>
+            <svg-icon name="next" style="margin-left: 20px;cursor: pointer"></svg-icon>
+          </div>
+          <div class="playerBar-audioContent-progressBar">
 
+          </div>
+        </div>
       </div>
 
     </div>
@@ -97,7 +108,16 @@ let suggestionTimer = null
 let popVisible = ref(false)
 let user = reactive({})
 let resultListIsVisible = ref(false)
-
+let isPlay = ref(false)
+let song = reactive({
+  src:null,
+  cover:null,
+  artist:null,
+  album:null,
+  duration:null,
+  currentTime:null
+})
+const audioRef = ref(null)
 //关闭登录弹窗
 const closePop = (e) => {
   popVisible.value = e
@@ -129,6 +149,24 @@ const searchSuggestion = (val) => {
   })
 }
 
+//播放或暂停
+const playOrPause = (val) => {
+  if (song.src === null){
+    return
+  }
+  val === true?audioRef.value.pause():audioRef.value.play()
+  isPlay.value = !val
+}
+
+//获取到歌曲id后再获取歌曲地址
+const playSong = (e) => {
+  axios.get(`${baseUrl}/song/url?id=${e}`).then(res => {
+    if (res.data.code === 200){
+      console.log(res.data.data[0].url)
+      song.src = res.data.data[0].url
+    }
+  })
+}
 //监听到子组件传来的值
 watch(
     () => popVisible.value,(next) => {
@@ -188,9 +226,11 @@ const getUserProfile = () => {
 
 const getSearch = (val) => {
   if (val !== ''){
+    resultListIsVisible.value = false
     router.push(`/searchResultPage/${val}`)
   }
 }
+
 onMounted(() => {
   getUserProfile()
 })
@@ -198,7 +238,6 @@ onMounted(() => {
 onUnmounted(()=>{
   clearInterval(suggestionTimer)
 })
-
 </script>
 
 <style>

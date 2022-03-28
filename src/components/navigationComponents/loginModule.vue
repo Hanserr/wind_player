@@ -119,7 +119,6 @@ watch(
 watch(
     () => option.value,(nextOption) => {
       if(nextOption === 1){
-        alert('手机号')
         getQRCode()
       }
     })
@@ -138,11 +137,19 @@ const phoneLogin = (phone,pwd) => {
     if (res.data.code === 200) {
       sessionStorage.setItem("neProfile",JSON.stringify(res.data.profile))
       Cookies.set("neCookie",res.data.cookie)
-      load.value = false
       invisible()
+    }else {
+      ElMessage({
+        message:"手机号或密码错误",
+        type:"error"
+      })
     }
   }).catch(()=>{
-    this.$message("手机号或密码错误")
+    ElMessage({
+      message:"手机号或密码错误",
+      type:"error"
+    })
+  }).finally(() => {
     load.value = false
   })
 }
@@ -164,7 +171,6 @@ const getQRCode = async () => {
           await getQRCode()
         }else if (status.data.code === 803) {
           Cookies.set("neCookie", QR.data.cookie)
-          console.log(Cookies.get("neCookie"))
           getUserStatus()
           ElMessage({
             message: status.data.message,

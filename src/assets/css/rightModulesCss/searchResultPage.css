@@ -3,23 +3,75 @@ body{
     padding: 0;
 }
 .searchResultPage{
-    background-color: #ffffff;
+    background-color: #2b2b2b;
     width: 920px;
     height: 500px;
 }
 .searchResultPage-resultList{
-    width: 100%;
+    width: 860px;
     height: 30px;
     background-color: #2b2b2b;
+    position: relative;
+    left: 30px;
+}
+.searchResultPage-resultList:hover{
+    background-color: #373737;
 }
 .searchResultPage-resultList:nth-child(2n){
-    width: 100%;
+    width: 860px;
     height: 30px;
     background-color: #2e2e2e;
+    position: relative;
+    left: 30px;
+}
+.searchResultPage-resultList:nth-child(2n):hover{
+    background-color: #373737;
+}
+.searchResultPage-title{
+    height: 40px;
+    width: 100%;
+    background-color: #2b2b2b;
+    line-height: 40px;
+
+}
+.searchResultPage-title p{
+    font-size: 13px;
+    display: inline;
+    color: #d3d3d3;
+}
+.searchResultPage-title p:nth-child(1){
+    margin-left: 90px;
+}
+.searchResultPage-title p:nth-child(2){
+    margin-left: 152px;
+}
+.searchResultPage-title p:nth-child(3){
+    margin-left: 210px;
 }
 .searchResultPage-resultList p{
     font-size: 13px;
     color: #d3d3d3;
     line-height: 30px;
+    display: inline;
     margin: 0;
+}
+.searchResultPage-resultList div{
+    height: 100%;
+    display: inline;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    position: absolute;
+}
+.searchResultPage-resultList-name{
+    width: 200px;
+    left: 30px;
+}
+.searchResultPage-resultList-artist{
+    width: 200px;
+    left: 260px;
+}
+.searchResultPage-resultList-album{
+    width: 200px;
+    left: 500px;
 }

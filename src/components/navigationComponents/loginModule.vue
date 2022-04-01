@@ -2,11 +2,12 @@
  <div class="loginModule">
    <!--    登录弹窗-->
    <el-dialog  v-model="loginVisible"
-               title="登录"
-               :width="dialogWidth"
-               :append-to-body="true"
-               :close-on-click-modal="false"
-               :center="true">
+                title="登录"
+                :width="dialogWidth"
+                :append-to-body="true"
+                :close-on-click-modal="false"
+                :center="true"
+                :before-close="invisible">
      <!--      遮罩层-->
      <div class="navigationMain-cover" v-if="load">
        <p>登录中</p>
@@ -132,6 +133,14 @@ const getUserStatus = () => {
 }
 //手机号登录
 const phoneLogin = (phone,pwd) => {
+  let phoneReg = /^[1][3,4,5,7,8][0-9]{9}$/
+  if (!phoneReg.test(phone) || pwd === ''){
+    ElMessage({
+      message:'请检查手机号或密码格式',
+      type:"warning"
+    })
+    return
+  }
   load.value = true
   axios.post(`${baseUrl}/login/cellphone?phone=${phone}&password=${pwd}`).then(res=>{
     if (res.data.code === 200) {

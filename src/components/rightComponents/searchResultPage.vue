@@ -113,5 +113,5 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-@import "../../assets/css/rightModulesCss/searchResultPage.css";
+@import "../../assets/css/rightComponentsCss/searchResultPage.css";
 </style>

@@ -1,6 +1,7 @@
 import {createRouter,createWebHistory} from "vue-router";
-const searchResultPage = () => import("../components/rightModules/searchResultPage")
-const homePage = () => import("../components/rightModules/homePage")
+const searchResultPage = () => import("../components/rightComponents/searchResultPage")
+const homePage = () => import("../components/rightComponents/homePage")
+const songListDetailPage = () => import("../components/rightComponents/songListDetailPage")
 
 const routes = [
     {
@@ -12,6 +13,11 @@ const routes = [
         path: '/searchResultPage/:inp',
         name: 'searchResultPage',
         component: searchResultPage
+    },
+    {
+        path: '/songListDetail/:id',
+        name: 'songListDetailPage',
+        component: songListDetailPage
     }
 ]
 

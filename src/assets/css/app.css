@@ -118,23 +118,24 @@ body{
     width: 100%;
 }
 #topBar-login{
-    font-size: 15px;
+    font-size: 10px;
     color: #eebe77;
     position: absolute;
     top: 25px;
-    left: 70px;
+    left: 60px;
     cursor: pointer;
 }
 #topBar-nickname{
     font-size: 10px;
     color:  #eebe77;
-    position: fixed;
-    left: 70px;
+    position: absolute;
+    top:15px;
+    left: 60px;
 }
 .topBar-profile-avatar{
     background-color: #eebe77;
     margin-left: 12px;
-    margin-top: 12px;
+    margin-top: 15px;
 }
 
 /*中间结果页*/

@@ -1,0 +1,60 @@
+body{
+    padding: 0;
+    margin: 0;
+}
+.navigationBar{
+    width: 100%;
+    height: 100%;
+}
+.navigationBar-p{
+    font-size: 14px;
+    padding: 0;
+    margin: 0;
+    line-height: 38px;
+    color: #d5d5d5;
+    width: 165px;
+    height: 38px;
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+}
+.navigationBar-p:hover{
+    background-color: #333333;
+}
+.navigationBar-p-headline{
+    font-size: 10px;
+    color: #797979;
+    margin-left: 3px;
+}
+.navigationBar-p-headline-wrap{
+    width: 165px;
+    height: 35px;
+}
+.navigationBar-p-headline-wrap:hover{
+    cursor: pointer;
+}
+.navigationBar-p-headline-wrap-svg{
+    position: relative;
+    top: -38px;
+    left: 75px;
+}
+.navigationBar-p-headline-wrap p{
+    line-height: 35px;
+}
+.createdSongList{
+    width: 165px;
+}
+.createdSongList-p{
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+    color: #d5d5d5;
+    line-height: 35px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.createdSongList-p:hover{
+    width: 100%;
+    height: 35px;
+    background-color: #333333;
+}

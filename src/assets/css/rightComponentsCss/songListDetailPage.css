@@ -1,0 +1,120 @@
+body{
+    padding: 0;
+    margin: 0;
+}
+.songListDetailPage{
+    width: 920px;
+    height: 450px;
+}
+.songListDetailPage-top{
+    width: 920px;
+    height: 180px;
+    overflow: hidden;
+}
+.songListDetailPage-top-img{
+    width: 150px;
+    height: 150px;
+    margin-left: 20px;
+    margin-top: 25px;
+}
+.songListDetailPage-top-img img{
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+}
+.songListDetailPage-top-right{
+    width: 720px;
+    height: 180px;
+    position: absolute;
+    top: 0;
+    left: 200px;
+}
+#songList{
+    width: 32px;
+    border-radius: 3px;
+    color: #df3c3c;
+    border: 1px solid #df3c3c;
+    position: absolute;
+    top: 10px;
+}
+#listName{
+    position: absolute;
+    left: 45px;
+    font-size: 25px;
+    top: 0;
+    line-height: 25px;
+    color: #dcdcdc;
+}
+#avatar{
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    position: absolute;
+    top: 55px;
+    left: 2px;
+}
+#creatorName{
+    font-size: 13px;
+    color: #c6cdff;
+    display: inline;
+}
+#creationTime{
+    font-size: 10px;
+    color: #989898;
+    display: inline;
+    margin-left: 3px;
+}
+#creatorWrap{
+    width: 400px;
+    height: 20px;
+    position: absolute;
+    top: 60px;
+    left: 40px;
+}
+#play{
+    border: none;
+    width: 100px;
+    height: 35px;
+    position: absolute;
+    border-radius: 15px;
+    top: 100px;
+    background-color: #df3c3c;
+    color: #e7e7e7;
+    cursor: pointer;
+}
+#collect{
+    border: 1px solid #e7e7e7;
+    background-color: transparent;
+    width: 100px;
+    height: 35px;
+    position: absolute;
+    border-radius: 15px;
+    top: 100px;
+    left: 120px;
+    color: #e7e7e7;
+    cursor: pointer;
+}
+#playCount{
+    color: #989898;
+    position: absolute;
+    top: 130px;
+    font-size: 10px;
+}
+#songCount{
+    color: #989898;
+    position: absolute;
+    top: 130px;
+    left: 60px;
+    font-size: 10px;
+}
+#description{
+    width: 700px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #989898;
+    position: absolute;
+    top: 150px;
+    left: 0;
+    font-size: 10px;
+}

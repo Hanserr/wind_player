@@ -4,7 +4,7 @@
 
 <!--      左侧导航栏-->
       <div class="playerPageLeft">
-
+        <navigation-bar @toSongDetail="toSongDetailPage"></navigation-bar>
       </div>
 
 <!--      顶部搜索栏-->
@@ -59,7 +59,7 @@
 <!--        用户登录-->
         <div class="userProfile">
           <div class="topBar-profile">
-            <el-avatar class="topBar-profile-avatar" :size="45" :src="user.avatarUrl"></el-avatar>
+            <el-avatar class="topBar-profile-avatar" :size="35" :src="user.avatarUrl"></el-avatar>
           </div>
           <a @click = "popVisible = true" id="topBar-login" v-if="user.nickname === undefined">登录</a>
           <p v-if="user.nickname !== undefined" id="topBar-nickname">{{user.nickname}}</p>
@@ -86,8 +86,8 @@
           <p>{{formatTime(audioRef.currentTime)}}</p>
           <div class="playerBar-audioContent-progressBar">
             <div class="playerBar-audioContent-progressBar-wrap" @mouseover="enterBar" @mouseleave="leaveBar" @mousedown="mouseDown($event)" @mouseup="mouseUp($event)">
-              <div class="playerBar-audioContent-progressBar-durationBar" :style="{width:durationBarWidth+'%'}"></div>
-              <div class="playerBar-audioContent-progressBar-point" :style="{left:pointStyle.left+'%',width: pointStyle.width+'px',height:pointStyle.height+'px',display:showPoint}"></div>
+              <div class="playerBar-audioContent-progressBar-durationBar" :style="{width:durationBarWidth+'px'}"></div>
+              <div class="playerBar-audioContent-progressBar-point" :style="{left:pointStyle.left+'px',width: pointStyle.width+'px',height:pointStyle.height+'px',display:showPoint}"></div>
             </div>
           </div>
           <p>{{formatTime(audioRef.duration)}}</p>
@@ -103,9 +103,10 @@ import {Search} from "@element-plus/icons-vue";
 import axios from "axios";
 import SvgIcon from "@/components/SvgIcon";
 import Cookies from "js-cookie";
-import LoginModule from "./components/navigationComponents/loginModule";
+import LoginModule from "./components/topComponents/loginModule";
 import {router} from "@/router/routes";
 import {ElMessage} from "element-plus";
+import NavigationBar from "@/components/navigationComponents/navigationBar";
 
 const baseUrl = "https://netease-cloud-music-api-beta-lime.vercel.app" //地址前缀
 let inputVal = ref('') //顶部搜索框变量
@@ -247,6 +248,14 @@ const getSearch = (val) => {
   }
 }
 
+//跳转歌单详情页
+const toSongDetailPage = (id) => {
+  if (id){
+    router.push(`/songListDetail/${id}`)
+  }
+}
+
+
 //鼠标进入进度条
 const enterBar = () => {
   showPoint.value = 'block'
@@ -264,7 +273,7 @@ const mouseDown = (e) => {
 }
 
 //鼠标在进度条上松开事件
-const mouseUp = (e) => {
+const mouseUp = () => {
 }
 
 //监听到子组件传来的值
@@ -305,8 +314,8 @@ onMounted(() => {
   }
   //播放时间变化
   audioRef.value.ontimeupdate = () => {
-    durationBarWidth.value = (audioRef.value.currentTime/audioRef.value.duration)*100
-    pointStyle.left = (audioRef.value.currentTime/audioRef.value.duration)*100 - 1
+    durationBarWidth.value = (audioRef.value.currentTime/audioRef.value.duration)*600
+    pointStyle.left = (audioRef.value.currentTime/audioRef.value.duration)*600 - 4
   }
   // 当前数据可以触发
   audioRef.value.oncanplay = () => {

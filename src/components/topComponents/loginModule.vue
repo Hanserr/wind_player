@@ -131,6 +131,12 @@ const getUserStatus = () => {
     }
   })
 }
+//获取用户信息 , 歌单，收藏，mv, dj 数量
+const getUserProfile = () => {
+  axios.get(`${baseUrl}/user/subcount`).then(res => {
+    console.log(res.data)
+  })
+}
 //手机号登录
 const phoneLogin = (phone,pwd) => {
   let phoneReg = /^[1][3,4,5,7,8][0-9]{9}$/
@@ -146,7 +152,9 @@ const phoneLogin = (phone,pwd) => {
     if (res.data.code === 200) {
       sessionStorage.setItem("neProfile",JSON.stringify(res.data.profile))
       Cookies.set("neCookie",res.data.cookie)
+      getUserProfile()
       invisible()
+      location.reload()
     }else {
       ElMessage({
         message:"手机号或密码错误",
@@ -181,6 +189,8 @@ const getQRCode = async () => {
         }else if (status.data.code === 803) {
           Cookies.set("neCookie", QR.data.cookie)
           getUserStatus()
+          getUserProfile()
+          location.reload()
           ElMessage({
             message: status.data.message,
             type: 'success'
@@ -256,6 +266,8 @@ const verificatonLogin = (phoneNumber,code) => {
       form.code = ''
     }else if(res.data.code === 200){
       getUserStatus()
+      getUserProfile()
+      location.reload()
       ElMessage({
         message:'登陆成功',
         type:"success"
@@ -264,11 +276,12 @@ const verificatonLogin = (phoneNumber,code) => {
     }
   })
 }
+
 onUnmounted(() => {
   clearInterval(verificationTimer)
 })
 </script>
 
 <style scoped>
-@import "../../assets/css/navigationComponentsCss/loginModule.css";
+@import "../../assets/css/topComponentsCss/loginModule.css";
 </style>

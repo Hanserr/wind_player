@@ -47,7 +47,6 @@ const emits = defineEmits(["closeResultList","songID"])
 
 //点击歌单区域关闭搜索建议
 const closeList = () => {
-  resultList = undefined
   emits('closeResultList',false)
 }
 //把歌曲id传给父元素
@@ -105,6 +104,7 @@ watch(
 }
 )
 onMounted(() => {
+  closeList()
   getResult(route.params.inp)
 })
 onUnmounted(() => {

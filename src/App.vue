@@ -8,11 +8,11 @@
       </div>
 
 <!--      顶部搜索栏-->
-      <div class="playerPageTop">
+      <div class="playerPageTop" :style="{backgroundColor:playerPageTopBC}">
 <!--        搜索框-->
         <div class="topBar-search">
-          <input class="topBar-searchInput" v-model="inputVal" @focus="searchInpFocus(inputVal)">
-          <el-icon color="#8896B3FF" class="topBar-search-el-icon" style="width: 30px;height: 27px;position:absolute;" @click="getSearch(inputVal)">
+          <input class="topBar-searchInput" v-model="inputVal" @focus="searchInpFocus(inputVal)" :style="{backgroundColor: topSearchBarBC}">
+          <el-icon color="#8896B3FF" class="topBar-search-el-icon" :style="{width: '30px',height: '27px',position:'absolute',backgroundColor:topSearchBarBC}" @click="getSearch(inputVal)">
             <Search/>
           </el-icon>
         </div>
@@ -76,14 +76,39 @@
 <!--      底部播放栏-->
       <div class="playerBar">
         <audio ref="audioRef" :src="song.src"></audio>
+
 <!--        右侧歌曲封面及歌手-->
-        <div class="playerBar-left">
-          <img :src="song.cover">
-          <p id="playerBar-left-name">{{song.name}}</p>
-          <div id="playBar-left-ar-wrap">
-            <p id="playBar-left-ar" v-for="i in song.artist" :key="i">{{i.name}}&nbsp;&nbsp;</p>
+        <div class="playerBar-left" :style="{top:playBarLeft+'px'}">
+
+          <div class="playerBar-left-top">
+            <div id="playBar-left-top-flip" @click="movingWindowDown">
+              <svg-icon name="arrowsDown" id="playBar-left-top-flip-arrows"></svg-icon>
+            </div>
+            <div class="playerBar-left-top-control1">
+              <svg-icon name="like" class="playerBar-left-top-control-icon1"></svg-icon>
+            </div>
+            <div class="playerBar-left-top-control1">
+              <svg-icon name="collect" class="playerBar-left-top-control-icon1"></svg-icon>
+            </div>
+            <div class="playerBar-left-top-control2">
+              <svg-icon name="share" class="playerBar-left-top-control-icon2"></svg-icon>
+            </div>
           </div>
+
+          <div class="playerBar-left-bottom">
+            <div id="cover" v-show="coverVisible" @mouseenter="coverVisible = true" @mouseleave="coverVisible = false" @click="movingWindowUp">
+              <svg-icon name="topArrows" id="cover-arrows"></svg-icon>
+            </div>
+            <svg-icon name="music" id="music-icon" v-show="!song.cover"></svg-icon>
+            <img :src="song.cover" v-show="song.cover" @mouseenter="coverVisible = true" @mouseleave="coverVisible = false">
+            <p id="playerBar-left-name">{{song.name}}</p>
+            <div id="playBar-left-ar-wrap">
+              <p id="playBar-left-ar" v-for="i in song.artist" :key="i">{{i.name}}&nbsp;&nbsp;</p>
+            </div>
+          </div>
+
         </div>
+
         <div class="playerBar-audioContent">
           <div class="playerBar-audioContent-panel">
             <svg-icon name="previous" style="margin-left: 290px;cursor: pointer"></svg-icon>
@@ -93,13 +118,18 @@
           </div>
           <p>{{formatTime(audioRef.currentTime)}}</p>
           <div class="playerBar-audioContent-progressBar">
-            <div class="playerBar-audioContent-progressBar-wrap" @mouseover="enterBar" @mouseleave="leaveBar" @mousedown="mouseDown($event)" @mouseup="mouseUp($event)">
+            <div class="playerBar-audioContent-progressBar-wrap" @mouseenter="enterBar" @mouseleave="leaveBar" @mousedown="mouseDown($event)" @mouseup="mouseUp($event)">
               <div class="playerBar-audioContent-progressBar-durationBar" :style="{width:durationBarWidth+'px'}"></div>
               <div class="playerBar-audioContent-progressBar-point" :style="{left:pointStyle.left+'px',width: pointStyle.width+'px',height:pointStyle.height+'px',display:showPoint}"></div>
             </div>
           </div>
           <p>{{formatTime(audioRef.duration)}}</p>
         </div>
+      </div>
+
+      <!--        歌曲详情页-->
+      <div class="songMovingWindow" :style="{top:songMovingWindowTop+'px'}">
+
       </div>
     </div>
   </div>
@@ -145,6 +175,11 @@ let audioRef = ref({
   duration:null
 }) //播放器DOM
 let showPoint = ref('none') //是否展示进度点
+let coverVisible = ref(false) //歌曲遮罩
+let songMovingWindowTop = ref(520) //歌曲详情弹窗上距
+let playBarLeft = ref(-60) //底部歌曲小页面上下移动距离
+let playerPageTopBC = ref() //顶部搜索栏背景色
+let topSearchBarBC = ref('#2b2b2b') //顶部搜索框背景色
 
 //关闭登录弹窗
 const closePop = (e) => {
@@ -253,7 +288,7 @@ const getUserProfile = () => {
 
 //顶部搜索
 const getSearch = (val) => {
-  if (val !== ''){
+  if (val){
     resultListIsVisible.value = false
     router.push(`/searchResultPage/${val}`)
   }
@@ -266,6 +301,21 @@ const toSongDetailPage = (id) => {
   }
 }
 
+//歌曲弹窗上移
+const movingWindowUp = () => {
+  songMovingWindowTop.value = 70
+  playBarLeft.value = 20
+  playerPageTopBC.value = '#2c2c2c'
+  topSearchBarBC.value = '#393B3A'
+}
+
+//歌曲弹窗下移
+const movingWindowDown = () => {
+  songMovingWindowTop.value = 520
+  playBarLeft.value = -60
+  playerPageTopBC.value = '#212121'
+  topSearchBarBC.value = '#2b2b2b'
+}
 
 //鼠标进入进度条
 const enterBar = () => {

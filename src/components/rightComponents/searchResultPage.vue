@@ -9,10 +9,10 @@
     <p>专辑</p>
   </div>
   <el-scrollbar max-height="400px" @click="closeList()" @scroll="infiniteScroll">
-    <div class="searchResultPage-resultList" v-for="(song,index) in resultList.songs" :key="index" @dblclick="playSong(song.privilege.id)">
+    <div class="searchResultPage-resultList" v-for="(song,index) in resultList.songs" :key="index" @dblclick="playSong(song)">
 
       <div class="searchResultPage-resultList-name">
-        <p>{{(index+1).toString().length === 1?0+""+(index+1):index+1}}{{"&nbsp;&nbsp;&nbsp;&nbsp;"+song.name}}</p>
+        <p>{{(index+1).toString().length === 1?"0"+(index+1):index+1}}&nbsp;&nbsp;&nbsp;&nbsp;{{song.name}}</p>
       </div>
 
       <div class="searchResultPage-resultList-artist">
@@ -51,8 +51,8 @@ const closeList = () => {
   emits('closeResultList',false)
 }
 //把歌曲id传给父元素
-const playSong = (id) => {
-  emits('songID',id)
+const playSong = (detail) => {
+  emits('songID',detail)
 }
 
 //获取搜索结果

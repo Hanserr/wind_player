@@ -2,6 +2,7 @@ body{
     padding: 0;
     margin: 0;
 }
+/*顶部介绍栏*/
 .songListDetailPage{
     width: 920px;
     height: 450px;
@@ -57,6 +58,7 @@ body{
     font-size: 13px;
     color: #c6cdff;
     display: inline;
+    cursor: pointer;
 }
 #creationTime{
     font-size: 10px;
@@ -117,4 +119,93 @@ body{
     top: 150px;
     left: 0;
     font-size: 10px;
+}
+
+/*底部歌曲列表*/
+.songListDetailPage-bottom{
+    width: 920px;
+    height: 270px;
+}
+.songListDetailPage-bottom-title{
+    width: 100%;
+    height: 30px;
+    position: relative;
+}
+.songListDetailPage-bottom-title p{
+    display: inline;
+    font-size: 13px;
+    color: #989898;
+}
+.songListDetailPage-bottom-content{
+    width: 100%;
+}
+#panel{
+    margin-left: 60px;
+}
+#title{
+    margin-left: 30px;
+}
+#artist{
+    margin-left: 313px;
+}
+#album{
+    margin-left: 130px;
+}
+#duration{
+    margin-left: 200px;
+}
+.songDetail{
+    width: 860px;
+    height: 25px;
+    position: relative;
+}
+.songDetail:hover{
+    background-color: #373737;
+}
+.songDetail:nth-child(2n){
+    background-color: #2e2e2e;
+}
+.songDetail:nth-child(2n):hover{
+    background-color: #373737;
+}
+.songDetail p{
+    display: inline;
+    font-size: 13px;
+    color: #d3d3d3;
+    line-height: 25px;
+    margin: 0;
+}
+.songDetail div{
+    position: absolute;
+    height: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.detailIndex{
+    width: 30px;
+    left: 25px;
+}
+.detailName{
+    width: 300px;
+    left: 118px;
+}
+.detailAr{
+    width: 100px;
+    left: 450px;
+}
+.detailAr p{
+    cursor: pointer;
+    margin-left: 5px;
+}
+.detailAl{
+    width: 170px;
+    left: 613px;
+}
+.detailAl p{
+    cursor: pointer;
+}
+.detailDuration{
+    left: 838px;
+    width: 60px;
 }

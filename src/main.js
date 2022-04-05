@@ -13,6 +13,7 @@ const app = createApp(App)
 //默认携带cookie
 axios.defaults.withCredentials=true
 
+//时间格式化
 app.config.globalProperties.$dateFormat = (val) => {
     if (val === null){
         return ''
@@ -25,6 +26,15 @@ app.config.globalProperties.$dateFormat = (val) => {
         d = d < 10?'0'+d:d
         return `${y}-${m}-${d}`
     }
+}
+//歌曲时长格式化
+app.config.globalProperties.$durationFormat = (val) => {
+    let time = Math.floor(val/1000)
+    let min = Math.floor(time/60)
+    min = min < 10?'0'+min:min
+    let sec = time%60
+    sec = sec < 10?'0'+sec:sec
+    return `${min}:${sec}`
 }
 
 app.component('SvgIcon',SvgIcon)

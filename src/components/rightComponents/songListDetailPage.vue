@@ -1,11 +1,9 @@
 <template>
   <div class="songListDetailPage">
     <div class="songListDetailPage-top" v-show="listDetail !== undefined">
-
       <div class="songListDetailPage-top-img">
         <img :src="listDetail === undefined?'':listDetail.playlist.coverImgUrl">
       </div>
-
       <div class="songListDetailPage-top-right">
         <p id="songList">歌单</p>
         <p id="listName">{{listDetail === undefined?'':listDetail.playlist.name}}</p>
@@ -20,19 +18,57 @@
         <p id="songCount">播放:{{listDetail === undefined?'':listDetail.playlist.playCount}}</p>
         <p id="description">简介:{{listDetail === undefined?'':listDetail.playlist.description}}</p>
       </div>
+    </div>
+    <div class="songListDetailPage-bottom">
+      <div class="songListDetailPage-bottom-title">
+        <p id="panel">操作</p>
+        <p id="title">标题</p>
+        <p id="artist">歌手</p>
+        <p id="album">专辑</p>
+        <p id="duration">时间</p>
+      </div>
+      <div class="songListDetailPage-bottom-content" v-show="listDetail !== undefined">
+        <el-scrollbar height="240px" v-if="listDetail !== undefined">
 
+          <div class="songDetail" v-for="(song,index) in listDetail.playlist.tracks" :key="song" @dblclick="playSong(song.id)">
+
+            <div class="detailIndex">
+              <p>{{(index+1).toString().length === 1?'0'+(index+1):(index+1)}}</p>
+            </div>
+
+            <div class="detailName">
+              <p>{{song.name}}</p>
+            </div>
+
+            <div class="detailAr">
+              <p v-for="(n,index) in song.ar" :key="index">{{n.name}}</p>
+            </div>
+
+            <div class="detailAl">
+              <p>{{song.al.name}}</p>
+            </div>
+
+            <div class="detailDuration">
+              <p>{{this.$durationFormat(song.dt)}}</p>
+            </div>
+
+          </div>
+
+        </el-scrollbar>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-
 import {onMounted, ref, watch} from "vue";
 import {useRoute} from "vue-router"
 import axios from "axios"
 
 const baseUrl = "https://netease-cloud-music-api-beta-lime.vercel.app"
 const route = useRoute()
+// eslint-disable-next-line no-undef
+const emits = defineEmits(['songID'])
 let listDetail = ref()
 
 //获取歌单详情
@@ -43,6 +79,11 @@ const getSongListDetail = (id) => {
       listDetail.value = res.data
     }
   })
+}
+
+//播放歌曲
+const playSong = (id) => {
+  emits('songID',id)
 }
 
 watch(() => route.params.id,(next) => {

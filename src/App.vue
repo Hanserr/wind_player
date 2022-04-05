@@ -76,6 +76,14 @@
 <!--      底部播放栏-->
       <div class="playerBar">
         <audio ref="audioRef" :src="song.src"></audio>
+<!--        右侧歌曲封面及歌手-->
+        <div class="playerBar-left">
+          <img :src="song.cover">
+          <p id="playerBar-left-name">{{song.name}}</p>
+          <div id="playBar-left-ar-wrap">
+            <p id="playBar-left-ar" v-for="i in song.artist" :key="i">{{i.name}}&nbsp;&nbsp;</p>
+          </div>
+        </div>
         <div class="playerBar-audioContent">
           <div class="playerBar-audioContent-panel">
             <svg-icon name="previous" style="margin-left: 290px;cursor: pointer"></svg-icon>
@@ -180,7 +188,10 @@ const playOrPause = (val) => {
 
 //获取到歌曲id 歌曲地址后播放
 const playSong = (e) => {
-  axios.get(`${baseUrl}/song/url?id=${e}`).then(res => {
+  song.cover = e.al.picUrl
+  song.artist = e.ar
+  song.name = e.name
+  axios.get(`${baseUrl}/song/url?id=${e.id}`).then(res => {
     if (res.data.code === 200){
       song.src = res.data.data[0].url
       //加个定时器给播放器预留缓冲时间

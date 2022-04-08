@@ -423,4 +423,5 @@ body{
 .lyricContent li{
     list-style: none;
     margin-top: 20px;
+    white-space:pre-wrap
 }

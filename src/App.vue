@@ -152,10 +152,9 @@
               <div class="songMovingWindow-top-middle-lyric">
                 <el-scrollbar height="280px" ref="lyricContentWrap">
                   <ul class="lyricContent" ref="lyricContent">
-                    <li v-for="(i,index) in song.lyric" :key="i" :style="{color:index+1 === lyricSum?'#FFFFFF':'#606266'}">{{i.content}}</li>
+                    <li v-for="(i,index) in song.lyric" :key="i" :style="{color:index+1 === lyricSum?'#FFFFFF':'#606266'}">{{i.content}}{{i.tlyric===null?"":i.tlyric}}</li>
                   </ul>
                 </el-scrollbar>
-              </div>
             </div>
 
             <div class="songMovingWindow-top-right">
@@ -165,6 +164,7 @@
           </div>
           <div class="songMovingWindow-bottom">
 
+          </div>
           </div>
         </el-scrollbar>
       </div>
@@ -200,7 +200,6 @@ let song = reactive({
   duration:null,
   currentTime:null,
   lyric:null, //歌词
-  tlyric:null, //歌词翻译
   transUser:null //翻译提供者
 }) //歌曲信息
 // eslint-disable-next-line no-unused-vars
@@ -217,7 +216,7 @@ let audioRef = ref({
 }) //播放器DOM
 let showPoint = ref('none') //是否展示进度点
 let coverVisible = ref(false) //歌曲遮罩
-let songMovingWindowTop = ref(70) //520歌曲详情弹窗上距
+let songMovingWindowTop = ref(520) //520歌曲详情弹窗上距
 let playBarLeft = ref(-60) //底部歌曲小页面上下移动距离
 let playerPageTopBC = ref() //顶部搜索栏背景色
 let topSearchBarBC = ref('#2b2b2b') //顶部搜索框背景色
@@ -397,14 +396,25 @@ const headerPosition = (val) => {
 //获取歌词
 const getLyric = (id) => {
   axios.get(`${baseUrl}/lyric?id=${id}`).then(res => {
-    let temp = (res.data.lrc.lyric).toString().split('\n')
-    for (let i in temp){
-      let lyricList = temp[i].split(']')
-      temp[i] = {time: lyricTimeFormat(lyricList[0]+']'),content:lyricList[1]}
+    let lyric = (res.data.lrc.lyric).toString().split('\n')
+    for (let i in lyric){
+      let lyricList = lyric[i].split(']')
+      lyric[i] = {time: lyricTimeFormat(lyricList[0]+']'),content:lyricList[1],tlyric:null}
     }
-    temp.splice(temp.length-1,1)
-    song.lyric = temp
-    song.tlyric = res.data.tlyric.lyric
+    if (res.data.tlyric){
+      let tlyric = (res.data.tlyric.lyric).toString().split('\n')
+      for (let i in tlyric){
+        let tlyricList = tlyric[i].split(']')
+        tlyric[i] = {time: lyricTimeFormat(tlyricList[0]+']'),content:tlyricList[1]}
+      }
+      for (let a in tlyric){
+        if (lyric[a].time === tlyric[a].time){
+          lyric[a].tlyric = "\n"+tlyric[a].content
+        }
+      }
+    }
+    lyric.splice(lyric.length-1,1)
+    song.lyric = lyric
     song.transUser = res.data.transUser
   })
 }
@@ -473,7 +483,6 @@ watch(() => inputVal.value,(newVal) => {
     })
 
 onMounted(() => {
-  playSong(1919029404)
 
   // 加载歌曲时缓冲
   audioRef.value.onprogress = () => {
@@ -490,13 +499,17 @@ onMounted(() => {
     durationBarWidth.value = (audioRef.value.currentTime/audioRef.value.duration)*600
     pointStyle.left = (audioRef.value.currentTime/audioRef.value.duration)*600 - 4
     //歌词滚动
-     if (audioRef.value.currentTime - song.lyric[lyricSum.value].time <= 0.8 && audioRef.value.currentTime - song.lyric[lyricSum.value].time >= -0.2 && lyricSum.value < song.lyric.length){
-       let list = lyricContent.value.children
-       if (song.lyric[lyricSum.value].content){
-         lyricContentWrap.value.setScrollTop(list[lyricSum.value].offsetTop-list[lyricSum.value].clientHeight/2-80)
-       }
-       lyricSum.value++
-     }
+    try {
+      if (audioRef.value.currentTime - song.lyric[lyricSum.value].time <= 0.8 && audioRef.value.currentTime - song.lyric[lyricSum.value].time >= -0.2 && lyricSum.value < song.lyric.length){
+        let list = lyricContent.value.children
+        if (song.lyric[lyricSum.value].content){
+          lyricContentWrap.value.setScrollTop(list[lyricSum.value].offsetTop-list[lyricSum.value].clientHeight/2-80)
+        }
+        lyricSum.value++
+      }
+    }catch(err){
+      console.log(err)
+    }
   }
 
   // 当前数据可以触发

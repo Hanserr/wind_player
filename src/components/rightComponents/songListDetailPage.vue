@@ -74,7 +74,6 @@ let listDetail = ref()
 //获取歌单详情
 const getSongListDetail = (id) => {
   axios.get(`${baseUrl}/playlist/detail?id=${id}`).then(res => {
-    console.log(res.data)
     if (res.data.code === 200){
       listDetail.value = res.data
     }

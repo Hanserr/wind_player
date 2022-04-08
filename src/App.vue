@@ -152,7 +152,7 @@
               <div class="songMovingWindow-top-middle-lyric">
                 <el-scrollbar height="280px" ref="lyricContentWrap">
                   <ul class="lyricContent" ref="lyricContent">
-                    <li v-for="(i,index) in song.lyric" :key="i" :style="{color:index+1 === lyricSum?'#FFFFFF':'#606266'}">{{i.content}}{{i.tlyric===null?"":i.tlyric}}</li>
+                    <li v-for="(i,index) in song.lyric" :key="i" :style="{color:index+1 === lyricSum?'#FFFFFF':'#606266'}" @click="toSpecificSong(i.time,index)">{{i.content}}{{i.tlyric===null?"":i.tlyric}}</li>
                   </ul>
                 </el-scrollbar>
             </div>
@@ -402,7 +402,7 @@ const getLyric = (id) => {
       lyric[i] = {time: lyricTimeFormat(lyricList[0]+']'),content:lyricList[1],tlyric:null}
     }
     let tempTLyric = []
-    if (res.data.tlyric){
+    if (res.data.tlyric.lyric.length>=1){
       let tlyric = (res.data.tlyric.lyric).toString().split('\n')
       let tlyricReg = /^\[[0-9]{2}:[0-9]{2}\.[0-9]{2,3}$/
       for (let i = 0;i<tlyric.length;i++){
@@ -416,7 +416,7 @@ const getLyric = (id) => {
       for (let a = 0;a < lyric.length-1;a++){
         if (lyric[a].time === tempTLyric[tlyricSum].time) {
           lyric[a].tlyric = "\n"+tempTLyric[tlyricSum].content
-          tlyricSum++
+          tlyricSum === tempTLyric.length-1?tlyricSum = tempTLyric.length-1:tlyricSum++
         }
       }
     }
@@ -433,6 +433,13 @@ const lyricTimeFormat = (time) => {
   let min = tList[0]
   let sec = tList[1]
   return min*60+sec*1
+}
+
+//点击歌词跳转到指定位置
+const toSpecificSong = (time,index) => {
+  lyricSum.value = index
+  audioRef.value.currentTime = time
+  playOrPause(false)
 }
 
 //清除当前所有歌曲信息

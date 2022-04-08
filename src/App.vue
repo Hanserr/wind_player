@@ -4,7 +4,7 @@
 
 <!--      左侧导航栏-->
       <div class="playerPageLeft">
-        <navigation-bar @toSongDetail="toSongDetailPage"></navigation-bar>
+        <navigation-bar @toSpecifiedPage="pushToPage"></navigation-bar>
       </div>
 
 <!--      顶部搜索栏-->
@@ -70,7 +70,7 @@
 
 <!--      中间结果栏-->
       <div class="searchResult">
-        <router-view @closeResultList="closeResultList" @songID="playSong"></router-view>
+          <router-view @closeResultList="closeResultList" @songID="playSong"></router-view>
       </div>
 
 <!--      底部播放栏-->
@@ -127,9 +127,46 @@
         </div>
       </div>
 
-      <!--        歌曲详情页-->
+<!--        歌曲详情页-->
       <div class="songMovingWindow" :style="{top:songMovingWindowTop+'px'}">
+        <el-scrollbar height="450px">
 
+          <div class="songMovingWindow-top">
+            <div class="songMovingWindow-top-pan">
+              <img src="./assets/pics/header.png" id="header" :style="{transform:headerRotate}">
+              <div class="songMovingWindow-top-pan-content" :style="{animationPlayState:panRotateState}">
+                <img :src="song.cover" id="vinyl-cover" v-show="song.cover">
+                <img src="./assets/pics/pan.png" id="vinyl">
+              </div>
+            </div>
+
+            <div class="songMovingWindow-top-middle">
+              <div class="songMovingWindow-top-middle-header">
+                <p id="songName">{{song.name}}</p>
+                <div class="songMovingWindow-top-middle-header-ar">
+                  <p v-for="i in song.artist" :key="i">{{i.name}}&nbsp;</p>
+                  <p>{{song.album === null?'':'- '+song.album.name}}</p>
+                </div>
+              </div>
+
+              <div class="songMovingWindow-top-middle-lyric">
+                <el-scrollbar height="280px" ref="lyricContentWrap">
+                  <ul class="lyricContent" ref="lyricContent">
+                    <li v-for="(i,index) in song.lyric" :key="i" :style="{color:index+1 === lyricSum?'#FFFFFF':'#606266'}">{{i.content}}</li>
+                  </ul>
+                </el-scrollbar>
+              </div>
+            </div>
+
+            <div class="songMovingWindow-top-right">
+
+            </div>
+
+          </div>
+          <div class="songMovingWindow-bottom">
+
+          </div>
+        </el-scrollbar>
       </div>
     </div>
   </div>
@@ -155,12 +192,16 @@ let user = reactive({}) //用户信息
 let resultListIsVisible = ref(false) //建议歌单是否可见
 let isPlay = ref(false) //是否播放中
 let song = reactive({
+  name:null,
   src:null,
   cover:null,
   artist:null,
   album:null,
   duration:null,
-  currentTime:null
+  currentTime:null,
+  lyric:null, //歌词
+  tlyric:null, //歌词翻译
+  transUser:null //翻译提供者
 }) //歌曲信息
 // eslint-disable-next-line no-unused-vars
 let playerTimer = null //播放器载入新歌曲地址后的定时器
@@ -176,10 +217,15 @@ let audioRef = ref({
 }) //播放器DOM
 let showPoint = ref('none') //是否展示进度点
 let coverVisible = ref(false) //歌曲遮罩
-let songMovingWindowTop = ref(520) //歌曲详情弹窗上距
+let songMovingWindowTop = ref(70) //520歌曲详情弹窗上距
 let playBarLeft = ref(-60) //底部歌曲小页面上下移动距离
 let playerPageTopBC = ref() //顶部搜索栏背景色
 let topSearchBarBC = ref('#2b2b2b') //顶部搜索框背景色
+let headerRotate = ref('rotate(0deg)') //磁头角度
+let panRotateState = ref('paused') //盘片是否旋转
+let lyricSum = ref(0) //当前歌词下标
+let lyricContent = ref(null) //歌词外层包裹
+let lyricContentWrap = ref(null) //el-scrollBar
 
 //关闭登录弹窗
 const closePop = (e) => {
@@ -219,14 +265,31 @@ const playOrPause = (val) => {
   }
   val === true?audioRef.value.pause():audioRef.value.play()
   isPlay.value = !val
+  headerPosition(val)
 }
 
-//获取到歌曲id 歌曲地址后播放
+// params:e 传入的歌曲id或歌曲完整信息
 const playSong = (e) => {
-  song.cover = e.al.picUrl
-  song.artist = e.ar
-  song.name = e.name
-  axios.get(`${baseUrl}/song/url?id=${e.id}`).then(res => {
+  clearSongInfo()
+  let id = null
+  if (e.ar && e.al){
+    song.cover = e.al.picUrl
+    song.artist = e.ar
+    song.name = e.name
+    song.album = e.album
+    id = e.id
+  }else{
+    id = e
+    //如果传入的是歌曲id则会获取歌曲相关信息
+    axios.get(`${baseUrl}/song/detail?ids=${id}`).then(res => {
+      song.cover = res.data.songs[0].al.picUrl
+      song.artist = res.data.songs[0].ar
+      song.name = res.data.songs[0].name
+      song.album = res.data.songs[0].al
+    })
+  }
+  getLyric(id)
+  axios.get(`${baseUrl}/song/url?id=${id}`).then(res => {
     if (res.data.code === 200){
       song.src = res.data.data[0].url
       //加个定时器给播放器预留缓冲时间
@@ -290,14 +353,17 @@ const getUserProfile = () => {
 const getSearch = (val) => {
   if (val){
     resultListIsVisible.value = false
+    movingWindowDown()
     router.push(`/searchResultPage/${val}`)
   }
 }
 
-//跳转歌单详情页
-const toSongDetailPage = (id) => {
-  if (id){
-    router.push(`/songListDetail/${id}`)
+//跳转到指定页
+const pushToPage = (e) => {
+  if (e[1]){
+    router.push(`${e[0]}/${e[1]}`)
+  }else {
+    router.push(e[0])
   }
 }
 
@@ -315,6 +381,49 @@ const movingWindowDown = () => {
   playBarLeft.value = -60
   playerPageTopBC.value = '#212121'
   topSearchBarBC.value = '#2b2b2b'
+}
+
+//黑椒唱片磁头位置和盘片旋转
+const headerPosition = (val) => {
+  if (val){
+    headerRotate.value = 'rotate(-20deg)'
+    panRotateState.value = 'paused'
+  }else{
+    headerRotate.value = 'rotate(0deg)'
+    panRotateState.value = 'running'
+  }
+}
+
+//获取歌词
+const getLyric = (id) => {
+  axios.get(`${baseUrl}/lyric?id=${id}`).then(res => {
+    let temp = (res.data.lrc.lyric).toString().split('\n')
+    for (let i in temp){
+      let lyricList = temp[i].split(']')
+      temp[i] = {time: lyricTimeFormat(lyricList[0]+']'),content:lyricList[1]}
+    }
+    temp.splice(temp.length-1,1)
+    song.lyric = temp
+    song.tlyric = res.data.tlyric.lyric
+    song.transUser = res.data.transUser
+  })
+}
+
+//歌词时间格式化
+const lyricTimeFormat = (time) => {
+  let temp = time.slice(1,time.length-1)
+  let tList = temp.split(':')
+  let min = tList[0]
+  let sec = tList[1]
+  return min*60+sec*1
+}
+
+//清除当前所有歌曲信息
+const clearSongInfo = () => {
+  for (let i in song){
+    song[i] = null
+  }
+  lyricSum.value = 0
 }
 
 //鼠标进入进度条
@@ -364,6 +473,8 @@ watch(() => inputVal.value,(newVal) => {
     })
 
 onMounted(() => {
+  playSong(1919029404)
+
   // 加载歌曲时缓冲
   audioRef.value.onprogress = () => {
   }
@@ -375,9 +486,19 @@ onMounted(() => {
   }
   //播放时间变化
   audioRef.value.ontimeupdate = () => {
+    //进度条和进度点变化
     durationBarWidth.value = (audioRef.value.currentTime/audioRef.value.duration)*600
     pointStyle.left = (audioRef.value.currentTime/audioRef.value.duration)*600 - 4
+    //歌词滚动
+     if (audioRef.value.currentTime - song.lyric[lyricSum.value].time <= 0.8 && audioRef.value.currentTime - song.lyric[lyricSum.value].time >= -0.2 && lyricSum.value < song.lyric.length){
+       let list = lyricContent.value.children
+       if (song.lyric[lyricSum.value].content){
+         lyricContentWrap.value.setScrollTop(list[lyricSum.value].offsetTop-list[lyricSum.value].clientHeight/2-80)
+       }
+       lyricSum.value++
+     }
   }
+
   // 当前数据可以触发
   audioRef.value.oncanplay = () => {
   }

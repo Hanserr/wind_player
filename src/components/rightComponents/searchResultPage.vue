@@ -105,7 +105,6 @@ watch(
 )
 onMounted(() => {
   closeList()
-  getResult(route.params.inp)
 })
 onUnmounted(() => {
   clearTimeout(markTimer)

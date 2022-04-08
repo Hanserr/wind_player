@@ -7,7 +7,10 @@ const routes = [
     {
         path: '/',
         name: 'homePage',
-        component: homePage
+        component: homePage,
+        meta:{
+            keepAlive: true
+        }
     },
     {
         path: '/searchResultPage/:inp',

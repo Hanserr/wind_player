@@ -1,22 +1,22 @@
 <template>
-  <div class="songListDetailPage">
-    <div class="songListDetailPage-top" v-show="listDetail !== undefined">
+  <div class="songListDetailPage" v-if="listDetail !== undefined">
+    <div class="songListDetailPage-top">
       <div class="songListDetailPage-top-img">
-        <img :src="listDetail === undefined?'':listDetail.playlist.coverImgUrl">
+        <img :src="listDetail.playlist.coverImgUrl">
       </div>
       <div class="songListDetailPage-top-right">
         <p id="songList">歌单</p>
-        <p id="listName">{{listDetail === undefined?'':listDetail.playlist.name}}</p>
-        <img id="avatar" :src="listDetail === undefined?'':listDetail.playlist.creator.avatarUrl">
+        <p id="listName">{{listDetail.playlist.name}}</p>
+        <img id="avatar" :src="listDetail.playlist.creator.avatarUrl">
         <div id="creatorWrap">
-          <p id="creatorName">{{listDetail === undefined?'':listDetail.playlist.creator.nickname}}</p>
-          <p id="creationTime">{{this.$dateFormat(listDetail === undefined?'':listDetail.playlist.createTime)}}创建</p>
+          <p id="creatorName">{{listDetail.playlist.creator.nickname}}</p>
+          <p id="creationTime">{{this.$dateFormat(listDetail.playlist.createTime)}}创建</p>
         </div>
         <button id="play">播放全部</button>
         <button id="collect">收藏</button>
-        <p id="playCount">歌曲:{{listDetail === undefined?'':listDetail.playlist.tracks.length}}</p>
-        <p id="songCount">播放:{{listDetail === undefined?'':listDetail.playlist.playCount}}</p>
-        <p id="description">简介:{{listDetail === undefined?'':listDetail.playlist.description}}</p>
+        <p id="playCount">歌曲:{{listDetail.playlist.tracks.length}}</p>
+        <p id="songCount">播放:{{listDetail.playlist.playCount}}</p>
+        <p id="description">简介:{{listDetail.playlist.description}}</p>
       </div>
     </div>
     <div class="songListDetailPage-bottom">
@@ -27,8 +27,8 @@
         <p id="album">专辑</p>
         <p id="duration">时间</p>
       </div>
-      <div class="songListDetailPage-bottom-content" v-show="listDetail !== undefined">
-        <el-scrollbar height="240px" v-if="listDetail !== undefined">
+      <div class="songListDetailPage-bottom-content">
+        <el-scrollbar height="240px">
 
           <div class="songDetail" v-for="(song,index) in listDetail.playlist.tracks" :key="song" @dblclick="playSong(song.id)">
 

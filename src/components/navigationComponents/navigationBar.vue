@@ -1,7 +1,7 @@
 <template>
   <div class="navigationBar">
     <el-scrollbar height="450px">
-      <p class="navigationBar-p">&nbsp;&nbsp;探索音乐</p>
+      <p class="navigationBar-p" @click="toHome()">&nbsp;&nbsp;探索音乐</p>
       <p class="navigationBar-p">&nbsp;&nbsp;Podcast播客</p>
       <p class="navigationBar-p">&nbsp;&nbsp;视频</p>
       <p class="navigationBar-p">&nbsp;&nbsp;关注</p>
@@ -39,10 +39,11 @@
 import {onMounted, ref} from "vue";
 import SvgIcon from "@/components/SvgIcon";
 import axios from "axios";
+import {router} from "@/router/routes";
 
 const baseUrl = "https://netease-cloud-music-api-beta-lime.vercel.app" //地址前缀
 // eslint-disable-next-line no-undef
-const emits = defineEmits(['toSongDetail'])
+const emits = defineEmits(['toSpecifiedPage'])
 let createdSongListIsFold = ref(true) //创建的歌单列表是否折叠
 let collectedSongIsFold = ref(true) //收藏的歌单是否折叠
 let createdSongList = ref() //创建的歌单列表
@@ -79,7 +80,12 @@ const classifySongList = (list) => {
 
 //跳转到歌单详情页
 const toSongListPage = (id) => {
-  emits('toSongDetail',id)
+  emits('toSpecifiedPage',['/songListDetail',id])
+}
+
+//跳转到首页
+const toHome = () => {
+  emits('toSpecifiedPage','/')
 }
 
 onMounted(() => {

@@ -398,12 +398,13 @@ body{
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    width: 380px;
 }
 .songMovingWindow-top-middle-header-ar{
     text-align: center;
     position: relative;
     top: -35px;
-    width: 300px;
+    width: 380px;
     height: 20px;
     margin: 0 auto;
     font-size: 15px;
@@ -420,8 +421,13 @@ body{
     text-align: center;
     height: 300px;
 }
+.lyricContent{
+    width: 380px;
+    padding: 0;
+}
 .lyricContent li{
+    width: 380px;
     list-style: none;
     margin-top: 20px;
-    white-space:pre-wrap
+    white-space:pre-wrap;
 }

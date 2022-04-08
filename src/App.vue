@@ -401,15 +401,22 @@ const getLyric = (id) => {
       let lyricList = lyric[i].split(']')
       lyric[i] = {time: lyricTimeFormat(lyricList[0]+']'),content:lyricList[1],tlyric:null}
     }
+    let tempTLyric = []
     if (res.data.tlyric){
       let tlyric = (res.data.tlyric.lyric).toString().split('\n')
-      for (let i in tlyric){
+      let tlyricReg = /^\[[0-9]{2}:[0-9]{2}\.[0-9]{2,3}$/
+      for (let i = 0;i<tlyric.length;i++){
         let tlyricList = tlyric[i].split(']')
-        tlyric[i] = {time: lyricTimeFormat(tlyricList[0]+']'),content:tlyricList[1]}
+        //去空
+        if (tlyricReg.test(tlyricList[0])){
+          tempTLyric.push({time: lyricTimeFormat(tlyricList[0]+']'),content:tlyricList[1]})
+        }
       }
-      for (let a in tlyric){
-        if (lyric[a].time === tlyric[a].time){
-          lyric[a].tlyric = "\n"+tlyric[a].content
+      let tlyricSum = 0
+      for (let a = 0;a < lyric.length-1;a++){
+        if (lyric[a].time === tempTLyric[tlyricSum].time) {
+          lyric[a].tlyric = "\n"+tempTLyric[tlyricSum].content
+          tlyricSum++
         }
       }
     }
@@ -520,6 +527,7 @@ onMounted(() => {
   }
   // 错误
   audioRef.value.onerror = () => {
+    playOrPause()
   }
 
   getUserProfile()

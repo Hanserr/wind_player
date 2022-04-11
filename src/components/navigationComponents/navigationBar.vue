@@ -29,7 +29,7 @@
       </div>
 
       <div class="collectedSongList" v-show="!collectedSongIsFold">
-        <p v-for="item in collectionSongList" :key="item" class="createdSongList-p">&nbsp;&nbsp;{{item.name}}</p>
+        <p v-for="item in collectionSongList" :key="item" class="createdSongList-p" @click="toSongListPage(item.id)">&nbsp;&nbsp;{{item.name}}</p>
       </div>
     </el-scrollbar>
   </div>
@@ -39,7 +39,6 @@
 import {onMounted, ref} from "vue";
 import SvgIcon from "@/components/SvgIcon";
 import axios from "axios";
-import {router} from "@/router/routes";
 
 const baseUrl = "https://netease-cloud-music-api-beta-lime.vercel.app" //地址前缀
 // eslint-disable-next-line no-undef
@@ -51,9 +50,9 @@ let collectionSongList = ref() //收藏的歌单列表
 
 //获取用户歌单列表
 const getUserSongList = () => {
-  let a = JSON.parse(sessionStorage.getItem('neProfile'))
-  if (a){
-    axios.get(`${baseUrl}/user/playlist?uid=${a.userId}`).then(res => {
+  let id = JSON.parse(sessionStorage.getItem('UID'))
+  if (id){
+    axios.get(`${baseUrl}/user/playlist?uid=${id}`).then(res => {
       if (res.data.code === 200){
         classifySongList(res.data.playlist)
       }

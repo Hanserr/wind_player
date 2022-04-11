@@ -59,18 +59,48 @@
 <!--        用户登录-->
         <div class="userProfile">
           <div class="topBar-profile">
-            <el-avatar class="topBar-profile-avatar" :size="35" :src="user.avatarUrl"></el-avatar>
+            <el-avatar class="topBar-profile-avatar" :size="35" :src="user?user.avatarUrl:''"></el-avatar>
           </div>
-          <a @click = "popVisible = true" id="topBar-login" v-if="user.nickname === undefined">登录</a>
-          <p v-if="user.nickname !== undefined" id="topBar-nickname">{{user.nickname}}</p>
+          <a @click = "popVisible = true" id="topBar-login" v-if="user === undefined">登录</a>
+          <p v-if="user !== undefined" id="topBar-nickname" @click="displayUserInfo = !displayUserInfo">{{user.nickname}}</p>
+          <div class="topBar-profile-popWindow" v-show="displayUserInfo">
+            <div class="topBar-profile-popWindow-numberArea">
+              <span v-if="user !== undefined" class="topBar-profile-popWindow-numberArea-p1">{{user.eventCount}}</span>
+              <span class="topBar-profile-popWindow-numberArea-p2">动态</span>
+            </div>
+            <div class="topBar-profile-popWindow-numberArea">
+              <span v-if="user !== undefined" class="topBar-profile-popWindow-numberArea-p1">{{user.follows}}</span>
+              <span class="topBar-profile-popWindow-numberArea-p2">关注</span>
+            </div>
+            <div class="topBar-profile-popWindow-numberArea">
+              <span v-if="user !== undefined" class="topBar-profile-popWindow-numberArea-p1">{{user.followeds}}</span>
+              <span class="topBar-profile-popWindow-numberArea-p2">粉丝</span>
+            </div>
+            <button>签到</button>
+            <div class="topBar-profile-popWindow-bottomDiv">
+              我的会员
+              <svg-icon name="arrowsRight" class="topBar-profile-popWindow-svg"></svg-icon>
+            </div>
+            <div class="topBar-profile-popWindow-bottomDiv">
+              等级
+              <svg-icon name="arrowsRight" class="topBar-profile-popWindow-svg"></svg-icon>
+            </div>
+            <div class="topBar-profile-popWindow-bottomDiv">
+              个人信息设置
+              <svg-icon name="arrowsRight" class="topBar-profile-popWindow-svg"></svg-icon>
+            </div>
+            <div class="topBar-profile-popWindow-bottomDiv" @click="checkLogoutAgain()">
+              注销登录
+              <svg-icon name="arrowsRight" class="topBar-profile-popWindow-svg"></svg-icon>
+            </div>
+          </div>
           <!--    登录模块-->
           <login-module :visible="popVisible" @changeVisible="closePop"></login-module>
         </div>
       </div>
-
 <!--      中间结果栏-->
       <div class="searchResult">
-          <router-view @closeResultList="closeResultList" @songID="playSong"></router-view>
+          <router-view @closeResultList="closeResultList" @songID="playSong" @tracks="pushPreparedSongList" @toSpecifiedPage="pushToPage"></router-view>
       </div>
 
 <!--      底部播放栏-->
@@ -133,14 +163,14 @@
 
           <div class="songMovingWindow-top">
             <div class="songMovingWindow-top-pan">
-              <img src="./assets/pics/header.png" id="header" :style="{transform:headerRotate}">
+              <img src="./assets/pics/header.webp" id="header" :style="{transform:headerRotate}">
               <div class="songMovingWindow-top-pan-content" :style="{animationPlayState:panRotateState}">
                 <img :src="song.cover" id="vinyl-cover" v-show="song.cover">
-                <img src="./assets/pics/pan.png" id="vinyl">
+                <img src="./assets/pics/pan.webp" id="vinyl">
               </div>
             </div>
 
-            <div class="songMovingWindow-top-middle">
+            <div class="songMovingWindow-top-middle" v-if="song.artist&&song.album&&song.lyric">
               <div class="songMovingWindow-top-middle-header">
                 <p id="songName">{{song.name}}</p>
                 <div class="songMovingWindow-top-middle-header-ar">
@@ -148,7 +178,6 @@
                   <p>{{song.album === null?'':'- '+song.album.name}}</p>
                 </div>
               </div>
-
               <div class="songMovingWindow-top-middle-lyric">
                 <el-scrollbar height="280px" ref="lyricContentWrap">
                   <ul class="lyricContent" ref="lyricContent">
@@ -156,7 +185,6 @@
                   </ul>
                 </el-scrollbar>
             </div>
-
             <div class="songMovingWindow-top-right">
 
             </div>
@@ -177,18 +205,19 @@ import {onMounted, onUnmounted, reactive, ref, watch} from "vue";
 import {Search} from "@element-plus/icons-vue";
 import axios from "axios";
 import SvgIcon from "@/components/SvgIcon";
-import Cookies from "js-cookie";
 import LoginModule from "./components/topComponents/loginModule";
 import {router} from "@/router/routes";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import NavigationBar from "@/components/navigationComponents/navigationBar";
+import Cookies from "js-cookie";
 
 const baseUrl = "https://netease-cloud-music-api-beta-lime.vercel.app" //地址前缀
 let inputVal = ref('') //顶部搜索框变量
 let songSuggestionList = reactive({}) //建议歌单列表
 let suggestionTimer = null //建议歌单列表的定时器
 let popVisible = ref(false) //登录弹窗是否可见
-let user = reactive({}) //用户信息
+let user = ref() //用户信息
+let displayUserInfo = ref(false) //展示用户部分信息（vip时间，注销···）弹窗
 let resultListIsVisible = ref(false) //建议歌单是否可见
 let isPlay = ref(false) //是否播放中
 let song = reactive({
@@ -225,6 +254,8 @@ let panRotateState = ref('paused') //盘片是否旋转
 let lyricSum = ref(0) //当前歌词下标
 let lyricContent = ref(null) //歌词外层包裹
 let lyricContentWrap = ref(null) //el-scrollBar
+let preparedSongList = ref() //待播放歌曲列表
+let presentSongIndexInPreparedList = 0 //当前播放的歌曲在待播列表中的位置
 
 //关闭登录弹窗
 const closePop = (e) => {
@@ -259,7 +290,7 @@ const searchSuggestion = (val) => {
 
 //播放或暂停
 const playOrPause = (val) => {
-  if (song.src === null){
+  if (!song.src){
     return
   }
   val === true?audioRef.value.pause():audioRef.value.play()
@@ -296,6 +327,7 @@ const playSong = (e) => {
         audioRef.value.pause()
         audioRef.value.play()
         isPlay.value = true
+        playOrPause(false)
       },150)
     }else {
       ElMessage({
@@ -321,31 +353,25 @@ const formatTime = (time) => {
   return `${min}:${sec}`
 }
 
-//从session-storage中获取用户信息
+//获取用户登陆状态
 const getUserProfile = () => {
-  if (sessionStorage.getItem("neProfile")){
-    let u = JSON.parse(sessionStorage.getItem("neProfile"))
-    user.nickname = u.nickname
-    user.avatarUrl = u.avatarUrl
-    user.birthday = u.birthday
-    user.city = u.city
-    user.followed = u.followed
-    user.follows = u.follows
-    user.gender = u.gender
-    user.province = u.province
-    user.signature = u.signature
-    user.userId = u.userId
-    user.vipType = u.vipType
-  } else {
-    if(Cookies.get('neCookie')){
-      axios.post(baseUrl+"/login/status").then(res => {
-        if(res.data.data.code === 200){
-          sessionStorage.setItem('neProfile',JSON.stringify(res.data.data.profile))
-          getUserProfile()
+  if (!Cookies.get('MUSIC_U')){
+    return
+  }
+  axios.post(`${baseUrl}/login/status`).then(res => {
+    if (res.data.data.account === null){
+      return
+    }
+    if(res.data.data.code === 200){
+      user.value = res.data.data.profile
+      sessionStorage.setItem('UID',user.value.userId)
+      axios.get(`${baseUrl}/user/detail?uid=${user.value.userId}`).then(res1 => {
+        if (res.data.data.code === 200){
+          user.value = res1.data.profile
         }
       })
     }
-  }
+  })
 }
 
 //顶部搜索
@@ -364,6 +390,12 @@ const pushToPage = (e) => {
   }else {
     router.push(e[0])
   }
+}
+
+//获取待播放列表
+const pushPreparedSongList = (e) => {
+  preparedSongList.value = e[0].value
+  presentSongIndexInPreparedList = e[1]
 }
 
 //歌曲弹窗上移
@@ -450,6 +482,32 @@ const clearSongInfo = () => {
   lyricSum.value = 0
 }
 
+//确认是否登出
+const checkLogoutAgain = async () => {
+  ElMessageBox.confirm(
+    '确定注销登录吗?',
+    'warning',
+    {
+      closeOnClickModal:false,
+      closeOnPressEscape:false,
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }).then(() => {
+      axios.get(`${baseUrl}/logout`).then(res => {
+        if (res.data.code === 200){
+          Cookies.remove('MUSIC_U')
+          Cookies.remove('_remember_me')
+          Cookies.remove('_csrf')
+          user.value = undefined
+          displayUserInfo.value = false
+        }
+      })
+      }).catch(() => {
+          displayUserInfo.value = false
+      })
+}
+
 //鼠标进入进度条
 const enterBar = () => {
   showPoint.value = 'block'
@@ -469,12 +527,6 @@ const mouseDown = (e) => {
 //鼠标在进度条上松开事件
 const mouseUp = () => {
 }
-
-//监听到子组件传来的值
-watch(() => popVisible.value,(next) => {
-      popVisible.value = next
-      getUserProfile()
-    })
 
 //监听输入框值，返回建议结果
 watch(() => inputVal.value,(newVal) => {
@@ -497,6 +549,7 @@ watch(() => inputVal.value,(newVal) => {
     })
 
 onMounted(() => {
+  getUserProfile()
 
   // 加载歌曲时缓冲
   audioRef.value.onprogress = () => {
@@ -514,12 +567,14 @@ onMounted(() => {
     pointStyle.left = (audioRef.value.currentTime/audioRef.value.duration)*600 - 4
     //歌词滚动
     try {
-      if (audioRef.value.currentTime - song.lyric[lyricSum.value].time <= 0.8 && audioRef.value.currentTime - song.lyric[lyricSum.value].time >= -0.2 && lyricSum.value < song.lyric.length){
-        let list = lyricContent.value.children
-        if (song.lyric[lyricSum.value].content){
-          lyricContentWrap.value.setScrollTop(list[lyricSum.value].offsetTop-list[lyricSum.value].clientHeight/2-80)
+      if (lyricSum.value < song.lyric.length){
+        if (audioRef.value.currentTime - song.lyric[lyricSum.value].time <= 1 && audioRef.value.currentTime - song.lyric[lyricSum.value].time >= -0.2){
+          let list = lyricContent.value.children
+          if (song.lyric[lyricSum.value].content){
+            lyricContentWrap.value.setScrollTop(list[lyricSum.value].offsetTop-list[lyricSum.value].clientHeight/2-80)
+          }
+          lyricSum.value++
         }
-        lyricSum.value++
       }
     }catch(err){
       console.log(err)
@@ -531,13 +586,13 @@ onMounted(() => {
   }
   // 音频播放完毕
   audioRef.value.onended = () => {
+    presentSongIndexInPreparedList++
+    playSong(preparedSongList.value[presentSongIndexInPreparedList])
   }
   // 错误
   audioRef.value.onerror = () => {
-    playOrPause()
+    playOrPause(true)
   }
-
-  getUserProfile()
 })
 
 onUnmounted(()=>{

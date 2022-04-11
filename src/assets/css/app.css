@@ -7,7 +7,8 @@ body{
     width: 100vw;
     height: 100vh;
     background-color: #686c85;
-    background-size: cover;
+    background-size: 100% 100%;
+    background-attachment: fixed;
     -webkit-background-size: cover;
     -o-background-size: cover;
     -webkit-touch-callout: none;
@@ -37,7 +38,7 @@ body{
     -webkit-backdrop-filter: blur(15px);
 }
 
-/*顶部搜索栏*/
+/*顶部*/
 .playerPageTop{
     width: 1100px;
     height: 70px;
@@ -133,11 +134,70 @@ body{
     position: absolute;
     top:15px;
     left: 60px;
+    cursor: pointer;
 }
 .topBar-profile-avatar{
     background-color: #eebe77;
     margin-left: 12px;
     margin-top: 15px;
+}
+.topBar-profile-popWindow{
+    width: 240px;
+    height: 300px;
+    background-color: #363636;
+    position: absolute;
+    top: 60px;
+    left: -50px;
+    z-index: 103;
+    border-radius: 5px;
+}
+.topBar-profile-popWindow button{
+    display: block;
+    margin: 0 auto;
+    position: relative;
+    top: 10px;
+    cursor: pointer;
+    width: 80px;
+    height: 30px;
+    border: none;
+    border-radius: 15px;
+}
+.topBar-profile-popWindow-bottomDiv{
+    width: 100%;
+    height: 43px;
+    position: relative;
+    top: 20px;
+    color: #D5D5D5;
+    text-indent: 1em;
+    line-height: 40px;
+}
+.topBar-profile-popWindow-bottomDiv:hover{
+    background-color: #414141;
+}
+.topBar-profile-popWindow-svg{
+    position: absolute;
+    top: 9px;
+    right: 0;
+}
+.topBar-profile-popWindow-numberArea{
+    width: 80px;
+    height: 70px;
+    display: inline-block;
+    text-align: center;
+}
+.topBar-profile-popWindow-numberArea-p1{
+    color: #d5d5d5;
+    font-size: 17px;
+    position: relative;
+    top: 10px;
+    display: block;
+}
+.topBar-profile-popWindow-numberArea-p2{
+    color: #989898;
+    font-size: 12px;
+    position: relative;
+    top:20px;
+    display: block;
 }
 
 /*中间结果页*/

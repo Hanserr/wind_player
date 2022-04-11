@@ -12,10 +12,13 @@
           <p id="creatorName">{{listDetail.playlist.creator.nickname}}</p>
           <p id="creationTime">{{this.$dateFormat(listDetail.playlist.createTime)}}创建</p>
         </div>
-        <button id="play">播放全部</button>
+        <button id="play" @click="playAll">播放全部</button>
         <button id="collect">收藏</button>
         <p id="playCount">歌曲:{{listDetail.playlist.tracks.length}}</p>
-        <p id="songCount">播放:{{listDetail.playlist.playCount}}</p>
+        <p id="songCount">播放:{{listDetail.playlist.playCount.toString().length>=100000000?
+            `${Math.floor(listDetail.playlist.playCount/1000000000)}亿`: listDetail.playlist.playCount.toString().length>=5?
+            `${Math.floor(listDetail.playlist.playCount/10000)}万`: listDetail.playlist.playCount}}
+        </p>
         <p id="description">简介:{{listDetail.playlist.description}}</p>
       </div>
     </div>
@@ -30,7 +33,7 @@
       <div class="songListDetailPage-bottom-content">
         <el-scrollbar height="240px">
 
-          <div class="songDetail" v-for="(song,index) in listDetail.playlist.tracks" :key="song" @dblclick="playSong(song.id)">
+          <div class="songDetail" v-for="(song,index) in listDetail.playlist.tracks" :key="song" @dblclick="playSong(song.id,index)">
 
             <div class="detailIndex">
               <p>{{(index+1).toString().length === 1?'0'+(index+1):(index+1)}}</p>
@@ -68,21 +71,30 @@ import axios from "axios"
 const baseUrl = "https://netease-cloud-music-api-beta-lime.vercel.app"
 const route = useRoute()
 // eslint-disable-next-line no-undef
-const emits = defineEmits(['songID'])
+const emits = defineEmits(['songID','tracks'])
 let listDetail = ref()
+let preparedSongList = ref() //待播放歌曲列表
 
 //获取歌单详情
 const getSongListDetail = (id) => {
   axios.get(`${baseUrl}/playlist/detail?id=${id}`).then(res => {
     if (res.data.code === 200){
       listDetail.value = res.data
+      preparedSongList.value = listDetail.value.playlist.tracks
     }
   })
 }
 
 //播放歌曲
-const playSong = (id) => {
+const playSong = (id,index) => {
   emits('songID',id)
+  emits('tracks',[preparedSongList,index])
+}
+
+//播放当前歌单全部歌曲
+const playAll = () => {
+  emits('songID',listDetail.value.playlist.tracks[0].id)
+  emits('tracks',[preparedSongList,0])
 }
 
 watch(() => route.params.id,(next) => {

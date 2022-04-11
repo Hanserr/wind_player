@@ -126,15 +126,14 @@ watch(
 //获取用户登陆状态
 const getUserStatus = () => {
   axios.post(`${baseUrl}/login/status`).then(res => {
-    if (res.data.data.code === 200){
-      sessionStorage.setItem('neProfile',JSON.stringify(res.data.data.profile))
+    if (res.data.data.code !== 200 || !res.data.data.account){
+      ElMessage({
+        message:'登陆失败，请稍后再试',
+        type:'error'
+      })
+    }else {
+      location.reload()
     }
-  })
-}
-//获取用户信息 , 歌单，收藏，mv, dj 数量
-const getUserProfile = () => {
-  axios.get(`${baseUrl}/user/subcount`).then(res => {
-    console.log(res.data)
   })
 }
 //手机号登录
@@ -149,10 +148,20 @@ const phoneLogin = (phone,pwd) => {
   }
   load.value = true
   axios.post(`${baseUrl}/login/cellphone?phone=${phone}&password=${pwd}`).then(res=>{
+    console.log(res.data)
     if (res.data.code === 200) {
-      sessionStorage.setItem("neProfile",JSON.stringify(res.data.profile))
-      Cookies.set("neCookie",res.data.cookie)
-      getUserProfile()
+      let cookiesList = res.data.cookie.split(';;')
+      for (let i = 0;i<cookiesList.length;i++){
+        let d = cookiesList[i].split(';')
+        let name = d[0].split('=')[0]
+        let val = d[0].split('=')[1]
+        let expire = new Date(d[2].split('=')[1])
+        let p = d[3].split('=')[1]
+        Cookies.set(name,val,{
+          expires:expire,
+          path:p
+        })
+      }
       invisible()
       location.reload()
     }else {
@@ -161,9 +170,10 @@ const phoneLogin = (phone,pwd) => {
         type:"error"
       })
     }
-  }).catch(()=>{
+  }).catch((err)=>{
+    console.log(err)
     ElMessage({
-      message:"手机号或密码错误",
+      message:"出错啦",
       type:"error"
     })
   }).finally(() => {
@@ -189,8 +199,6 @@ const getQRCode = async () => {
         }else if (status.data.code === 803) {
           Cookies.set("neCookie", QR.data.cookie)
           getUserStatus()
-          getUserProfile()
-          location.reload()
           ElMessage({
             message: status.data.message,
             type: 'success'
@@ -200,6 +208,7 @@ const getQRCode = async () => {
     }
   }
 }
+
 //获取验证码
 const getVerificationCode = (phoneNumber) => {
   //获取前先判定cookie中是否有未过期的获取记录
@@ -257,6 +266,7 @@ const verificatonLogin = (phoneNumber,code) => {
     })
     return;
   }
+  load.value = true
   axios.post(`${baseUrl}/captcha/verify?phone=${phoneNumber}&captcha=${code}`).then(res => {
     if (res.data.code === 503){
       ElMessage({
@@ -266,14 +276,14 @@ const verificatonLogin = (phoneNumber,code) => {
       form.code = ''
     }else if(res.data.code === 200){
       getUserStatus()
-      getUserProfile()
-      location.reload()
       ElMessage({
         message:'登陆成功',
         type:"success"
       })
       invisible()
     }
+  }).finally(() => {
+    load.value = false
   })
 }
 

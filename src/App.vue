@@ -355,21 +355,13 @@ const formatTime = (time) => {
 
 //获取用户登陆状态
 const getUserProfile = () => {
-  if (!Cookies.get('MUSIC_U')){
+  if (!Cookies.get('MUSIC_U') || !Cookies.get('UID')){
     return
   }
-  axios.post(`${baseUrl}/login/status`).then(res => {
-    if (res.data.data.account === null){
-      return
-    }
-    if(res.data.data.code === 200){
-      user.value = res.data.data.profile
-      sessionStorage.setItem('UID',user.value.userId)
-      axios.get(`${baseUrl}/user/detail?uid=${user.value.userId}`).then(res1 => {
-        if (res.data.data.code === 200){
-          user.value = res1.data.profile
-        }
-      })
+  let uid = Cookies.get('UID')
+  axios.get(`${baseUrl}/user/detail?uid=${uid}`).then(res => {
+    if (res.data.code === 200){
+      user.value = res.data.profile
     }
   })
 }
@@ -486,7 +478,6 @@ const clearSongInfo = () => {
 const checkLogoutAgain = async () => {
   ElMessageBox.confirm(
     '确定注销登录吗?',
-    'warning',
     {
       closeOnClickModal:false,
       closeOnPressEscape:false,
@@ -499,12 +490,17 @@ const checkLogoutAgain = async () => {
           Cookies.remove('MUSIC_U')
           Cookies.remove('_remember_me')
           Cookies.remove('_csrf')
+          Cookies.remove('UID')
           user.value = undefined
           displayUserInfo.value = false
         }
       })
       }).catch(() => {
-          displayUserInfo.value = false
+        displayUserInfo.value = false
+        ElMessage({
+          message:'登出失败',
+          type:'error'
+        })
       })
 }
 

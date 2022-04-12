@@ -98,7 +98,7 @@ const loginOption = [
   '二维码登录',
   '验证码登录'
 ]
-//提前定义emit事件
+
 // eslint-disable-next-line no-undef
 const emits = defineEmits(["changeVisible"])
 // eslint-disable-next-line no-undef
@@ -108,21 +108,23 @@ const props = defineProps({
     default:false
   }
 })
+
 //关闭弹窗
 const invisible = () => {
   option.value = 0
   emits('changeVisible',false)
 }
-watch(
-    () => props.visible,(nextVisible) => {
+
+watch(() => props.visible,(nextVisible) => {
       loginVisible.value = nextVisible
 })
-watch(
-    () => option.value,(nextOption) => {
+
+watch(() => option.value,(nextOption) => {
       if(nextOption === 1){
         getQRCode()
       }
     })
+
 //获取用户登陆状态
 const getUserStatus = () => {
   axios.post(`${baseUrl}/login/status`).then(res => {
@@ -136,6 +138,7 @@ const getUserStatus = () => {
     }
   })
 }
+
 //手机号登录
 const phoneLogin = (phone,pwd) => {
   let phoneReg = /^[1][3,4,5,7,8][0-9]{9}$/
@@ -162,6 +165,9 @@ const phoneLogin = (phone,pwd) => {
           path:p
         })
       }
+      Cookies.set('UID',res.data.profile.userId,{
+        expires: 15
+      })
       invisible()
       location.reload()
     }else {
@@ -180,6 +186,7 @@ const phoneLogin = (phone,pwd) => {
     load.value = false
   })
 }
+
 //二维码登录
 const getQRCode = async () => {
   let QR = null
@@ -197,7 +204,31 @@ const getQRCode = async () => {
         if (status.data.code === 800) {
           await getQRCode()
         }else if (status.data.code === 803) {
-          Cookies.set("neCookie", QR.data.cookie)
+          console.log(status.data)
+          axios.get(`${baseUrl}/login/status`).then(res => {
+          Cookies.set('UID',res.data.data.account.id,{
+            expires:15
+          })
+          })
+          status.data.cookie.split(/csrf=.{0,120};;/)
+          let MU = status.data.cookie.match(/MUSIC_U=.{0,230}GMT;/)
+          status.data.cookie.split(/MUSIC_U=.{0,230}GMT;/)
+          Cookies.set('MUSIC_U',MU,{
+            expires:15
+          })
+          let cookiesList =  status.data.cookie.split('HTTPOnly;')
+          for (let i = 0;i<cookiesList.length;i++){
+            let d = cookiesList[i].split(';')
+            let name = d[0].split('=')[0]
+            let val = d[0].split('=')[1]
+            let expire = new Date(d[2].split('=')[1])
+            let p = d[3].split('=')[1]
+            Cookies.set(name,val,{
+              expires:expire,
+              path:p,
+            })
+          }
+          clearInterval(QRCodeTimer)
           getUserStatus()
           ElMessage({
             message: status.data.message,
@@ -256,6 +287,7 @@ const getVerificationCode = (phoneNumber) => {
     }
   })
 }
+
 //验证码登录
 const verificatonLogin = (phoneNumber,code) => {
   const phoneReg = /^[1][3,4,5,7,8][0-9]{9}$/;
@@ -275,6 +307,11 @@ const verificatonLogin = (phoneNumber,code) => {
       })
       form.code = ''
     }else if(res.data.code === 200){
+      axios.get(`${baseUrl}/login/status`).then(res => {
+        if (res.data.code === 200){
+          Cookies.set('UID',res.data.account.id)
+        }
+      })
       getUserStatus()
       ElMessage({
         message:'登陆成功',

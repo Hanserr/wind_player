@@ -39,6 +39,7 @@
 import {onMounted, ref} from "vue";
 import SvgIcon from "@/components/SvgIcon";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const baseUrl = "https://netease-cloud-music-api-beta-lime.vercel.app" //地址前缀
 // eslint-disable-next-line no-undef
@@ -50,7 +51,7 @@ let collectionSongList = ref() //收藏的歌单列表
 
 //获取用户歌单列表
 const getUserSongList = () => {
-  let id = JSON.parse(sessionStorage.getItem('UID'))
+  let id = JSON.parse(Cookies.get('UID'))
   if (id){
     axios.get(`${baseUrl}/user/playlist?uid=${id}`).then(res => {
       if (res.data.code === 200){

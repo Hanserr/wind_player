@@ -32,7 +32,7 @@ const getBanner = () => {
   })
 }
 
-//获取轮播图歌曲 已知targetType对应 1:单曲  3000:活动页面
+//获取轮播图歌曲 已知targetType对应 1:单曲  10:专辑  1000:歌单  3000:活动页面
 const getBannerSong = (item) => {
   if (item.targetType === 1){
     emits("songID",item.targetId)

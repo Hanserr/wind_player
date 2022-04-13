@@ -340,7 +340,7 @@ body{
     margin: 10px auto;
 }
 .playerBar-audioContent-progressBar{
-    width: 700px;
+    width: 600px;
     height: 25px;
     position: absolute;
     left: 50px;
@@ -360,11 +360,6 @@ body{
     left: 0;
     background-color: #e87535;
     top: 0;
-}
-.playerBar-audioContent-progressBar-point{
-    border-radius: 4px;
-    background-color: #8896b3;
-    position: absolute;
 }
 .playerBar-audioContent p:nth-child(2){
     position:absolute;

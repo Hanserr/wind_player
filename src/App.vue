@@ -141,16 +141,15 @@
 
         <div class="playerBar-audioContent">
           <div class="playerBar-audioContent-panel">
-            <svg-icon name="previous" style="margin-left: 290px;cursor: pointer"></svg-icon>
+            <svg-icon name="previous" style="margin-left: 290px;cursor: pointer" @click="previousSong"></svg-icon>
             <svg-icon name="pause" style="margin-left: 20px;cursor: pointer" @click="playOrPause(isPlay)" v-show="isPlay"></svg-icon>
             <svg-icon name="play" style="margin-left: 20px;cursor: pointer" @click="playOrPause(isPlay)" v-show="!isPlay"></svg-icon>
-            <svg-icon name="next" style="margin-left: 20px;cursor: pointer"></svg-icon>
+            <svg-icon name="next" style="margin-left: 20px;cursor: pointer"  @click="nextSong"></svg-icon>
           </div>
           <p>{{formatTime(audioRef.currentTime)}}</p>
           <div class="playerBar-audioContent-progressBar">
-            <div class="playerBar-audioContent-progressBar-wrap" @mouseenter="enterBar" @mouseleave="leaveBar" @mousedown="mouseDown($event)" @mouseup="mouseUp($event)">
+            <div class="playerBar-audioContent-progressBar-wrap" @mouseenter="enterBar" @mouseleave="leaveBar" @mousedown="mouseDown" @mouseup="mouseUp" @mousemove="mouseMove">
               <div class="playerBar-audioContent-progressBar-durationBar" :style="{width:durationBarWidth+'px'}"></div>
-              <div class="playerBar-audioContent-progressBar-point" :style="{left:pointStyle.left+'px',width: pointStyle.width+'px',height:pointStyle.height+'px',display:showPoint}"></div>
             </div>
           </div>
           <p>{{formatTime(audioRef.duration)}}</p>
@@ -181,7 +180,7 @@
               <div class="songMovingWindow-top-middle-lyric">
                 <el-scrollbar height="280px" ref="lyricContentWrap">
                   <ul class="lyricContent" ref="lyricContent">
-                    <li v-for="(i,index) in song.lyric" :key="i" :style="{color:index+1 === lyricSum?'#FFFFFF':'#606266'}" @click="toSpecificSong(i.time,index)">{{i.content}}{{i.tlyric===null?"":i.tlyric}}</li>
+                    <li v-for="(i,index) in song.lyric" :key="i" :style="{color:index+1 === lyricSum?'#FFFFFF':'#606266'}" @click="toSpecificLyric(i.time,index)">{{i.content}}{{i.tlyric===null?"":i.tlyric}}</li>
                   </ul>
                 </el-scrollbar>
             </div>
@@ -234,16 +233,10 @@ let song = reactive({
 // eslint-disable-next-line no-unused-vars
 let playerTimer = null //播放器载入新歌曲地址后的定时器
 let durationBarWidth = ref(0) //进度条宽度
-let pointStyle = reactive({
-  left:0,
-  width:8,
-  height:8
-}) //进度点样式
 let audioRef = ref({
   currentTime:null,
   duration:null
 }) //播放器DOM
-let showPoint = ref('none') //是否展示进度点
 let coverVisible = ref(false) //歌曲遮罩
 let songMovingWindowTop = ref(520) //520歌曲详情弹窗上距
 let playBarLeft = ref(-60) //底部歌曲小页面上下移动距离
@@ -256,6 +249,8 @@ let lyricContent = ref(null) //歌词外层包裹
 let lyricContentWrap = ref(null) //el-scrollBar
 let preparedSongList = ref() //待播放歌曲列表
 let presentSongIndexInPreparedList = 0 //当前播放的歌曲在待播列表中的位置
+// eslint-disable-next-line no-unused-vars
+let onBarMark = false //鼠标是否在进度条上点击
 
 //关闭登录弹窗
 const closePop = (e) => {
@@ -299,8 +294,7 @@ const playOrPause = (val) => {
 }
 
 // params:e 传入的歌曲id或歌曲完整信息
-const playSong = (e) => {
-  clearSongInfo()
+const playSong = async (e) => {
   let id = null
   if (e.ar && e.al){
     song.cover = e.al.picUrl
@@ -318,7 +312,9 @@ const playSong = (e) => {
       song.album = res.data.songs[0].al
     })
   }
-  getLyric(id)
+  clearSongInfo()
+  //先获取歌词再获取播放地址防止报错
+  await getLyric(id)
   axios.get(`${baseUrl}/song/url?id=${id}`).then(res => {
     if (res.data.code === 200){
       song.src = res.data.data[0].url
@@ -342,6 +338,26 @@ const playSong = (e) => {
     })
   })
 }
+
+//播放上一首
+const previousSong = () => {
+  if (presentSongIndexInPreparedList === 0){
+    playSong(preparedSongList.value[preparedSongList.value.length-1].id)
+  }else {
+    playSong(preparedSongList.value[--presentSongIndexInPreparedList].id)
+  }
+
+}
+
+//播放下一首
+const nextSong = () => {
+  if (presentSongIndexInPreparedList >= preparedSongList.value.length-1){
+    playSong(preparedSongList.value[0].id)
+  }else {
+    playSong(preparedSongList.value[++presentSongIndexInPreparedList].id)
+  }
+}
+
 
 //格式化时间
 const formatTime = (time) => {
@@ -460,14 +476,15 @@ const lyricTimeFormat = (time) => {
 }
 
 //点击歌词跳转到指定位置
-const toSpecificSong = (time,index) => {
-  lyricSum.value = index
+const toSpecificLyric = (time,index) => {
+  lyricSum.value = index+1
   audioRef.value.currentTime = time
   playOrPause(false)
 }
 
 //清除当前所有歌曲信息
 const clearSongInfo = () => {
+  audioRef.value.pause()
   for (let i in song){
     song[i] = null
   }
@@ -506,22 +523,43 @@ const checkLogoutAgain = async () => {
 
 //鼠标进入进度条
 const enterBar = () => {
-  showPoint.value = 'block'
+
 }
 
 //鼠标离开进度条
 const leaveBar = () => {
-  showPoint.value = 'none'
 }
 
 //鼠标在进度条上按下事件
 const mouseDown = (e) => {
-  console.log(e.target.offsetLeft)
-  console.log(e.clientX)
+  if (audioRef.value.src){
+    onBarMark = true
+    audioRef.value.currentTime = e.offsetX/600*audioRef.value.duration
+    durationBarWidth.value = (audioRef.value.currentTime/audioRef.value.duration)*600
+  }
 }
 
 //鼠标在进度条上松开事件
-const mouseUp = () => {
+const mouseUp = (e) => {
+  if (audioRef.value.src) {
+    audioRef.value.currentTime = e.offsetX/600*audioRef.value.duration
+    playOrPause(false)
+    onBarMark = false
+    //鼠标从进度条松开时跳转歌词位置
+    for(let i in song.lyric){
+      if (song.lyric[i].time > audioRef.value.currentTime){
+        toSpecificLyric(audioRef.value.currentTime,i-1)
+        break
+      }
+    }
+  }
+}
+
+//鼠标移动
+const mouseMove = (e) => {
+  if (onBarMark){
+    durationBarWidth.value = e.offsetX
+  }
 }
 
 //监听输入框值，返回建议结果
@@ -547,6 +585,11 @@ watch(() => inputVal.value,(newVal) => {
 onMounted(() => {
   getUserProfile()
 
+  addEventListener('mouseup',() => {
+    if (onBarMark){
+      onBarMark = false
+    }
+  })
   // 加载歌曲时缓冲
   audioRef.value.onprogress = () => {
   }
@@ -555,15 +598,17 @@ onMounted(() => {
   }
   //音频时长变化;得到时长数据
   audioRef.value.ondurationchange = () =>{
+
   }
   //播放时间变化
   audioRef.value.ontimeupdate = () => {
     //进度条和进度点变化
-    durationBarWidth.value = (audioRef.value.currentTime/audioRef.value.duration)*600
-    pointStyle.left = (audioRef.value.currentTime/audioRef.value.duration)*600 - 4
+    if (!onBarMark){
+      durationBarWidth.value = (audioRef.value.currentTime/audioRef.value.duration)*600
+    }
     //歌词滚动
     try {
-      if (lyricSum.value < song.lyric.length){
+      if (lyricSum.value < song.lyric?1:song.lyric.length){
         if (audioRef.value.currentTime - song.lyric[lyricSum.value].time <= 1 && audioRef.value.currentTime - song.lyric[lyricSum.value].time >= -0.2){
           let list = lyricContent.value.children
           if (song.lyric[lyricSum.value].content){

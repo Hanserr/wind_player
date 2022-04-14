@@ -98,6 +98,7 @@
           <login-module :visible="popVisible" @changeVisible="closePop"></login-module>
         </div>
       </div>
+
 <!--      中间结果栏-->
       <div class="searchResult">
           <router-view @closeResultList="closeResultList" @songID="playSong" @tracks="pushPreparedSongList" @toSpecifiedPage="pushToPage"></router-view>
@@ -108,8 +109,8 @@
         <audio ref="audioRef" :src="song.src"></audio>
 
 <!--        右侧歌曲封面及歌手-->
-        <div class="playerBar-left" :style="{top:playBarLeft+'px'}">
-
+        <div class="playerBar-left">
+          <div class="playerBar-left-wrap" :style="{top:playBarLeft+'px'}">
           <div class="playerBar-left-top">
             <div id="playBar-left-top-flip" @click="movingWindowDown">
               <svg-icon name="arrowsDown" id="playBar-left-top-flip-arrows"></svg-icon>
@@ -125,18 +126,18 @@
             </div>
           </div>
 
-          <div class="playerBar-left-bottom">
-            <div id="cover" v-show="coverVisible" @mouseenter="coverVisible = true" @mouseleave="coverVisible = false" @click="movingWindowUp">
-              <svg-icon name="topArrows" id="cover-arrows"></svg-icon>
-            </div>
-            <svg-icon name="music" id="music-icon" v-show="!song.cover"></svg-icon>
-            <img :src="song.cover" v-show="song.cover" @mouseenter="coverVisible = true" @mouseleave="coverVisible = false">
-            <p id="playerBar-left-name">{{song.name}}</p>
-            <div id="playBar-left-ar-wrap">
-              <p id="playBar-left-ar" v-for="i in song.artist" :key="i">{{i.name}}&nbsp;&nbsp;</p>
+            <div class="playerBar-left-bottom">
+              <div id="cover" v-show="coverVisible" @mouseenter="coverVisible = true" @mouseleave="coverVisible = false" @click="movingWindowUp">
+                <svg-icon name="topArrows" id="cover-arrows"></svg-icon>
+              </div>
+              <svg-icon name="music" id="music-icon" v-show="!song.cover"></svg-icon>
+              <img :src="song.cover" v-show="song.cover" @mouseenter="coverVisible = true" @mouseleave="coverVisible = false">
+              <p id="playerBar-left-name">{{song.name}}</p>
+              <div id="playBar-left-ar-wrap">
+                <p id="playBar-left-ar" v-for="i in song.artist" :key="i">{{i.name}}&nbsp;&nbsp;</p>
+              </div>
             </div>
           </div>
-
         </div>
 
         <div class="playerBar-audioContent">
@@ -154,6 +155,15 @@
           </div>
           <p>{{formatTime(audioRef.duration)}}</p>
         </div>
+        <svg-icon name="volume" id="volumeIcon" v-show="!audioRef.muted" @click="isMuted" @mouseover="volumeBarVisibleBeforeFunc" @mouseleave="volumeBarVisibleAfterFunc"></svg-icon>
+        <svg-icon name="muted" id="volumeIcon" v-show="audioRef.muted" @click="isMuted" @mouseover="volumeBarVisibleBeforeFunc" @mouseleave="volumeBarVisibleAfterFunc"></svg-icon>
+        <div id="volumeIconBody" v-show="volumeBarVisible" @mouseover="volumeBarVisibleBeforeFunc" @mouseleave="volumeBarVisibleAfterFunc">
+          <div id="volumeIconBodyContainer" @mousemove="volumeMouseMove" @mousedown="volumeMouseDown" @mouseup="volumeMouseUp" @mouseleave="volumeMouseOut">
+            <div id="volumeIconBodyBar" :style="{height: volumeValue+'px'}"></div>
+          </div>
+        </div>
+        <svg-icon name="playlistHeart" id="playlistIcon"></svg-icon>
+        <div></div>
       </div>
 
 <!--        歌曲详情页-->
@@ -195,8 +205,9 @@
           </div>
         </el-scrollbar>
       </div>
+
     </div>
-  </div>
+    </div>
 </template>
 
 <script setup>
@@ -251,6 +262,15 @@ let preparedSongList = ref() //待播放歌曲列表
 let presentSongIndexInPreparedList = 0 //当前播放的歌曲在待播列表中的位置
 // eslint-disable-next-line no-unused-vars
 let onBarMark = false //鼠标是否在进度条上点击
+let volumeValue = ref(80) //音量
+let tempVolumeValue = 0 //临时音量
+let tempVolumeBeforeMuted = 0 //静音前临时保存音量值
+// eslint-disable-next-line no-unused-vars
+let mousePositionInVolumeBar = 0 //鼠标在音量条内点击的初始位置
+// eslint-disable-next-line no-unused-vars
+let volumeMouseClick = false //鼠标在音量条内是否按下
+let volumeBarVisible = ref(false) //音量条是否显示
+let volumeBarVisibleTimer = null //音量条是否可见定时器
 
 //关闭登录弹窗
 const closePop = (e) => {
@@ -297,6 +317,8 @@ const playOrPause = (val) => {
 const playSong = async (e) => {
   let id = null
   if (e.ar && e.al){
+    //先获取歌词再获取播放地址防止报错
+    await getLyric(e.id)
     song.cover = e.al.picUrl
     song.artist = e.ar
     song.name = e.name
@@ -304,6 +326,8 @@ const playSong = async (e) => {
     id = e.id
   }else{
     id = e
+    //先获取歌词再获取播放地址防止报错
+    await getLyric(id)
     //如果传入的是歌曲id则会获取歌曲相关信息
     axios.get(`${baseUrl}/song/detail?ids=${id}`).then(res => {
       song.cover = res.data.songs[0].al.picUrl
@@ -313,8 +337,6 @@ const playSong = async (e) => {
     })
   }
   clearSongInfo()
-  //先获取歌词再获取播放地址防止报错
-  await getLyric(id)
   axios.get(`${baseUrl}/song/url?id=${id}`).then(res => {
     if (res.data.code === 200){
       song.src = res.data.data[0].url
@@ -562,6 +584,59 @@ const mouseMove = (e) => {
   }
 }
 
+//鼠标在音量条内移动
+const volumeMouseMove = (e) => {
+  if (volumeMouseClick){
+    let temp = mousePositionInVolumeBar-e.clientY
+    volumeValue.value = (tempVolumeValue+temp)>80?80:tempVolumeValue+temp
+    audioRef.value.volume = parseFloat((volumeValue.value/80).toFixed(2))
+  }
+}
+
+//鼠标在音量条上按下
+const volumeMouseDown = (e) => {
+  volumeValue.value = e.target.clientHeight - e.offsetY
+  audioRef.value.volume = volumeValue.value/80
+  tempVolumeValue = volumeValue.value
+  mousePositionInVolumeBar = e.clientY
+  volumeMouseClick = true
+}
+
+//鼠标在音量条上松开
+const volumeMouseUp = () => {
+  volumeMouseClick = false
+}
+
+//鼠标离开音量条
+const volumeMouseOut = () => {
+  volumeMouseClick = false
+}
+
+//是否静音
+const isMuted = () => {
+  if (audioRef.value.muted){
+    audioRef.value.muted = false
+    volumeValue.value = tempVolumeBeforeMuted
+  }else{
+    tempVolumeBeforeMuted = volumeValue.value
+    audioRef.value.muted = true
+    volumeValue.value = 0
+  }
+
+}
+
+//是否显示音量条
+const volumeBarVisibleBeforeFunc = () => {
+  volumeBarVisible.value = true
+  clearTimeout(volumeBarVisibleTimer)
+}
+const volumeBarVisibleAfterFunc = () => {
+  volumeBarVisibleTimer = setTimeout(() => {
+    volumeBarVisible.value = false
+  },200)
+}
+
+
 //监听输入框值，返回建议结果
 watch(() => inputVal.value,(newVal) => {
       if (newVal !== ''){
@@ -608,15 +683,13 @@ onMounted(() => {
     }
     //歌词滚动
     try {
-      if (lyricSum.value < song.lyric?1:song.lyric.length){
         if (audioRef.value.currentTime - song.lyric[lyricSum.value].time <= 1 && audioRef.value.currentTime - song.lyric[lyricSum.value].time >= -0.2){
-          let list = lyricContent.value.children
-          if (song.lyric[lyricSum.value].content){
+          if (song.lyric[lyricSum.value].content && lyricContent){
+            let list = lyricContent.value.children
             lyricContentWrap.value.setScrollTop(list[lyricSum.value].offsetTop-list[lyricSum.value].clientHeight/2-80)
           }
-          lyricSum.value++
+          lyricSum.value = lyricSum.value <= song.lyric.length-1?++lyricSum.value:song.lyric.length-1
         }
-      }
     }catch(err){
       console.log(err)
     }
@@ -632,7 +705,6 @@ onMounted(() => {
   }
   // 错误
   audioRef.value.onerror = () => {
-    playOrPause(true)
   }
 })
 

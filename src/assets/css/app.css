@@ -422,6 +422,101 @@ body{
     position: absolute;
     bottom: 0;
 }
+#preparedSongList{
+    background-color: #363636;
+    width: 400px;
+    height: 450px;
+    position: absolute;
+    top: -450px;
+    transition: linear 0.2s;
+}
+#preparedSLTop{
+    width: 400px;
+    height: 90px;
+    overflow: hidden;
+}
+#preparedSLTop span:nth-child(1){
+    color: #D3D3D3;
+    font-size: 22px;
+    margin-left: 20px;
+    margin-top: 15px;
+    display: block;
+}
+ #preparedSLTop span:nth-child(2){
+     font-size: 10px;
+     color: #555B5B;
+     margin-left: 20px;
+     margin-top: 15px;
+     display: block;
+ }
+#preparedSLTop span:nth-child(3){
+    font-size: 15px;
+    color: #6d75a2;
+    position: absolute;
+    right: 20px;
+    top: 60px;
+    cursor: pointer;
+}
+#preparedSLBottom {
+    width: 400px;
+    height: 359px;
+    overflow: hidden;
+}
+#cutOff{
+    width: 360px;
+    height: 1px;
+    background-color: #3F3F3F;
+    border: none;
+    margin: 0 auto;
+}
+.preparedSongContent{
+    font-size: 13px;
+    position: relative;
+    top: 0;
+}
+.preparedSongContent:nth-child(2n){
+    font-size: 13px;
+    position: relative;
+    top: 0;
+    background-color: #393939;
+}
+.preparedSongContent:hover{
+    background-color: #3D3D3D;
+}
+.el-scrollbar{
+    margin-top: 5px;
+}
+.preparedSongContent div{
+    display: inline-block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    height: 25px;
+    line-height: 25px;
+}
+.preparedSongContent div:nth-child(1){
+    width: 220px;
+}
+.preparedSongContent div:nth-child(2){
+    width: 120px;
+}
+.preparedSongContent div:nth-child(3){
+    width: 60px;
+}
+.preparedSongContent div:nth-child(1) span{
+    color: #D3D3D3;
+    font-size: 13px;
+    margin-left: 20px;
+}
+.preparedSongContent div:nth-child(2) span{
+    color: #8F8F8F;
+    margin-left: 5px;
+}
+.preparedSongContent div:nth-child(3) span{
+    color: #5E5E5E;
+    margin-left: 7px;
+
+}
 
 /*歌曲详情页弹窗*/
 .songMovingWindow{

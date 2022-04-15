@@ -131,7 +131,7 @@
                 <svg-icon name="topArrows" id="cover-arrows"></svg-icon>
               </div>
               <svg-icon name="music" id="music-icon" v-show="!song.cover"></svg-icon>
-              <img :src="song.cover" v-show="song.cover" @mouseenter="coverVisible = true" @mouseleave="coverVisible = false">
+              <img :src="song.cover" v-show="song.cover" @mouseenter="coverVisible = true" @mouseleave="coverVisible = false" alt="">
               <p id="playerBar-left-name">{{song.name}}</p>
               <div id="playBar-left-ar-wrap">
                 <p id="playBar-left-ar" v-for="i in song.artist" :key="i">{{i.name}}&nbsp;&nbsp;</p>
@@ -149,7 +149,7 @@
           </div>
           <p>{{formatTime(audioRef.currentTime)}}</p>
           <div class="playerBar-audioContent-progressBar">
-            <div class="playerBar-audioContent-progressBar-wrap" @mouseenter="enterBar" @mouseleave="leaveBar" @mousedown="mouseDown" @mouseup="mouseUp" @mousemove="mouseMove">
+            <div class="playerBar-audioContent-progressBar-wrap" @mousedown="mouseDown" @mouseup="mouseUp" @mousemove="mouseMove">
               <div class="playerBar-audioContent-progressBar-durationBar" :style="{width:durationBarWidth+'px'}"></div>
             </div>
           </div>
@@ -162,8 +162,30 @@
             <div id="volumeIconBodyBar" :style="{height: volumeValue+'px'}"></div>
           </div>
         </div>
-        <svg-icon name="playlistHeart" id="playlistIcon"></svg-icon>
-        <div></div>
+        <svg-icon name="playlistHeart" id="playlistIcon" @click="preparedSongListRight = preparedSongListRight===0?-400:0"></svg-icon>
+        <div id="preparedSongList" :style="{right:preparedSongListRight+'px'}">
+          <div id="preparedSLTop">
+            <span>当前播放</span>
+            <span>共{{preparedSongList?preparedSongList.length:"--"}}首音乐</span>
+            <span @click="preparedSongList = null">清空列表</span>
+          </div>
+          <div id="cutOff"></div>
+          <div id="preparedSLBottom">
+            <el-scrollbar height="359px">
+              <div class="preparedSongContent" v-for="i in preparedSongList" :key="i" @dblclick="playSong(i.id)">
+                <div>
+                  <span>{{i.name}}</span>
+                </div>
+                <div>
+                  <span v-for="ar in i.ar" :key="ar">{{ar.name}}</span>
+                </div>
+                <div>
+                  <span>{{this.$durationFormat(i.dt)}}</span>
+                </div>
+              </div>
+            </el-scrollbar>
+          </div>
+        </div>
       </div>
 
 <!--        歌曲详情页-->
@@ -172,10 +194,10 @@
 
           <div class="songMovingWindow-top">
             <div class="songMovingWindow-top-pan">
-              <img src="./assets/pics/header.webp" id="header" :style="{transform:headerRotate}">
+              <img src="./assets/pics/header.webp" id="header" :style="{transform:headerRotate}" alt="">
               <div class="songMovingWindow-top-pan-content" :style="{animationPlayState:panRotateState}">
-                <img :src="song.cover" id="vinyl-cover" v-show="song.cover">
-                <img src="./assets/pics/pan.webp" id="vinyl">
+                <img :src="song.cover" id="vinyl-cover" v-show="song.cover" alt="">
+                <img src="./assets/pics/pan.webp" id="vinyl" alt="">
               </div>
             </div>
 
@@ -271,6 +293,7 @@ let mousePositionInVolumeBar = 0 //鼠标在音量条内点击的初始位置
 let volumeMouseClick = false //鼠标在音量条内是否按下
 let volumeBarVisible = ref(false) //音量条是否显示
 let volumeBarVisibleTimer = null //音量条是否可见定时器
+let preparedSongListRight = ref(-400) //待播放列表位置
 
 //关闭登录弹窗
 const closePop = (e) => {
@@ -318,7 +341,7 @@ const playSong = async (e) => {
   let id = null
   if (e.ar && e.al){
     //先获取歌词再获取播放地址防止报错
-    await getLyric(e.id)
+    getLyric(e.id)
     song.cover = e.al.picUrl
     song.artist = e.ar
     song.name = e.name
@@ -327,7 +350,7 @@ const playSong = async (e) => {
   }else{
     id = e
     //先获取歌词再获取播放地址防止报错
-    await getLyric(id)
+    getLyric(id)
     //如果传入的是歌曲id则会获取歌曲相关信息
     axios.get(`${baseUrl}/song/detail?ids=${id}`).then(res => {
       song.cover = res.data.songs[0].al.picUrl
@@ -363,6 +386,9 @@ const playSong = async (e) => {
 
 //播放上一首
 const previousSong = () => {
+  if (!preparedSongList.value){
+    return
+  }
   if (presentSongIndexInPreparedList === 0){
     playSong(preparedSongList.value[preparedSongList.value.length-1].id)
   }else {
@@ -373,6 +399,9 @@ const previousSong = () => {
 
 //播放下一首
 const nextSong = () => {
+  if (!preparedSongList.value){
+    return
+  }
   if (presentSongIndexInPreparedList >= preparedSongList.value.length-1){
     playSong(preparedSongList.value[0].id)
   }else {
@@ -543,15 +572,6 @@ const checkLogoutAgain = async () => {
       })
 }
 
-//鼠标进入进度条
-const enterBar = () => {
-
-}
-
-//鼠标离开进度条
-const leaveBar = () => {
-}
-
 //鼠标在进度条上按下事件
 const mouseDown = (e) => {
   if (audioRef.value.src){
@@ -622,7 +642,6 @@ const isMuted = () => {
     audioRef.value.muted = true
     volumeValue.value = 0
   }
-
 }
 
 //是否显示音量条
@@ -657,6 +676,19 @@ watch(() => inputVal.value,(newVal) => {
       }
     })
 
+//获取到歌词后和当前播放进度对比，动态改变当前歌词位置
+watch(() => song.lyric,(next) => {
+  if (next){
+    lyricSum.value = 0
+      for(let i in song.lyric){
+        if (song.lyric[i].time > audioRef.value.currentTime){
+          lyricSum.value = i
+          break
+        }
+    }
+  }
+})
+
 onMounted(() => {
   getUserProfile()
 
@@ -683,13 +715,13 @@ onMounted(() => {
     }
     //歌词滚动
     try {
-        if (audioRef.value.currentTime - song.lyric[lyricSum.value].time <= 1 && audioRef.value.currentTime - song.lyric[lyricSum.value].time >= -0.2){
+        if (song.lyric && audioRef.value.currentTime - song.lyric[lyricSum.value].time <= 1 && audioRef.value.currentTime - song.lyric[lyricSum.value].time >= -0.2){
           if (song.lyric[lyricSum.value].content && lyricContent){
             let list = lyricContent.value.children
             lyricContentWrap.value.setScrollTop(list[lyricSum.value].offsetTop-list[lyricSum.value].clientHeight/2-80)
           }
           lyricSum.value = lyricSum.value <= song.lyric.length-1?++lyricSum.value:song.lyric.length-1
-        }
+      }
     }catch(err){
       console.log(err)
     }
@@ -700,8 +732,11 @@ onMounted(() => {
   }
   // 音频播放完毕
   audioRef.value.onended = () => {
-    presentSongIndexInPreparedList++
-    playSong(preparedSongList.value[presentSongIndexInPreparedList])
+    if (!preparedSongList.value){
+      return
+    }
+    playOrPause(true)
+    playSong(preparedSongList.value[++presentSongIndexInPreparedList].id)
   }
   // 错误
   audioRef.value.onerror = () => {

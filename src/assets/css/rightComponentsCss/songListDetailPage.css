@@ -179,7 +179,6 @@ body{
     position: absolute;
     height: 100%;
     white-space: nowrap;
-    text-overflow: ellipsis;
     overflow: hidden;
 }
 .detailIndex{

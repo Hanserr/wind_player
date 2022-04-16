@@ -190,7 +190,7 @@
 
 <!--        歌曲详情页-->
       <div class="songMovingWindow" :style="{top:songMovingWindowTop+'px'}">
-        <el-scrollbar height="450px">
+        <el-scrollbar @scroll="infiniteScroll">
 
           <div class="songMovingWindow-top">
             <div class="songMovingWindow-top-pan">
@@ -221,9 +221,42 @@
             </div>
 
           </div>
-          <div class="songMovingWindow-bottom">
-
           </div>
+
+<!--          底部评论区-->
+          <div class="songMovingWindow-bottom" v-if="song.total!==-1" ref="commentsRef">
+            <span id="allCommentsTitle">全部评论({{song.total}})</span>
+            <div class="songHotCommentsContent" v-for="i in song.hotComments" :key="i">
+              <img :src="i.user.avatarUrl" alt="" class="commentsUserAvatar">
+              <div class="songCommentContentTop">
+                <span class="commentsUserName">{{i.user.nickname}}:</span>
+                <span class="commentsContent">{{i.content}}</span>
+                <div class="parentComment" v-if="i.beReplied.length > 0" >
+                  <span>@{{i.beReplied[0].user.nickname}}:</span>
+                  <span>{{i.beReplied[0].content}}</span>
+                </div>
+              </div>
+              <div class="songCommentContentBottom">
+                <span class="commentsPublishTime">{{this.$commentTimeFormat(i.time)}}</span>
+              </div>
+              <div class="commentDivider"></div>
+            </div>
+            <button id="checkMoreHotCommentsButton">更多精彩评论</button>
+            <div class="songCommentContent" v-for="i in song.comments" :key="i">
+              <img :src="i.user.avatarUrl" alt="" class="commentsUserAvatar">
+              <div class="songCommentContentTop">
+                <span class="commentsUserName">{{i.user.nickname}}:</span>
+                <span class="commentsContent">{{i.content}}</span>
+                <div class="parentComment" v-if="i.beReplied.length > 0" >
+                  <span>@{{i.beReplied[0].user.nickname}}:</span>
+                  <span>{{i.beReplied[0].content}}</span>
+                </div>
+              </div>
+              <div class="songCommentContentBottom">
+                <span class="commentsPublishTime">{{this.$commentTimeFormat(i.time)}}</span>
+              </div>
+              <div class="commentDivider"></div>
+            </div>
           </div>
         </el-scrollbar>
       </div>
@@ -253,6 +286,7 @@ let displayUserInfo = ref(false) //展示用户部分信息（vip时间，注销
 let resultListIsVisible = ref(false) //建议歌单是否可见
 let isPlay = ref(false) //是否播放中
 let song = reactive({
+  id:null,
   name:null,
   src:null,
   cover:null,
@@ -261,7 +295,10 @@ let song = reactive({
   duration:null,
   currentTime:null,
   lyric:null, //歌词
-  transUser:null //翻译提供者
+  transUser:null, //翻译提供者
+  total:-1, //评论数
+  hotComments:[],
+  comments:[]
 }) //歌曲信息
 // eslint-disable-next-line no-unused-vars
 let playerTimer = null //播放器载入新歌曲地址后的定时器
@@ -294,6 +331,9 @@ let volumeMouseClick = false //鼠标在音量条内是否按下
 let volumeBarVisible = ref(false) //音量条是否显示
 let volumeBarVisibleTimer = null //音量条是否可见定时器
 let preparedSongListRight = ref(-400) //待播放列表位置
+let commentsOffset = 0 //评论分页偏移量
+let commentsRef = ref(null)//歌曲详情页ref
+let refreshCommentTimer = null //评论刷新定时器
 
 //关闭登录弹窗
 const closePop = (e) => {
@@ -337,8 +377,8 @@ const playOrPause = (val) => {
 }
 
 // params:e 传入的歌曲id或歌曲完整信息
-const playSong = async (e) => {
-  let id = null
+const playSong = (e) => {
+  clearSongInfo()
   if (e.ar && e.al){
     //先获取歌词再获取播放地址防止报错
     getLyric(e.id)
@@ -346,21 +386,20 @@ const playSong = async (e) => {
     song.artist = e.ar
     song.name = e.name
     song.album = e.album
-    id = e.id
+    song.id = e.id
   }else{
-    id = e
+    song.id = e
     //先获取歌词再获取播放地址防止报错
-    getLyric(id)
+    getLyric(song.id)
     //如果传入的是歌曲id则会获取歌曲相关信息
-    axios.get(`${baseUrl}/song/detail?ids=${id}`).then(res => {
+    axios.get(`${baseUrl}/song/detail?ids=${song.id}`).then(res => {
       song.cover = res.data.songs[0].al.picUrl
       song.artist = res.data.songs[0].ar
       song.name = res.data.songs[0].name
       song.album = res.data.songs[0].al
     })
   }
-  clearSongInfo()
-  axios.get(`${baseUrl}/song/url?id=${id}`).then(res => {
+  axios.get(`${baseUrl}/song/url?id=${song.id}`).then(res => {
     if (res.data.code === 200){
       song.src = res.data.data[0].url
       //加个定时器给播放器预留缓冲时间
@@ -422,15 +461,14 @@ const formatTime = (time) => {
 
 //获取用户登陆状态
 const getUserProfile = () => {
-  if (!Cookies.get('MUSIC_U') || !Cookies.get('UID')){
-    return
+  if (Cookies.get('UID') || Cookies.get('MUSIC_U')){
+    let uid = Cookies.get('UID')
+    axios.get(`${baseUrl}/user/detail?uid=${uid}`).then(res => {
+      if (res.data.code === 200){
+        user.value = res.data.profile
+      }
+    })
   }
-  let uid = Cookies.get('UID')
-  axios.get(`${baseUrl}/user/detail?uid=${uid}`).then(res => {
-    if (res.data.code === 200){
-      user.value = res.data.profile
-    }
-  })
 }
 
 //顶部搜索
@@ -540,6 +578,7 @@ const clearSongInfo = () => {
     song[i] = null
   }
   lyricSum.value = 0
+  commentsOffset = 0
 }
 
 //确认是否登出
@@ -561,6 +600,7 @@ const checkLogoutAgain = async () => {
           Cookies.remove('UID')
           user.value = undefined
           displayUserInfo.value = false
+          location.reload()
         }
       })
       }).catch(() => {
@@ -655,6 +695,36 @@ const volumeBarVisibleAfterFunc = () => {
   },200)
 }
 
+//获取评论
+const getComments = async (id) => {
+ await axios.get(`${baseUrl}/comment/music?id=${id}&limit=30&offset=${commentsOffset}`).then( res => {
+    if (res.data.code === 200){
+      song.total = res.data.total
+      song.hotComments = res.data.hotComments
+      if (commentsOffset === 0){
+        song.comments = res.data.comments
+      }else{
+        for (let i in res.data.comments){
+          song.comments.push(res.data.comments[i])
+        }
+      }
+      commentsOffset += 30
+    }
+ })
+}
+
+//歌词懒加载
+let cancel = true
+const infiniteScroll = (e) => {
+  if (commentsRef.value.clientHeight - e.scrollTop < 800 && cancel){
+    cancel = false
+    getComments(song.id)
+    refreshCommentTimer = setTimeout(() => {
+      cancel = true
+    },5000)
+  }
+}
+
 
 //监听输入框值，返回建议结果
 watch(() => inputVal.value,(newVal) => {
@@ -688,6 +758,16 @@ watch(() => song.lyric,(next) => {
     }
   }
 })
+
+//获取评论
+watch(() => songMovingWindowTop.value,(next) => {
+  if (next === 70){
+    getComments(song.id)
+  }
+})
+
+//歌曲评论懒加载
+
 
 onMounted(() => {
   getUserProfile()
@@ -745,6 +825,7 @@ onMounted(() => {
 
 onUnmounted(()=>{
   clearInterval(suggestionTimer)
+  clearTimeout(refreshCommentTimer)
 })
 </script>
 

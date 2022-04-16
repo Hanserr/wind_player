@@ -39,6 +39,11 @@
               <p>{{(index+1).toString().length === 1?'0'+(index+1):(index+1)}}</p>
             </div>
 
+<!--            <div class="songOption">-->
+<!--              <svg-icon name="likeSong" v-if="song.liked"></svg-icon>-->
+<!--              <svg-icon name="unlikeSong" v-if="song.liked"></svg-icon>-->
+<!--            </div>-->
+
             <div class="detailName">
               <p>{{song.name}}</p>
             </div>
@@ -67,6 +72,8 @@
 import {onMounted, ref, watch} from "vue";
 import {useRoute} from "vue-router"
 import axios from "axios"
+import SvgIcon from "@/components/SvgIcon";
+import Cookies from "js-cookie";
 
 const baseUrl = "https://netease-cloud-music-api-beta-lime.vercel.app"
 const route = useRoute()
@@ -74,13 +81,26 @@ const route = useRoute()
 const emits = defineEmits(['songID','tracks'])
 let listDetail = ref()
 let preparedSongList = ref() //待播放歌曲列表
+let userLikedSongList = ref() //用户喜欢的歌曲列表
 
 //获取歌单详情
 const getSongListDetail = (id) => {
-  axios.get(`${baseUrl}/playlist/detail?id=${id}`).then(res => {
-    if (res.data.code === 200){
+  axios.get(`${baseUrl}/playlist/detail?id=${id}`).then(async res => {
+    if (res.data.code === 200) {
       listDetail.value = res.data
       preparedSongList.value = listDetail.value.playlist.tracks
+    }
+  })
+}
+
+//获取用户喜欢的歌曲列表
+const getUserLikedSongList = () => {
+  if (!Cookies.get('UID')){
+    return
+  }
+  axios.get(`${baseUrl}/likelist?uid=${Cookies.get('UID')}`).then(res => {
+    if (res.data.code === 200){
+      userLikedSongList.value = res.data.ids
     }
   })
 }
@@ -101,8 +121,15 @@ watch(() => route.params.id,(next) => {
   getSongListDetail(next)
 })
 
-onMounted(() => {
-  getSongListDetail(route.params.id)
+// watch(() => preparedSongList.value,() => {
+//   for (let s in preparedSongList.value) {
+//     preparedSongList.value[s].liked = userLikedSongList.value.indexOf(preparedSongList.value[s].id)>0
+//   }
+// })
+
+onMounted(async () => {
+  await getUserLikedSongList()
+  await getSongListDetail(route.params.id)
 })
 </script>
 

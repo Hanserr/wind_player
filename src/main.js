@@ -36,6 +36,21 @@ app.config.globalProperties.$durationFormat = (val) => {
     sec = sec < 10?'0'+sec:sec
     return `${min}:${sec}`
 }
+//评论时间转换
+app.config.globalProperties.$commentTimeFormat = (val) => {
+    if (val === null){
+        return ''
+    }else {
+        let date = new Date(val)
+        let y = date.getFullYear()
+        let m = date.getMonth()+1 < 10?'0'+(date.getMonth()+1):date.getMonth()+1
+        let d = date.getDate() < 10?'0'+date.getDate():date.getDate()
+        let H = date.getHours() < 10?'0'+date.getHours():date.getHours()
+        let mm = date.getMinutes() < 10?'0'+date.getMinutes():date.getMinutes()
+        return `${y}年${m}月${d}日 ${H}:${mm}`
+    }
+}
+
 
 app.component('SvgIcon',SvgIcon)
 app.use(ElementPlus)

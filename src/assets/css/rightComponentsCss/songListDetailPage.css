@@ -185,6 +185,12 @@ body{
     width: 30px;
     left: 25px;
 }
+.songOption{
+    width: 25px;
+    height: 30px;
+    left: 60px;
+}
+
 .detailName{
     width: 300px;
     left: 118px;

@@ -308,8 +308,8 @@ const verificatonLogin = (phoneNumber,code) => {
       form.code = ''
     }else if(res.data.code === 200){
       axios.get(`${baseUrl}/login/status`).then(res => {
-        if (res.data.code === 200){
-          Cookies.set('UID',res.data.account.id)
+        if (res.data.data.code === 200){
+          Cookies.set('UID',res.data.data.account.id)
         }
       })
       getUserStatus()

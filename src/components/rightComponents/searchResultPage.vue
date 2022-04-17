@@ -88,8 +88,9 @@ const infiniteScroll = (e) => {
 //监听用户搜索数据的变化
 watch(
     () => route.params.inp,(next) => {
-      if (next !== ''){
-        getResult(route.params.inp)
+      console.log(next)
+      if (next){
+        getResult(next)
       }
     }
 )

@@ -190,7 +190,13 @@
 
 <!--        歌曲详情页-->
       <div class="songMovingWindow" :style="{top:songMovingWindowTop+'px'}">
-        <el-scrollbar @scroll="infiniteScroll">
+<!--        发条评论吧-->
+        <div id="sendAMessage" @click="openCommentAreaToSong">
+          <svg-icon name="sendComment"></svg-icon>
+          <span>写条评论吧</span>
+        </div>
+
+        <el-scrollbar @scroll="infiniteScroll" ref="elInfiniteScroll">
 
           <div class="songMovingWindow-top">
             <div class="songMovingWindow-top-pan">
@@ -224,8 +230,16 @@
           </div>
 
 <!--          底部评论区-->
-          <div class="songMovingWindow-bottom" v-if="song.total!==-1" ref="commentsRef">
-            <span id="allCommentsTitle">全部评论({{song.total}})</span>
+          <div
+              v-loading="true"
+              id="loadingCover"
+              element-loading-text="评论加载中···"
+              element-loading-background="transparent"
+              v-if="!song.total">
+          </div>
+          <div class="songMovingWindow-bottom" ref="commentsRef">
+            <span id="allCommentsTitle" v-show="song.total">全部评论({{song.total}})</span>
+
             <div class="songHotCommentsContent" v-for="i in song.hotComments" :key="i">
               <img :src="i.user.avatarUrl" alt="" class="commentsUserAvatar">
               <div class="songCommentContentTop">
@@ -238,12 +252,18 @@
               </div>
               <div class="songCommentContentBottom">
                 <span class="commentsPublishTime">{{this.$commentTimeFormat(i.time)}}</span>
+                <svg-icon name="thumbUp" class="thumbupComment" v-if="i.liked" @click="i.liked = false;--i.likedCount;isThumbUpComment(i.commentId,1)"></svg-icon>
+                <svg-icon name="unThumbUp" class="thumbupComment" v-if="!i.liked" @click="i.liked = true;++i.likedCount;isThumbUpComment(i.commentId,0)"></svg-icon>
+                <span class="commentsThumbUpCount">{{i.likedCount}}</span>
+                <svg-icon name="sendCommentToSomeone" class="sendCommentToSomeone" @click="openCommentArea(i.commentId,i.user.nickname)"></svg-icon>
               </div>
               <div class="commentDivider"></div>
             </div>
-            <button id="checkMoreHotCommentsButton">更多精彩评论</button>
+
+            <button id="checkMoreHotCommentsButton" v-show="song.total">更多精彩评论</button>
             <div class="songCommentContent" v-for="i in song.comments" :key="i">
               <img :src="i.user.avatarUrl" alt="" class="commentsUserAvatar">
+
               <div class="songCommentContentTop">
                 <span class="commentsUserName">{{i.user.nickname}}:</span>
                 <span class="commentsContent">{{i.content}}</span>
@@ -252,11 +272,18 @@
                   <span>{{i.beReplied[0].content}}</span>
                 </div>
               </div>
+
               <div class="songCommentContentBottom">
                 <span class="commentsPublishTime">{{this.$commentTimeFormat(i.time)}}</span>
+                <svg-icon name="thumbUp" class="thumbupComment" v-if="i.liked" @click="i.liked = false;--i.likedCount;isThumbUpComment(i.commentId,1)"></svg-icon>
+                <svg-icon name="unThumbUp" class="thumbupComment" v-if="!i.liked" @click="i.liked = true;++i.likedCount;isThumbUpComment(i.commentId,0)"></svg-icon>
+                <span class="commentsThumbUpCount">{{i.likedCount}}</span>
+                <svg-icon name="sendCommentToSomeone" class="sendCommentToSomeone" @click="openCommentArea(i.commentId,i.user.nickname)"></svg-icon>
               </div>
+
               <div class="commentDivider"></div>
             </div>
+
           </div>
         </el-scrollbar>
       </div>
@@ -334,6 +361,8 @@ let preparedSongListRight = ref(-400) //待播放列表位置
 let commentsOffset = 0 //评论分页偏移量
 let commentsRef = ref(null)//歌曲详情页ref
 let refreshCommentTimer = null //评论刷新定时器
+let cancel = true //评论懒加载间隔时间段
+let elInfiniteScroll = ref(null) //懒加载滚动条
 
 //关闭登录弹窗
 const closePop = (e) => {
@@ -354,7 +383,7 @@ const searchInpFocus = (val) => {
 
 //获取用户可能搜索的结果
 const searchSuggestion = (val) => {
-  axios.get(baseUrl+`/search/suggest?keywords=${val}`).then(res => {
+  axios.get(`${baseUrl}/search/suggest?keywords=${val}`).then(res => {
     if (res.data.code === 200){
       songSuggestionList.albums = res.data.result.albums
       songSuggestionList.artists = res.data.result.artists
@@ -378,6 +407,7 @@ const playOrPause = (val) => {
 
 // params:e 传入的歌曲id或歌曲完整信息
 const playSong = (e) => {
+  elInfiniteScroll.value.setScrollTop = 0
   clearSongInfo()
   if (e.ar && e.al){
     //先获取歌词再获取播放地址防止报错
@@ -713,8 +743,7 @@ const getComments = async (id) => {
  })
 }
 
-//歌词懒加载
-let cancel = true
+//歌曲评论懒加载
 const infiniteScroll = (e) => {
   if (commentsRef.value.clientHeight - e.scrollTop < 800 && cancel){
     cancel = false
@@ -725,12 +754,66 @@ const infiniteScroll = (e) => {
   }
 }
 
+//点赞或取消点赞评论
+const  isThumbUpComment = (cid,val) => {
+  axios.get(`${baseUrl}/comment/like?id=${song.id}&cid=${cid}&t=${val}&type=0`).then(res => {
+    if (res.data.code !== 200){
+      ElMessage({
+        message:'操作失败，请稍后再试',
+        type:'error'
+      })
+    }
+  })
+}
+
+//回复评论
+const openCommentArea = (cid,targetUser) => {
+  ElMessageBox.prompt('', `评论@${targetUser}`, {
+    confirmButtonText: '发送',
+    cancelButtonText: '取消',
+  }).then(({value}) => {
+    axios.get(`${baseUrl}/comment?t=2&type=0&id=${song.id}&commentId=${cid}&content=${value}`).then(res => {
+      if (res.data.code !== 200){
+        ElMessage({
+          message:'发送失败，请稍后再试',
+          type:'error'
+        })
+      }
+    })
+    ElMessage({
+      type: 'success',
+      message: `发送成功`,
+    })
+  })
+}
+
+//向歌曲发生评论
+const openCommentAreaToSong = () => {
+  ElMessageBox.prompt('', `评论`, {
+    confirmButtonText: '发送',
+    cancelButtonText: '取消',
+  }).then(({value}) => {
+    axios.get(`${baseUrl}/comment?t=2&type=0&id=${song.id}&content=${value}`).then(res => {
+      if (res.data.code !== 200){
+        ElMessage({
+          message:'发送失败，请稍后再试',
+          type:'error'
+        })
+      }
+    })
+    ElMessage({
+      type: 'success',
+      message: `发送成功`,
+    })
+  })
+}
+
 
 //监听输入框值，返回建议结果
 watch(() => inputVal.value,(newVal) => {
       if (newVal !== ''){
         clearInterval(suggestionTimer)
-        suggestionTimer = setInterval(() => {
+        suggestionTimer = setTimeout(() => {
           searchSuggestion(newVal)
           clearInterval(suggestionTimer)
         },300)
@@ -765,9 +848,6 @@ watch(() => songMovingWindowTop.value,(next) => {
     getComments(song.id)
   }
 })
-
-//歌曲评论懒加载
-
 
 onMounted(() => {
   getUserProfile()

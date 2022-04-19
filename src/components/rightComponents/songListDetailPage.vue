@@ -81,11 +81,11 @@ const route = useRoute()
 const emits = defineEmits(['songID','tracks'])
 let listDetail = ref()
 let preparedSongList = ref() //待播放歌曲列表
-let userLikedSongList = ref() //用户喜欢的歌曲列表
+// let userLikedSongList = ref() //用户喜欢的歌曲列表
 
 //获取歌单详情
 const getSongListDetail = (id) => {
-  axios.get(`${baseUrl}/playlist/detail?id=${id}`).then(async res => {
+  axios.get(`${baseUrl}/playlist/detail?id=${id}`).then(res => {
     if (res.data.code === 200) {
       listDetail.value = res.data
       preparedSongList.value = listDetail.value.playlist.tracks
@@ -94,16 +94,16 @@ const getSongListDetail = (id) => {
 }
 
 //获取用户喜欢的歌曲列表
-const getUserLikedSongList = () => {
-  if (!Cookies.get('UID')){
-    return
-  }
-  axios.get(`${baseUrl}/likelist?uid=${Cookies.get('UID')}`).then(res => {
-    if (res.data.code === 200){
-      userLikedSongList.value = res.data.ids
-    }
-  })
-}
+// const getUserLikedSongList = () => {
+//   if (!Cookies.get('UID')){
+//     return
+//   }
+//   axios.get(`${baseUrl}/likelist?uid=${Cookies.get('UID')}`).then(res => {
+//     if (res.data.code === 200){
+//       userLikedSongList.value = res.data.ids
+//     }
+//   })
+// }
 
 //播放歌曲
 const playSong = (id,index) => {
@@ -127,9 +127,9 @@ watch(() => route.params.id,(next) => {
 //   }
 // })
 
-onMounted(async () => {
-  await getUserLikedSongList()
-  await getSongListDetail(route.params.id)
+onMounted(() => {
+  // await getUserLikedSongList()
+  getSongListDetail(route.params.id)
 })
 </script>
 

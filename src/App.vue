@@ -56,10 +56,11 @@
             </p>
           </el-scrollbar>
         </div>
+
 <!--        用户登录-->
         <div class="userProfile">
           <div class="topBar-profile">
-            <el-avatar class="topBar-profile-avatar" :size="35" :src="user?user.avatarUrl:''"></el-avatar>
+           <el-avatar class="topBar-profile-avatar" :size="35" :src="user?user.avatarUrl:''" @click="toEditUserInfoPage"></el-avatar>
           </div>
           <a @click = "popVisible = true" id="topBar-login" v-if="user === undefined">登录</a>
           <p v-if="user !== undefined" id="topBar-nickname" @click="displayUserInfo = !displayUserInfo">{{user.nickname}}</p>
@@ -76,7 +77,7 @@
               <span v-if="user !== undefined" class="topBar-profile-popWindow-numberArea-p1">{{user.followeds}}</span>
               <span class="topBar-profile-popWindow-numberArea-p2">粉丝</span>
             </div>
-            <button>签到</button>
+            <button @click="dailySignin">签到</button>
             <div class="topBar-profile-popWindow-bottomDiv">
               我的会员
               <svg-icon name="arrowsRight" class="topBar-profile-popWindow-svg"></svg-icon>
@@ -506,7 +507,7 @@ const getSearch = (val) => {
   if (val){
     resultListIsVisible.value = false
     movingWindowDown()
-    router.push(`/searchResultPage/${val}`)
+    pushToPage(['/searchResultPage',val])
   }
 }
 
@@ -787,7 +788,7 @@ const openCommentArea = (cid,targetUser) => {
   })
 }
 
-//向歌曲发生评论
+//发送评论
 const openCommentAreaToSong = () => {
   ElMessageBox.prompt('', `评论`, {
     confirmButtonText: '发送',
@@ -808,6 +809,29 @@ const openCommentAreaToSong = () => {
   })
 }
 
+//每日签到
+const dailySignin = () => {
+  if (Cookies.get("signed")){
+    ElMessage({
+      message:"今天已经签到过了哟",
+      type:'success'
+    })
+    return
+  }
+  axios.get(`${baseUrl}/daily_signin`).then(res => {
+    if (res.data.code === 200){
+      Cookies.set('signed','1',{
+        expires:new Date(new Date(new Date().toLocaleDateString()).getTime() +24 * 60 * 60 * 1000 -1)
+      })
+    }
+  })
+}
+
+//跳转至编辑用户界面
+const toEditUserInfoPage = () => {
+  if (!user.value) return
+  router.push("/editUserInfo")
+}
 
 //监听输入框值，返回建议结果
 watch(() => inputVal.value,(newVal) => {
@@ -857,6 +881,8 @@ onMounted(() => {
       onBarMark = false
     }
   })
+
+
   // 加载歌曲时缓冲
   audioRef.value.onprogress = () => {
   }

@@ -1,0 +1,100 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+.editUserInfo{
+    width: 100%;
+    height: 100%;
+}
+.editionPageLeft{
+    height: 100%;
+    width: 350px;
+    position: absolute;
+    top: 0;
+}
+.editionPageRight{
+    height: 100%;
+    width: 570px;
+    position: absolute;
+    left: 350px;
+    top: 0;
+    color: #D5D5D5;
+    font-size: 15px;
+}
+#userAvatar{
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
+    margin-left: 100px;
+    margin-top: 80px;
+}
+#alterAvatar{
+    width: 100px;
+    height: 40px;
+    border-radius: 10px;
+    margin-left: 125px;
+    margin-top: 30px;
+    border: none;
+    background-color: #3d3d3d;
+    color: #D5D5D5;
+    cursor: pointer;
+}
+#alterAvatar:hover{
+    color: #ffffff;
+}
+.editionPageRight p{
+    font-size: 25px;
+    margin-left: 30px;
+}
+#nickName{
+    margin-left: 30px;
+}
+#introduction{
+    margin-left: 30px;
+    position: relative;
+    top: -60px;
+}
+#gender,#birthday,#region{
+    margin-left: 30px;
+}
+#nickNameInput,#introductionInput{
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    background-color: #3d3d3d;
+    margin-left: 5px;
+    color: #D5D5D5;
+}
+#nickNameInput{
+    width: 400px;
+    height: 30px;
+}
+#introductionInput{
+    resize: none;
+    margin-top: 20px;
+}
+.regionSelect{
+    width: 100px;
+    height: 30px;
+    outline: none;
+    margin-top: 20px;
+    background-color: #3d3d3d;
+    color: #D5D5D5;
+    border-radius: 5px;
+    border: none;
+}
+#confirmAltering{
+    width: 150px;
+    height: 40px;
+    border: none;
+    border-radius: 5px;
+    background-color: #3A3A3A;
+    color: #D5D5D5;
+    position: relative;
+    top: 20px;
+    left: 70px;
+    cursor: pointer;
+}
+#confirmAltering:hover{
+    color: #ffffff;
+}

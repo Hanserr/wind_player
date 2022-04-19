@@ -88,7 +88,6 @@ const infiniteScroll = (e) => {
 //监听用户搜索数据的变化
 watch(
     () => route.params.inp,(next) => {
-      console.log(next)
       if (next){
         getResult(next)
       }
@@ -106,6 +105,10 @@ watch(
 )
 onMounted(() => {
   closeList()
+  //由于生命周期的原因第一次跳转时需要在onMounted内获取值
+  if (route.params.inp){
+    getResult(route.params.inp)
+  }
 })
 onUnmounted(() => {
   clearTimeout(markTimer)

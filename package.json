@@ -11,6 +11,7 @@
     "@element-plus/icons-vue": "^1.1.1",
     "axios": "^0.26.1",
     "core-js": "^3.8.3",
+    "cropper": "^4.1.0",
     "css-loader": "^6.7.1",
     "element-plus": "^2.1.2",
     "js-cookie": "^3.0.1",

@@ -5,8 +5,16 @@
      element-loading-background="rgba(0, 0, 0, 0.8)">
 
   <div class="editionPageLeft">
-    <img :src="user.avatarUrl?user.avatarUrl:''" alt="" id="userAvatar">
-    <button id="alterAvatar">修改头像</button>
+    <el-upload
+        action=""
+        class="avatar-uploader"
+        :show-file-list="false"
+        :http-request="alterAvatar">
+      <img v-if="user.avatarUrl" :src="user.avatarUrl" class="avatar"/>
+      <el-icon v-else class="avatar-uploader-icon"><Plus/></el-icon>
+      <div class="avatar-cover" v-show="showUploadingProgress"></div>
+      <el-progress type="circle" :percentage="uploadingProgress" v-show="showUploadingProgress"/>
+    </el-upload>
   </div>
 
   <div class="editionPageRight">
@@ -45,6 +53,7 @@ import {region} from "@/region";
 import {onMounted, reactive, ref, watch} from "vue";
 import axios from "axios";
 import {ElMessage} from "element-plus";
+import { Plus } from '@element-plus/icons-vue';
 
 const baseUrl = "https://netease-cloud-music-api-beta-lime.vercel.app" //地址前缀
 let user = reactive({
@@ -60,6 +69,8 @@ let tempProvince = ref() //临时存放省市数据
 let tempRegion = ref() //市级城市临时数据
 let tempUserRegion = ref() //临时存放用户地区数据
 let loading = ref(false) //加载遮罩
+let uploadingProgress = ref(0) //头像上传进度条
+let showUploadingProgress = ref(false) //展示头像上传进度条
 
 //获取用户信息
 const getUserInfo = () => {
@@ -89,7 +100,7 @@ watch(() => tempProvince.value, next => {
   }
 })
 
-//修改地区
+//修改用户信息
 const alterUserProfile = () => {
   loading.value = true
   if (user.nickname === null){
@@ -125,6 +136,74 @@ const alterUserProfile = () => {
    }
   }).finally(() => {
     loading.value = false
+  })
+}
+
+// 修改头像
+const alterAvatar = async (f) => {
+  const isJPG = f.file.type === 'image/jpeg';
+  const isPNG = f.file.type === 'image/png'
+  const isLt2M = f.file.size / 1024 / 1024 < 2;
+  if (!(isJPG || isPNG)) {
+    ElMessage({
+      message:'只能上传JPG/PNG图像！',
+      type:'warning'
+    })
+    return
+  }
+  if (!isLt2M) {
+    ElMessage({
+      message:'图片大小请限制在2MB内',
+      type:'warning'
+    })
+    return
+  }
+  showUploadingProgress.value = true
+  let formData = new FormData()
+  formData.append('imgFile', f.file)
+  let size = await getImgSize(f.file)
+  size = size.height>size.width?size.width:size.height
+  axios({
+    method: 'post',
+    url: `${baseUrl}/avatar/upload?imgSize=${size}&timestamp=${Date.now()}`,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: formData,
+    onUploadProgress:(progressEvent) => {
+      if (progressEvent.lengthComputable){
+        uploadingProgress.value = Math.ceil((progressEvent.loaded / progressEvent.total) * 100)
+      }
+    }
+  }).then(res => {
+    if (res.data.code === 200){
+      user.avatarUrl = res.data.data.url
+      showUploadingProgress.value = false
+      uploadingProgress.value = 0
+    }else{
+      ElMessage({
+        message:'上传失败',
+        type:'error'
+      })
+    }
+  })
+}
+
+//获取图像尺寸
+const getImgSize = (file) => {
+  return new Promise((resolve) => {
+    let reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = (e) => {
+      let image = new Image()
+      image.src = e.target.result
+      image.onload = () => {
+        resolve({
+          width: image.width,
+          height: image.height,
+        })
+      }
+    }
   })
 }
 

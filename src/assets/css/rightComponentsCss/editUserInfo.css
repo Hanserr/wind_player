@@ -28,17 +28,6 @@ body{
     margin-left: 100px;
     margin-top: 80px;
 }
-#alterAvatar{
-    width: 100px;
-    height: 40px;
-    border-radius: 10px;
-    margin-left: 125px;
-    margin-top: 30px;
-    border: none;
-    background-color: #3d3d3d;
-    color: #D5D5D5;
-    cursor: pointer;
-}
 #alterAvatar:hover{
     color: #ffffff;
 }
@@ -97,4 +86,39 @@ body{
 }
 #confirmAltering:hover{
     color: #ffffff;
+}
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    top: 82px;
+    left: 84px;
+}
+.avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+}
+.avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+}
+.avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+}
+.avatar-cover{
+    width: 178px;
+    height: 178px;
+    background-color: #2b2b2b;
+    position: absolute;
+    border-radius: 5px;
+}
+.el-progress{
+    position: absolute;
 }

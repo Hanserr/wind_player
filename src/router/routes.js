@@ -3,10 +3,11 @@ const searchResultPage = () => import("../components/rightComponents/searchResul
 const homePage = () => import("../components/rightComponents/homePage")
 const songListDetailPage = () => import("../components/rightComponents/songListDetailPage")
 const editUserInfo = () => import("../components/rightComponents/editUserInfo")
+const editSongListInfo = () => import("../components/rightComponents/editSongListInfo")
 
 const routes = [
     {
-        path: '/t',
+        path: '/',
         name: 'homePage',
         component: homePage,
         meta:{
@@ -21,10 +22,16 @@ const routes = [
     {
         path: '/songListDetail/:id',
         name: 'songListDetailPage',
-        component: songListDetailPage
+        component: songListDetailPage,
     },
     {
-        path: '/',
+        path:'/editSongListInfo',
+        name:'editSongListInfo',
+        component: editSongListInfo,
+
+    },
+    {
+        path: '/editUserInfo',
         name: 'editUserInfo',
         component: editUserInfo
     },

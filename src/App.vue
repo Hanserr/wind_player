@@ -304,7 +304,6 @@ import {ElMessage, ElMessageBox} from "element-plus";
 import NavigationBar from "@/components/navigationComponents/navigationBar";
 import Cookies from "js-cookie";
 
-const baseUrl = "https://netease-cloud-music-api-beta-lime.vercel.app" //地址前缀
 let inputVal = ref('') //顶部搜索框变量
 let songSuggestionList = reactive({}) //建议歌单列表
 let suggestionTimer = null //建议歌单列表的定时器
@@ -384,7 +383,7 @@ const searchInpFocus = (val) => {
 
 //获取用户可能搜索的结果
 const searchSuggestion = (val) => {
-  axios.get(`${baseUrl}/search/suggest?keywords=${val}`).then(res => {
+  axios.get(`/search/suggest?keywords=${val}`).then(res => {
     if (res.data.code === 200){
       songSuggestionList.albums = res.data.result.albums
       songSuggestionList.artists = res.data.result.artists
@@ -423,14 +422,14 @@ const playSong = (e) => {
     //先获取歌词再获取播放地址防止报错
     getLyric(song.id)
     //如果传入的是歌曲id则会获取歌曲相关信息
-    axios.get(`${baseUrl}/song/detail?ids=${song.id}`).then(res => {
+    axios.get(`/song/detail?ids=${song.id}`).then(res => {
       song.cover = res.data.songs[0].al.picUrl
       song.artist = res.data.songs[0].ar
       song.name = res.data.songs[0].name
       song.album = res.data.songs[0].al
     })
   }
-  axios.get(`${baseUrl}/song/url?id=${song.id}`).then(res => {
+  axios.get(`/song/url?id=${song.id}`).then(res => {
     if (res.data.code === 200){
       song.src = res.data.data[0].url
       //加个定时器给播放器预留缓冲时间
@@ -494,7 +493,7 @@ const formatTime = (time) => {
 const getUserProfile = () => {
   if (Cookies.get('UID') || Cookies.get('MUSIC_U')){
     let uid = Cookies.get('UID')
-    axios.get(`${baseUrl}/user/detail?uid=${uid}`).then(res => {
+    axios.get(`/user/detail?uid=${uid}`).then(res => {
       if (res.data.code === 200){
         user.value = res.data.profile
       }
@@ -555,7 +554,7 @@ const headerPosition = (val) => {
 
 //获取歌词
 const getLyric = (id) => {
-  axios.get(`${baseUrl}/lyric?id=${id}`).then(res => {
+  axios.get(`/lyric?id=${id}`).then(res => {
     let lyric = (res.data.lrc.lyric).toString().split('\n')
     for (let i in lyric){
       let lyricList = lyric[i].split(']')
@@ -623,7 +622,7 @@ const checkLogoutAgain = async () => {
       cancelButtonText: '取消',
       type: 'warning',
     }).then(() => {
-      axios.get(`${baseUrl}/logout`).then(res => {
+      axios.get(`/logout`).then(res => {
         if (res.data.code === 200){
           Cookies.remove('MUSIC_U')
           Cookies.remove('_remember_me')
@@ -728,7 +727,7 @@ const volumeBarVisibleAfterFunc = () => {
 
 //获取评论
 const getComments = async (id) => {
- await axios.get(`${baseUrl}/comment/music?id=${id}&limit=30&offset=${commentsOffset}`).then( res => {
+ await axios.get(`/comment/music?id=${id}&limit=30&offset=${commentsOffset}`).then( res => {
     if (res.data.code === 200){
       song.total = res.data.total
       song.hotComments = res.data.hotComments
@@ -757,7 +756,7 @@ const infiniteScroll = (e) => {
 
 //点赞或取消点赞评论
 const  isThumbUpComment = (cid,val) => {
-  axios.get(`${baseUrl}/comment/like?id=${song.id}&cid=${cid}&t=${val}&type=0`).then(res => {
+  axios.get(`/comment/like?id=${song.id}&cid=${cid}&t=${val}&type=0`).then(res => {
     if (res.data.code !== 200){
       ElMessage({
         message:'操作失败，请稍后再试',
@@ -773,7 +772,7 @@ const openCommentArea = (cid,targetUser) => {
     confirmButtonText: '发送',
     cancelButtonText: '取消',
   }).then(({value}) => {
-    axios.get(`${baseUrl}/comment?t=2&type=0&id=${song.id}&commentId=${cid}&content=${value}`).then(res => {
+    axios.get(`/comment?t=2&type=0&id=${song.id}&commentId=${cid}&content=${value}`).then(res => {
       if (res.data.code !== 200){
         ElMessage({
           message:'发送失败，请稍后再试',
@@ -794,7 +793,7 @@ const openCommentAreaToSong = () => {
     confirmButtonText: '发送',
     cancelButtonText: '取消',
   }).then(({value}) => {
-    axios.get(`${baseUrl}/comment?t=2&type=0&id=${song.id}&content=${value}`).then(res => {
+    axios.get(`/comment?t=2&type=0&id=${song.id}&content=${value}`).then(res => {
       if (res.data.code !== 200){
         ElMessage({
           message:'发送失败，请稍后再试',
@@ -818,7 +817,7 @@ const dailySignin = () => {
     })
     return
   }
-  axios.get(`${baseUrl}/daily_signin`).then(res => {
+  axios.get(`/daily_signin`).then(res => {
     if (res.data.code === 200){
       Cookies.set('signed','1',{
         expires:new Date(new Date(new Date().toLocaleDateString()).getTime() +24 * 60 * 60 * 1000 -1)

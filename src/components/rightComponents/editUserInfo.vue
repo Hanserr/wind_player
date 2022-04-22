@@ -55,7 +55,6 @@ import axios from "axios";
 import {ElMessage} from "element-plus";
 import { Plus } from '@element-plus/icons-vue';
 
-const baseUrl = "https://netease-cloud-music-api-beta-lime.vercel.app" //地址前缀
 let user = reactive({
   avatarUrl:null,
   nickname:null,
@@ -75,7 +74,7 @@ let showUploadingProgress = ref(false) //展示头像上传进度条
 //获取用户信息
 const getUserInfo = () => {
   if (Cookies.get("UID")){
-    axios.get(`${baseUrl}/user/detail?uid=${Cookies.get("UID")}`).then(res => {
+    axios.get(`/user/detail?uid=${Cookies.get("UID")}`).then(res => {
       if (res.data.code === 200){
         user.nickname = res.data.profile.nickname
         user.avatarUrl = res.data.profile.avatarUrl
@@ -122,7 +121,7 @@ const alterUserProfile = () => {
       break
     }
   }
-  axios.get(`${baseUrl}/user/update?gender=${user.gender}&signature=${user.intro}&city=${user.region}&nickname=${user.nickname}&birthday=${user.birthday}&province=${user.province}`).then(res => {
+  axios.get(`/user/update?gender=${user.gender}&signature=${user.intro}&city=${user.region}&nickname=${user.nickname}&birthday=${user.birthday}&province=${user.province}`).then(res => {
    if (res.data.code === 200){
      ElMessage({
        message:"修改成功!",
@@ -165,7 +164,7 @@ const alterAvatar = async (f) => {
   size = size.height>size.width?size.width:size.height
   axios({
     method: 'post',
-    url: `${baseUrl}/avatar/upload?imgSize=${size}&timestamp=${Date.now()}`,
+    url: `/avatar/upload?imgSize=${size}&timestamp=${Date.now()}`,
     headers: {
       'Content-Type': 'multipart/form-data',
     },

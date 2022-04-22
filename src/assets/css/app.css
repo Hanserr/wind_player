@@ -140,6 +140,7 @@ body{
     background-color: #eebe77;
     margin-left: 12px;
     margin-top: 15px;
+    cursor: pointer;
 }
 .topBar-profile-popWindow{
     width: 240px;

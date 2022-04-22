@@ -14,6 +14,7 @@
         </div>
         <button id="play" @click="playAll">播放全部</button>
         <button id="collect">收藏</button>
+        <svg-icon name="alterSongList" style="position: absolute;top: 105px;left: 240px;cursor:pointer;" @click="toAlterSongList"></svg-icon>
         <p id="playCount">歌曲:{{listDetail.playlist.tracks.length}}</p>
         <p id="songCount">播放:{{listDetail.playlist.playCount.toString().length>=100000000?
             `${Math.floor(listDetail.playlist.playCount/1000000000)}亿`: listDetail.playlist.playCount.toString().length>=5?
@@ -73,37 +74,23 @@ import {onMounted, ref, watch} from "vue";
 import {useRoute} from "vue-router"
 import axios from "axios"
 import SvgIcon from "@/components/SvgIcon";
-import Cookies from "js-cookie";
+import {router} from "@/router/routes";
 
-const baseUrl = "https://netease-cloud-music-api-beta-lime.vercel.app"
 const route = useRoute()
 // eslint-disable-next-line no-undef
 const emits = defineEmits(['songID','tracks'])
 let listDetail = ref()
 let preparedSongList = ref() //待播放歌曲列表
-// let userLikedSongList = ref() //用户喜欢的歌曲列表
 
 //获取歌单详情
 const getSongListDetail = (id) => {
-  axios.get(`${baseUrl}/playlist/detail?id=${id}`).then(res => {
+  axios.get(`/playlist/detail?id=${id}`).then(res => {
     if (res.data.code === 200) {
       listDetail.value = res.data
       preparedSongList.value = listDetail.value.playlist.tracks
     }
   })
 }
-
-//获取用户喜欢的歌曲列表
-// const getUserLikedSongList = () => {
-//   if (!Cookies.get('UID')){
-//     return
-//   }
-//   axios.get(`${baseUrl}/likelist?uid=${Cookies.get('UID')}`).then(res => {
-//     if (res.data.code === 200){
-//       userLikedSongList.value = res.data.ids
-//     }
-//   })
-// }
 
 //播放歌曲
 const playSong = (id,index) => {
@@ -117,18 +104,21 @@ const playAll = () => {
   emits('tracks',[preparedSongList,0])
 }
 
+//跳转至修改歌单页面
+const toAlterSongList = () => {
+  router.push({
+    name:'editSongListInfo',
+    params:{
+      id:route.params.id
+    }
+  })
+}
+
 watch(() => route.params.id,(next) => {
   getSongListDetail(next)
 })
 
-// watch(() => preparedSongList.value,() => {
-//   for (let s in preparedSongList.value) {
-//     preparedSongList.value[s].liked = userLikedSongList.value.indexOf(preparedSongList.value[s].id)>0
-//   }
-// })
-
 onMounted(() => {
-  // await getUserLikedSongList()
   getSongListDetail(route.params.id)
 })
 </script>

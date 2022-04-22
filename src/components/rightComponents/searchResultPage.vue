@@ -33,7 +33,6 @@ import axios from "axios";
 import {onMounted, onUnmounted, reactive, ref, watch} from "vue";
 import {useRoute} from "vue-router"
 
-const baseUrl = "https://netease-cloud-music-api-beta-lime.vercel.app"
 const route = useRoute()
 let resultList = reactive({})
 let loading = ref(false)
@@ -58,7 +57,7 @@ const playSong = (detail) => {
 const getResult = (val) => {
   offset.value = 0
   loading.value = true
-  axios.get(`${baseUrl}/cloudsearch?keywords=${val}&limit=50&offset=${offset.value}`).then(res => {
+  axios.get(`/cloudsearch?keywords=${val}&limit=50&offset=${offset.value}`).then(res => {
     if (res.data.code === 200){
       resultTimeCounter = 0
       resultList.songs = res.data.result.songs
@@ -73,7 +72,7 @@ const infiniteScroll = (e) => {
   if (resultListHeight.value - e.scrollTop <= 150 && mark.value && resultTimeCounter <=3){
     offset.value++
     mark.value = false
-    axios.get(`${baseUrl}/cloudsearch?keywords=${route.params.inp}&limit=50&offset=${offset.value}`).then(res => {
+    axios.get(`/cloudsearch?keywords=${route.params.inp}&limit=50&offset=${offset.value}`).then(res => {
       if(res.data.code === 200){
         resultTimeCounter++
         resultListHeight.value = resultList.songs.length>17?10+(resultList.songs.length-16)*30:10

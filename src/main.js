@@ -12,6 +12,7 @@ const app = createApp(App)
 
 //默认携带cookie
 axios.defaults.withCredentials=true
+axios.defaults.baseURL="https://netease-cloud-music-api-beta-lime.vercel.app"
 
 //时间格式化
 app.config.globalProperties.$dateFormat = (val) => {

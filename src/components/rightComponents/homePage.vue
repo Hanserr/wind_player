@@ -16,7 +16,6 @@ import {onMounted, ref} from "vue";
 import axios from "axios";
 import {ElCarousel} from "element-plus";
 
-const baseUrl = "https://netease-cloud-music-api-beta-lime.vercel.app" //地址前缀
 let bannerList = ref({'':''}) //banner列表
 let beforeBanner = require('../../assets/pics/beforeBanner.webp')
 
@@ -25,7 +24,7 @@ const emits = defineEmits(['songID','toSpecifiedPage'])
 
 //获取首页轮播图
 const getBanner = () => {
-  axios.get(`${baseUrl}/banner`).then(res => {
+  axios.get(`/banner`).then(res => {
     if (res.data.code === 200){
       bannerList.value = res.data.banners
     }

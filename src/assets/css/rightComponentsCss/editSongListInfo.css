@@ -1,0 +1,109 @@
+body{
+    padding: 0;
+    margin: 0;
+}
+.editSongListInfo{
+    width: 100%;
+    height: 100%;
+}
+.leftContent{
+    height: 100%;
+    width: 500px;
+    overflow: hidden;
+    color: #D5D5D5;
+    display: inline-block;
+}
+#title{
+    font-size: 25px;
+    margin-left: 20px;
+    font-weight: bold;
+}
+.leftContent span{
+    margin-left: 20px;
+    font-size: 13px;
+}
+.leftContent span:nth-child(5){
+    position: relative;
+    top: -95px;
+}
+#listNameInp{
+    width: 400px;
+    height: 28px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    background-color: #3d3d3d;
+    margin-left: 5px;
+    color: #D5D5D5;
+}
+#SongListInfoDescription{
+    outline: none;
+    width: 400px;
+    background-color: #3d3d3d;
+    margin-left: 5px;
+    color: #D5D5D5;
+    resize: none;
+    margin-top: 30px;
+    border: none;
+    border-radius: 5px;
+}
+.leftContent button{
+    width: 100px;
+    height: 35px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+}
+.leftContent button:nth-child(8) {
+    background-color: #a0a9d9;
+    color: #22328c;
+    margin-left: 68px;
+}
+.leftContent button:nth-child(9) {
+    background-color: #3d3d3d;
+    color: #D5D5D5;
+    margin-left: 20px;
+}
+.rightContent{
+    width: 420px;
+    height: 100%;
+    display: inline-block;
+    position: absolute;
+    top: 0;
+}
+.songListCover-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    top: 82px;
+    left: 84px;
+}
+.songListCover-uploader .el-upload:hover {
+    border-color: #409EFF;
+}
+.songListCover-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+}
+.cover {
+    width: 178px;
+    height: 178px;
+    display: block;
+}
+.el-progress{
+    position: absolute;
+}
+.songListCover-cover{
+    width: 178px;
+    height: 178px;
+    background-color: #2b2b2b;
+    position: absolute;
+    border-radius: 5px;
+}

@@ -1,0 +1,75 @@
+body{
+    padding: 0;
+    margin: 0;
+}
+.album-songlist-page{
+    width: 100%;
+    height: 500px;
+}
+.albumPageTopTitle{
+    width: 100%;
+    height: 30px;
+    color: #989898;
+    font-size: 13px;
+    line-height: 30px;
+}
+.albumPageBottomContent{
+    width: 100%;
+    height: auto;
+}
+.albumPageBottomContent-bottom{
+    width: 100%;
+    height: 30px;
+    color: #D5D5D5;
+    font-size: 13px;
+}
+.albumPageBottomContent-bottom div{
+    display: inline-block;
+    line-height: 30px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.albumSongIndex{
+    margin-left: 5px;
+    line-height: 30px;
+    position: relative;
+    top: -9px;
+    height: 100%;
+}
+.albumSongTitle{
+    width: 200px;
+    margin-left: 10px;
+    height: 100%;
+}
+.albumSongAr{
+    width: 130px;
+    margin-left: 28px;
+    height: 100%;
+}
+.albumSongName{
+    width: 120px;
+    margin-left: 40px;
+    height: 100%;
+}
+.albumSongDt{
+    width: 60px;
+    margin-left: 30px;
+    height: 100%;
+}
+.albumSongPop{
+    width: 80px;
+    margin-left: 5px;
+    background-color: #404040;
+    height: 10px;
+    position: relative;
+    top: -10px;
+    border-radius: 5px;
+}
+.albumSongPop-content{
+    height: 10px;
+    position: relative;
+    top: -10px;
+    border-radius: 5px;
+    background-color: #484848;
+}

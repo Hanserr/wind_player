@@ -22,7 +22,7 @@ body{
     margin-left: 20px;
     font-size: 13px;
 }
-.leftContent span:nth-child(5){
+#songListInfoDesc{
     position: relative;
     top: -95px;
 }
@@ -55,12 +55,12 @@ body{
     cursor: pointer;
     margin-top: 20px;
 }
-.leftContent button:nth-child(8) {
+#preserveBtn{
     background-color: #a0a9d9;
     color: #22328c;
     margin-left: 68px;
 }
-.leftContent button:nth-child(9) {
+#cancelBtn{
     background-color: #3d3d3d;
     color: #D5D5D5;
     margin-left: 20px;

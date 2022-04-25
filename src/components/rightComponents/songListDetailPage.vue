@@ -1,5 +1,5 @@
 <template>
-  <div class="songListDetailPage" v-if="listDetail !== undefined">
+  <div class="songListDetailPage" v-if="listDetail">
     <div class="songListDetailPage-top">
       <div class="songListDetailPage-top-img">
         <img :src="listDetail.playlist.coverImgUrl">
@@ -54,7 +54,7 @@
             </div>
 
             <div class="detailAl">
-              <p>{{song.al.name}}</p>
+              <p @click="toAlbumDetail(song.al.id)">{{song.al.name}}</p>
             </div>
 
             <div class="detailDuration">
@@ -109,17 +109,22 @@ const toAlterSongList = () => {
   router.push({
     name:'editSongListInfo',
     params:{
-      id:route.params.id
+      editSongListInfoId:route.params.songListId
     }
   })
 }
 
-watch(() => route.params.id,(next) => {
+//跳转至专辑详情页
+const toAlbumDetail = (id) => {
+  router.push(`/albumDetail/songlistPage/${id}`)
+}
+
+watch(() => route.params.songListId,(next) => {
   getSongListDetail(next)
 })
 
 onMounted(() => {
-  getSongListDetail(route.params.id)
+  getSongListDetail(route.params.songListId)
 })
 </script>
 

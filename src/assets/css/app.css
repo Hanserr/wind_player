@@ -63,11 +63,11 @@ body{
 .topBar-search{
     width: 227px;
     height: 27px;
-    position: relative;
+    position: absolute;
     left: 50%;
     margin-left: -114px;
     top: 50%;
-    margin-top: -14px;
+    margin-top: -13px;
 }
 .topBar-search-el-icon{
     top: 0;
@@ -443,7 +443,7 @@ body{
     margin-top: 15px;
     display: block;
 }
- #preparedSLTop span:nth-child(2){
+#preparedSLTop span:nth-child(2){
      font-size: 10px;
      color: #555B5B;
      margin-left: 20px;

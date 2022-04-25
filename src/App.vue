@@ -4,11 +4,11 @@
 
 <!--      左侧导航栏-->
       <div class="playerPageLeft">
-        <navigation-bar @toSpecifiedPage="pushToPage"></navigation-bar>
+        <navigation-bar></navigation-bar>
       </div>
-
 <!--      顶部搜索栏-->
       <div class="playerPageTop" :style="{backgroundColor:playerPageTopBC}">
+        <svg-icon name="logoIcon" style="width: 50px;height: 50px;margin-left: 10px;margin-top: 10px;cursor:pointer;" @click="router.push('/')"></svg-icon>
 <!--        搜索框-->
         <div class="topBar-search">
           <input class="topBar-searchInput" v-model="inputVal" @focus="searchInpFocus(inputVal)" :style="{backgroundColor: topSearchBarBC}">
@@ -102,7 +102,17 @@
 
 <!--      中间结果栏-->
       <div class="searchResult">
-          <router-view @closeResultList="closeResultList" @songID="playSong" @tracks="pushPreparedSongList" @toSpecifiedPage="pushToPage"></router-view>
+          <router-view
+              @closeResultList="closeResultList"
+              @songID="playSong"
+              @tracks="pushPreparedSongList"
+              @toSongListDetailPage="pushToSongListDetailPage"
+              v-slot="{Component}">
+            <keep-alive>
+              <component :is="Component" :key="$route.name" v-if="$route.meta.keepAlive" ></component>
+            </keep-alive>
+            <component :is="Component" :key="$route.name" v-if="!$route.meta.keepAlive" ></component>
+          </router-view>
       </div>
 
 <!--      底部播放栏-->
@@ -415,7 +425,7 @@ const playSong = (e) => {
     song.cover = e.al.picUrl
     song.artist = e.ar
     song.name = e.name
-    song.album = e.album
+    song.album = e.al
     song.id = e.id
   }else{
     song.id = e
@@ -506,18 +516,15 @@ const getSearch = (val) => {
   if (val){
     resultListIsVisible.value = false
     movingWindowDown()
-    pushToPage(['/searchResultPage',val])
+    router.push({
+      name:'searchResultPage',
+      params:{
+        id:val
+      }
+    })
   }
 }
 
-//跳转到指定页
-const pushToPage = (e) => {
-  if (e[1]){
-    router.push(`${e[0]}/${e[1]}`)
-  }else {
-    router.push(e[0])
-  }
-}
 
 //获取待播放列表
 const pushPreparedSongList = (e) => {

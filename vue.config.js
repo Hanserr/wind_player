@@ -20,8 +20,6 @@ module.exports = defineConfig({
     module[
         rules[
             {test:/\.vue$/,use:'vue-loader'}
-            // {test:/\.js$/,use:'babel-loader'}
-
             ]
         ]
 )

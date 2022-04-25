@@ -1,0 +1,20 @@
+body{
+    padding: 0;
+    margin: 0;
+}
+.album-info-page{
+    overflow: hidden;
+    width: 760px;
+    height: auto;
+}
+.album-info-page p{
+    color: #D5D5D5;
+    font-size: 18px;
+}
+.album-info-page span{
+    text-indent: 2em;
+    color: #D5D5D5;
+    font-size: 15px;
+    display: inline-block;
+    line-height: 25px;
+}

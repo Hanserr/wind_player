@@ -3,13 +3,13 @@
   <div class="leftContent">
     <p id="title">编辑歌单信息</p>
     <span>歌单名:</span>
-    <input type="text" id="listNameInp" v-model="songList.name" v-if="songList.name">
+    <input type="text" id="listNameInp" v-model="songList.name">
     <br>
-    <span>简&emsp;介:</span>
-    <textarea id="SongListInfoDescription" rows="7" v-model="songList.description" v-if="songList.description"></textarea>
+    <span id="songListInfoDesc">简&emsp;介:</span>
+    <textarea id="SongListInfoDescription" rows="7" v-model="songList.description"></textarea>
     <br>
-    <button @click="alterSongListInfo">保存</button>
-    <button @click="$router.go(-1)">取消</button>
+    <button @click="alterSongListInfo" id="preserveBtn">保存</button>
+    <button @click="$router.go(-1)" id="cancelBtn">取消</button>
   </div>
   <div class="rightContent">
     <el-upload
@@ -97,7 +97,7 @@ const alterSongListCover = async (f) => {
   size = size.height>size.width?size.width:size.height
   axios({
     method: 'post',
-    url: `/avatar/upload?imgSize=${size}&timestamp=${Date.now()}`,
+    url: `/playlist/cover/update?id=${songList.id}&imgSize=${size}&timestamp=${Date.now()}`,
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -140,8 +140,8 @@ const getImgSize = (file) => {
 }
 
 onMounted(() => {
-  songList.id = route.params.id
-  getSongListInfo(route.params.id)
+  songList.id = route.params.editSongListInfoId
+  getSongListInfo(route.params.editSongListInfoId)
 })
 </script>
 

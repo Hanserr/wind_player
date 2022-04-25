@@ -1,0 +1,87 @@
+body{
+    padding: 0;
+    margin: 0;
+}
+.albumDetailPage{
+    width: 920px;
+    height: 100%;
+}
+.albumDetailPage-top{
+    width: 920px;
+    height: 200px;
+}
+.albumDetailPage-top-rightInfo{
+    width: 620px;
+    height: 200px;
+    float: right;
+}
+#albumCover{
+    width: 180px;
+    height: 180px;
+    background-color: #D5D5D5;
+    border-radius: 5px;
+    margin-left: 80px;
+    margin-top: 10px;
+}
+#albumTitle{
+    color: #df3c3c;
+    border: 1px solid #df3c3c;
+    position: relative;
+    top: 0;
+    left: 10px;
+}
+#albumName{
+    font-size: 30px;
+    color: #D5D5D5;
+    position: relative;
+    left: 30px;
+    top: 10px;
+    white-space: nowrap;
+    display: inline-block;
+    width: 500px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#playAll,#collectAlbum{
+    width: 100px;
+    height: 40px;
+    border: none;
+    border-radius: 20px;
+    background-color: #df3c3c;
+    font-size: 16px;
+    color: #D5D5D5;
+    position: relative;
+    top: 15px;
+    left: 10px;
+    cursor: pointer;
+}
+#collectAlbum{
+    border: 1px solid #D5D5D5;
+    background-color: transparent;
+    left: 20px;
+}
+.albumArAndTi{
+    font-size: 13px;
+    color: #D5D5D5;
+    position: relative;
+    top: 25px;
+    left: 10px;
+}
+.albumCreator{
+    font-size: 13px;
+    color: #a0a9d9;
+    position: relative;
+    top: 25px;
+    left: 10px;
+}
+.albumDetailPage-bottom{
+    width: 760px;
+    height: auto;
+    margin: 20px auto;
+}
+.albumDetailPage-bottom-title{
+    font-size: 15px;
+    color: #D5D5D5;
+    margin-left: 10px;
+    cursor: pointer;
+}

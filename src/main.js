@@ -43,10 +43,6 @@ app.config.globalProperties.$commentTimeFormat = (val) => {
         return ''
     }else {
         let date = new Date(val)
-        let temp = new Date().getTime() - date.getTime()
-        if (temp < 60*60*1000){
-            return `${temp/1000}分钟前`
-        }
         let y = date.getFullYear()
         let m = date.getMonth()+1 < 10?'0'+(date.getMonth()+1):date.getMonth()+1
         let d = date.getDate() < 10?'0'+date.getDate():date.getDate()

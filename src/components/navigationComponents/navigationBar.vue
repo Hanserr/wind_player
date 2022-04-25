@@ -40,10 +40,10 @@ import {onMounted, ref} from "vue";
 import SvgIcon from "@/components/SvgIcon";
 import axios from "axios";
 import Cookies from "js-cookie";
+import {router} from "@/router/routes";
 
 const baseUrl = "https://netease-cloud-music-api-beta-lime.vercel.app" //地址前缀
 // eslint-disable-next-line no-undef
-const emits = defineEmits(['toSpecifiedPage'])
 let createdSongListIsFold = ref(true) //创建的歌单列表是否折叠
 let collectedSongIsFold = ref(true) //收藏的歌单是否折叠
 let createdSongList = ref() //创建的歌单列表
@@ -80,12 +80,17 @@ const classifySongList = (list) => {
 
 //跳转到歌单详情页
 const toSongListPage = (id) => {
-  emits('toSpecifiedPage',['/songListDetail',id])
+  router.push({
+    name:'songListDetailPage',
+    params:{
+      songListId:id
+    }
+  })
 }
 
 //跳转到首页
 const toHome = () => {
-  emits('toSpecifiedPage','/')
+  router.push('/')
 }
 
 onMounted(() => {

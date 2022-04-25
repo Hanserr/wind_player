@@ -90,8 +90,7 @@ watch(
       if (next){
         getResult(next)
       }
-    }
-)
+    })
 watch(
     () => mark.value, (next) => {
       if (!next){
@@ -100,13 +99,13 @@ watch(
           clearTimeout(markTimer)
         },1000)
       }
-}
-)
+})
+
 onMounted(() => {
   closeList()
   //由于生命周期的原因第一次跳转时需要在onMounted内获取值
-  if (route.params.inp){
-    getResult(route.params.inp)
+  if (route.params.id){
+    getResult(route.params.id)
   }
 })
 onUnmounted(() => {

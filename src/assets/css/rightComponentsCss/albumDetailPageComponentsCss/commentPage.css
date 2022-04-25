@@ -1,0 +1,78 @@
+body{
+    padding: 0;
+    margin: 0;
+}
+.album-comment-page{
+    width: 760px;
+    height: auto;
+}
+.album-comment-page textarea{
+    resize: none;
+    border: none;
+    width: 760px;
+    height: 100px;
+    border-radius: 10px;
+    margin-top: 10px;
+    background-color: #383838;
+    outline: none;
+}
+#sendAlbumComment{
+    width: 100px;
+    height: 30px;
+    color: #D5D5D5;
+    float: right;
+    background-color: transparent;
+    border-radius: 15px;
+    border: 1px solid #D5D5D5;
+    margin-top: 5px;
+    cursor: pointer;
+}
+.albumCommentContent{
+    width: 760px;
+    height: auto;
+    margin-top: 40px;
+}
+.albumCommentContent-son{
+    width: 760px;
+    height: auto;
+    margin-top: 10px;
+}
+.albumCommentUserInfo{
+    width: 700px;
+    height: auto;
+    position: relative;
+    top: -45px;
+    left: 50px;
+    font-size: 13px;
+    margin-bottom: -20px;
+}
+.albumCommentUserAvatar{
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    margin-top: 5px;
+    margin-left: 5px;
+}
+.albumCommentUserNickname{
+    color: #a0a9d9;
+}
+.albumCommentUserComment{
+    color: #D5D5D5;
+}
+.albumCommentUserTime{
+    color: #666660;
+    font-size: 12px;
+    position: relative;
+    left: 50px;
+}
+.albumCommentsDivider{
+    width: 750px;
+    height: 1px;
+    border: none;
+    background-color: #343434;
+}
+.albumThumbupComment{
+    position: relative;
+    left: 600px;
+    cursor: pointer;
+}

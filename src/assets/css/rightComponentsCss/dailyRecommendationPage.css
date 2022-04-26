@@ -1,0 +1,136 @@
+body{
+    padding: 0;
+    margin: 0;
+}
+.dailyRecommendation{
+    width: 920px;
+    height: 100%;
+}
+.dailyRecommendation-top{
+    width: 100%;
+    height: 180px;
+}
+#recCalender{
+    width: 130px;
+    height: 130px;
+    margin-left: 25px;
+    position: relative;
+    left: -50px;
+}
+.dailyRecommendation-top span{
+    color: #D5D5D5;
+    position: relative;
+}
+.dailyRecommendation-top span:nth-child(1){
+    font-size: 40px;
+    top: -20px;
+    left: 65px;
+    color: #EC4141;
+    font-weight: bold;
+}
+.dailyRecommendation-top span:nth-child(3){
+    font-size: 25px;
+    top: -60px;
+    left: -40px;
+}
+.dailyRecommendation-top span:nth-child(4){
+    font-size: 15px;
+    top: -30px;
+    left: -190px;
+}
+.dailyRecommendation-top button{
+    border: none;
+    border-radius: 20px;
+    width: 120px;
+    height: 35px;
+    font-size: 17px;
+    color: #eeeeee;
+    cursor: pointer;
+    display: block;
+}
+.dailyRecommendation-top button:nth-child(5) {
+    background-color: #EC4141;
+    margin-left: 30px;
+}
+.dailyRecommendation-top button:nth-child(6) {
+    background-color: transparent;
+    border: 1px solid #eeeeee;
+    margin-left: 180px;
+    margin-top: -35px;
+}
+.dailyRecommendation-bottom{
+    width: 100%;
+    height: auto;
+}
+
+.dailyRecommendationPageTopTitle{
+    width: 100%;
+    height: 30px;
+    color: #989898;
+    font-size: 13px;
+    line-height: 30px;
+
+}
+.dailyRecommendationPageBottomContent{
+    width: 900px;
+    height: auto;
+    margin: 0 auto;
+}
+.dailyRecommendationPageBottomContent-bottom{
+    width: 100%;
+    height: 30px;
+    color: #D5D5D5;
+    font-size: 13px;
+}
+.dailyRecommendationPageBottomContent-bottom div{
+    display: inline-block;
+    line-height: 30px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.dailyRecommendationSongIndex{
+    margin-left: 5px;
+    line-height: 30px;
+    position: relative;
+    top: -9px;
+    height: 100%;
+}
+.dailyRecommendationSongTitle{
+    width: 200px;
+    margin-left: 30px;
+    height: 100%;
+}
+.dailyRecommendationSongAr{
+    width: 160px;
+    margin-left: 26px;
+    height: 100%;
+
+}
+.dailyRecommendationSongName{
+    width: 130px;
+    margin-left: 48px;
+    height: 100%;
+
+}
+.dailyRecommendationSongDt{
+    width: 60px;
+    margin-left: 35px;
+    height: 100%;
+}
+.dailyRecommendationSongPop{
+    width: 80px;
+    margin-left: 45px;
+    background-color: #404040;
+    height: 10px;
+    position: relative;
+    top: -10px;
+    border-radius: 5px;
+}
+.dailyRecommendationSongPop-content{
+    height: 10px;
+    position: relative;
+    top: -10px;
+    border-radius: 5px;
+    background-color: #484848;
+}

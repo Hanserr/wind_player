@@ -1,0 +1,78 @@
+<template>
+  <div class="dailyRecommendation">
+    <el-scrollbar>
+      <div class="dailyRecommendation-top">
+        <span>{{new Date().getDate()}}</span>
+        <svg-icon name="calender" id="recCalender"></svg-icon>
+        <span>每日音乐推荐</span>
+        <span>根据你的听歌风格生成的歌单，每日6点刷新</span>
+        <button @click="playAll">播放全部</button>
+        <button>收藏</button>
+      </div>
+      <div class="dailyRecommendation-bottom">
+        <div class="dailyRecommendationPageTopTitle">
+          <span style="margin-left: 60px">标题</span>
+          <span style="margin-left: 200px">歌手</span>
+          <span style="margin-left: 180px">专辑</span>
+          <span style="margin-left: 140px">时长</span>
+          <span style="margin-left: 100px">热度</span>
+        </div>
+        <div class="dailyRecommendationPageBottomContent">
+          <div v-for="(i,index) in dailyList" :key="i"  class="dailyRecommendationPageBottomContent-bottom" @dblclick="playMusic(i.id)">
+            <span class="dailyRecommendationSongIndex">{{(index+1).toString().length<2?"0"+(index+1):index+1}}</span>
+            <div class="dailyRecommendationSongTitle"><span>{{i.name}}</span></div>
+            <div class="dailyRecommendationSongAr"><span v-for="ar in i.ar" :key="ar">{{ar.name}}&nbsp;&nbsp;</span></div>
+            <div class="dailyRecommendationSongName"><span>{{i.al.name}}</span></div>
+            <div class="dailyRecommendationSongDt"><span>{{this.$durationFormat(i.dt)}}</span></div>
+            <div class="dailyRecommendationSongPop">
+              <div class="dailyRecommendationSongPop-content" :style="{width:i.pop+'%'}"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </el-scrollbar>
+  </div>
+</template>
+
+<script setup>
+import {onMounted,ref} from "vue";
+import axios from "axios";
+import {ElMessage} from "element-plus";
+import SvgIcon from "@/components/SvgIcon";
+
+// eslint-disable-next-line no-undef
+let emits = defineEmits(['songID','tracks'])
+let dailyList = ref() //日推歌单
+
+//获取日推歌曲
+const getDailyRecommendSongs = () => {
+  axios.get(`/recommend/songs`).then(res => {
+    if (res.data.code === 200){
+      dailyList.value = res.data.data.dailySongs
+    }else {
+      ElMessage({
+        message:'获取数据失败',
+        type:'error'
+      })
+    }
+  })
+}
+
+//播放音乐
+const playMusic = (id) => {
+  emits('songID',id)
+}
+
+//播放当前歌单全部歌曲
+const playAll = () => {
+  emits('songID',dailyList.value[0].id)
+  emits('tracks',[dailyList,0])
+}
+
+onMounted(() => {
+  getDailyRecommendSongs()
+})
+</script>
+
+<style src="../../assets/css/rightComponentsCss/dailyRecommendationPage.css" scoped>
+</style>

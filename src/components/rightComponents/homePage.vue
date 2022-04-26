@@ -35,7 +35,7 @@ let beforeBanner = require('../../assets/pics/beforeBanner.webp') //banner未加
 let recommendSongs = ref([]) //日推歌曲
 let cover = require("../../assets/pics/cover.webp") //日推封面
 // eslint-disable-next-line no-undef
-const emits = defineEmits(['songID','toSongListDetailPage'])
+const emits = defineEmits(['songID'])
 
 //获取首页轮播图
 const getBanner = () => {
@@ -53,24 +53,10 @@ const getBannerSong = (item) => {
   } else if(item.targetType === 10){
     router.push(`/albumDetail/songlistPage/${item.targetId}`)
   }else if (item.targetType === 1000){
-    router.push({
-      name:'songListDetailPage',
-      params:{
-        songListId:item.targetId
-      }
-    })
+    toSongListDetail(item.targetId)
   }else if (item.targetType === 3000){
     window.open(item.url,'_blank')
   }
-}
-
-//获取日推歌曲
-const getDailyRecommendSongs = () => {
-  axios.get(`/recommend/songs`).then(res => {
-    if (res.data.code === 200){
-      recommendSongs.value.push(res.data.data.dailySongs)
-    }
-  })
 }
 
 //获取日推歌单
@@ -95,8 +81,15 @@ const getDailyRecommendSongLists = () => {
 //跳转至歌单详情页
 const toSongListDetail = (id) => {
   if (id !== -1 && id !== ''){
-    emits('toSongListDetailPage',id)
-}
+    router.push({
+      name:'songListDetailPage',
+      params:{
+        songListId:id
+      }
+    })
+}else if(id === -1){
+    router.push('/dailyRecommendation')
+  }
 }
 
 onMounted(() => {

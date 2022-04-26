@@ -1,19 +1,10 @@
 import {createRouter,createWebHistory} from "vue-router";
-const searchResultPage = () => import("../components/rightComponents/searchResultPage")
-const homePage = () => import("../components/rightComponents/homePage")
-const songListDetailPage = () => import("../components/rightComponents/songListDetailPage")
-const editUserInfo = () => import("../components/rightComponents/editUserInfo")
-const editSongListInfo = () => import("../components/rightComponents/editSongListInfo")
-const albumDetailPage = () => import("../components/rightComponents/albumDetailPage")
-const commentPage = () => import("../components/rightComponents/albumDetailPageComponents/commentPage")
-const songlistPage = () => import("../components/rightComponents/albumDetailPageComponents/songlistPage")
-const infoPage = () => import("../components/rightComponents/albumDetailPageComponents/infoPage")
 
 const routes = [
     {
         path: '/',
         name: 'homePage',
-        component: homePage,
+        component: () => import("../components/rightComponents/homePage"),
         meta:{
             keepAlive:true
         }
@@ -21,7 +12,7 @@ const routes = [
     {
         path: '/searchResultPage',
         name: 'searchResultPage',
-        component: searchResultPage,
+        component: () => import("../components/rightComponents/searchResultPage"),
         meta: {
             keepAlive: false
         },
@@ -29,7 +20,7 @@ const routes = [
     {
         path: '/songListDetail',
         name: 'songListDetailPage',
-        component: songListDetailPage,
+        component: () => import("../components/rightComponents/songListDetailPage"),
         meta:{
             keepAlive:true
         }
@@ -37,7 +28,7 @@ const routes = [
     {
         path:'/editSongListInfo',
         name:'editSongListInfo',
-        component: editSongListInfo,
+        component: () => import("../components/rightComponents/editSongListInfo"),
         meta: {
             keepAlive: false
         },
@@ -45,7 +36,7 @@ const routes = [
     {
         path: '/editUserInfo',
         name: 'editUserInfo',
-        component: editUserInfo,
+        component: () => import("../components/rightComponents/editUserInfo"),
         meta: {
             keepAlive: false
         },
@@ -53,26 +44,31 @@ const routes = [
     {
         path: '/albumDetail',
         name: 'albumDetailPage',
-        component: albumDetailPage,
+        component: () => import("../components/rightComponents/albumDetailPage"),
         redirect:'/albumDetail/songlistPage/:id',
         children:[
             {
                 path:'songlistPage/:id',
-                name:songlistPage,
-                component: songlistPage
+                name:'songlistPage',
+                component: () => import("../components/rightComponents/albumDetailPageComponents/songlistPage")
             },
             {
                 path:'commentPage/:id',
-                name:commentPage,
-                component: commentPage
+                name:'commentPage',
+                component: () => import("../components/rightComponents/albumDetailPageComponents/commentPage")
             },
             {
                 path:'infoPage/:id',
-                name:infoPage,
-                component: infoPage
+                name:'infoPage',
+                component: () => import("../components/rightComponents/albumDetailPageComponents/infoPage")
             },
         ],
     },
+    {
+        path: '/dailyRecommendation',
+        name: 'dailyRecommendationPage',
+        component: () => import("../components/rightComponents/dailyRecommendationPage")
+    }
 ]
 
 export const router = createRouter({

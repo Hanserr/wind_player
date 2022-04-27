@@ -13,8 +13,8 @@
           <p id="creationTime">{{this.$dateFormat(listDetail.playlist.createTime)}}创建</p>
         </div>
         <button id="play" @click="playAll">播放全部</button>
-        <button id="collect">收藏</button>
-        <svg-icon name="alterSongList" style="position: absolute;top: 105px;left: 240px;cursor:pointer;" @click="toAlterSongList"></svg-icon>
+        <button id="collect" @click="collectSongList" :disabled="!canCollect" :style="{backgroundColor:canCollect?'transparent':'#383838'}">{{hadCollected?'已收藏':'收藏'}}</button>
+        <svg-icon name="alterSongList" style="position: absolute;top: 105px;left: 240px;cursor:pointer;" @click="toAlterSongList" v-show="!canCollect"></svg-icon>
         <p id="playCount">歌曲:{{listDetail.playlist.tracks.length}}</p>
         <p id="songCount">播放:{{listDetail.playlist.playCount.toString().length>=100000000?
             `${Math.floor(listDetail.playlist.playCount/1000000000)}亿`: listDetail.playlist.playCount.toString().length>=5?
@@ -75,21 +75,25 @@ import {useRoute} from "vue-router"
 import axios from "axios"
 import SvgIcon from "@/components/SvgIcon";
 import {router} from "@/router/routes";
+import Cookies from "js-cookie";
 
 const route = useRoute()
 // eslint-disable-next-line no-undef
 const emits = defineEmits(['songID','tracks'])
 let listDetail = ref()
 let preparedSongList = ref() //待播放歌曲列表
+let canCollect = ref(true) //是否可以收藏
+let hadCollected = ref(true) //是否已收藏
 
 //获取歌单详情
 const getSongListDetail = (id) => {
   axios.get(`/playlist/detail?id=${id}`).then(res => {
     if (res.data.code === 200) {
       listDetail.value = res.data
-      preparedSongList.value = listDetail.value.playlist.tracks
-    }
-  })
+      canCollect.value = res.data.playlist.userId !== parseInt(Cookies.get('UID'))
+      hadCollected.value = res.data.playlist.subscribed
+  }
+})
 }
 
 //播放歌曲
@@ -113,6 +117,15 @@ const toAlterSongList = () => {
     }
   })
 }
+
+//收藏歌单
+const collectSongList = () => {
+  hadCollected.value = !hadCollected.value
+  axios.get(`/playlist/subscribe?t=${hadCollected.value?1:2}&id=${route.params.songListId}`).then(res => {
+    console.log(res.data)
+  })
+}
+
 
 //跳转至专辑详情页
 const toAlbumDetail = (id) => {

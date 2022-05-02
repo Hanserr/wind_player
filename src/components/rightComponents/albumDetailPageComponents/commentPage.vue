@@ -43,8 +43,8 @@ const getComments = (id) => {
     axios.get(`/comment/new?type=3&id=${id}&sortType=2&pageNo=${presentPageNo}`).then(res => {
       if (res.data.code === 200){
         ++presentPageNo
-        for(let i in res.data.data.comments){
-          commentsList.value.push(res.data.data.comments[i])
+        for(let i of res.data.data.comments){
+          commentsList.value.push(i)
         }
         console.log(res.data)
       }else{

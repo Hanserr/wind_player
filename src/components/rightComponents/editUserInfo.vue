@@ -49,7 +49,7 @@
 
 <script setup>
 import Cookies from "js-cookie";
-import {region} from "@/region";
+import {region} from "@/tools/region";
 import {onMounted, reactive, ref, watch} from "vue";
 import axios from "axios";
 import {ElMessage} from "element-plus";
@@ -90,10 +90,10 @@ const getUserInfo = () => {
 
 //动态改变当前市级地区数据
 watch(() => tempProvince.value, next => {
-  for (let i in region){
-    if (region[i][1] === next){
-      tempProvince.value = region[i][1]
-      tempRegion.value = region[i][2]
+  for (let i of region){
+    if (i[1] === next){
+      tempProvince.value = i[1]
+      tempRegion.value = i[2]
       break
     }
   }
@@ -109,11 +109,11 @@ const alterUserProfile = () => {
     })
     return
   }
-  for (let i in region){
-    if (region[i][1] === tempProvince.value){
-      user.province = region[i][0]
-      for (let a in region[i][2]){
-        if (tempUserRegion.value === region[i][2][a]){
+  for (let i of region){
+    if( i[1] === tempProvince.value){
+      user.province = i[0]
+      for (let a in i[2]){
+        if (tempUserRegion.value === i[2][a]){
           user.region = parseInt(a)
           break
         }

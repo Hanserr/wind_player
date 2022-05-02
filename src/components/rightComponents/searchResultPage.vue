@@ -76,8 +76,8 @@ const infiniteScroll = (e) => {
       if(res.data.code === 200){
         resultTimeCounter++
         resultListHeight.value = resultList.songs.length>17?10+(resultList.songs.length-16)*30:10
-        for (let item in res.data.result.songs){
-          resultList.songs.push(res.data.result.songs[item])
+        for (let item of res.data.result.songs){
+          resultList.songs.push(item)
         }
       }
     })

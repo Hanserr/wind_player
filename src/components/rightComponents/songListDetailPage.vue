@@ -1,5 +1,5 @@
 <template>
-  <div class="songListDetailPage" v-if="listDetail">
+  <div class="songListDetailPage" v-if="listDetail" v-loading="loading">
     <div class="songListDetailPage-top">
       <div class="songListDetailPage-top-img">
         <img :src="listDetail.playlist.coverImgUrl">
@@ -84,16 +84,20 @@ let listDetail = ref()
 let preparedSongList = ref() //待播放歌曲列表
 let canCollect = ref(true) //是否可以收藏
 let hadCollected = ref(true) //是否已收藏
+let loading = ref(false) //遮罩
 
 //获取歌单详情
 const getSongListDetail = (id) => {
+  loading.value = true
   axios.get(`/playlist/detail?id=${id}`).then(res => {
     if (res.data.code === 200) {
       listDetail.value = res.data
       canCollect.value = res.data.playlist.userId !== parseInt(Cookies.get('UID'))
       hadCollected.value = res.data.playlist.subscribed
   }
-})
+}).finally(() => {
+  loading.value = false
+  })
 }
 
 //播放歌曲

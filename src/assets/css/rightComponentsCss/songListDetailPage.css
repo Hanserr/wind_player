@@ -39,12 +39,16 @@ body{
     top: 10px;
 }
 #listName{
+    width: 670px;
     position: absolute;
     left: 45px;
     font-size: 25px;
     top: 0;
     line-height: 25px;
     color: #dcdcdc;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 #avatar{
     width: 30px;

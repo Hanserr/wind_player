@@ -15,28 +15,35 @@ body{
     height: 130px;
     margin-left: 25px;
     position: relative;
-    left: -50px;
+    left: 0;
 }
 .dailyRecommendation-top span{
     color: #D5D5D5;
     position: relative;
 }
+.dailyRecommendation-top div:nth-child(1){
+    width: 70px;
+    height: 40px;
+    position: absolute;
+    top: 70px;
+    left: 55px;
+    text-align: center;
+}
 .dailyRecommendation-top span:nth-child(1){
     font-size: 40px;
-    top: -20px;
-    left: 65px;
     color: #EC4141;
     font-weight: bold;
+    top: -5px;
 }
 .dailyRecommendation-top span:nth-child(3){
     font-size: 25px;
     top: -60px;
-    left: -40px;
+    left: 0;
 }
 .dailyRecommendation-top span:nth-child(4){
     font-size: 15px;
     top: -30px;
-    left: -190px;
+    left: -150px;
 }
 .dailyRecommendation-top button{
     border: none;

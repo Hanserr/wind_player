@@ -1,14 +1,13 @@
 <template>
   <div class="navigationBar">
     <el-scrollbar height="450px">
-      <p class="navigationBar-p" @click="toHome()">&nbsp;&nbsp;探索音乐</p>
+      <p class="navigationBar-p" @click="router.push('/')">&nbsp;&nbsp;探索音乐</p>
       <p class="navigationBar-p">&nbsp;&nbsp;Podcast播客</p>
       <p class="navigationBar-p">&nbsp;&nbsp;视频</p>
       <p class="navigationBar-p">&nbsp;&nbsp;关注</p>
       <p class="navigationBar-p">&nbsp;&nbsp;直播</p>
-      <p class="navigationBar-p">&nbsp;&nbsp;私人FM</p>
+      <p class="navigationBar-p" @click="router.push('/personalFm')">&nbsp;&nbsp;私人FM</p>
       <p class="navigationBar-p-headline">&nbsp;&nbsp;我的音乐</p>
-      <p class="navigationBar-p">&nbsp;&nbsp;最近播放</p>
       <p class="navigationBar-p">&nbsp;&nbsp;我的播客</p>
       <p class="navigationBar-p">&nbsp;&nbsp;我的收藏</p>
 
@@ -67,11 +66,11 @@ const classifySongList = (list) => {
   let temp2 = []
   createdSongList.value = {}
   collectionSongList.value = {}
-  for(let i in list){
-    if (list[i].subscribed){
-      temp1.push(list[i])
+  for(let i of list){
+    if (i.subscribed){
+      temp1.push(i)
     }else {
-      temp2.push(list[i])
+      temp2.push(i)
     }
     createdSongList.value = temp2
     collectionSongList.value = temp1
@@ -88,16 +87,11 @@ const toSongListPage = (id) => {
   })
 }
 
-//跳转到首页
-const toHome = () => {
-  router.push('/')
-}
-
 onMounted(() => {
   getUserSongList()
 })
 </script>
 
 <style scoped>
-@import "../../assets/css/navigationComponents/navigationBar.css";
+@import "../../assets/css/navigationComponentsCss/navigationBar.css";
 </style>

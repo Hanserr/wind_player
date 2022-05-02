@@ -8,7 +8,7 @@
       </div>
 <!--      顶部搜索栏-->
       <div class="playerPageTop" :style="{backgroundColor:playerPageTopBC}">
-        <svg-icon name="logoIcon" style="width: 50px;height: 50px;margin-left: 10px;margin-top: 10px;cursor:pointer;" @click="router.push('/')"></svg-icon>
+        <svg-icon name="logoIcon" style="width: 50px;height: 50px;margin-left: 10px;margin-top: 10px;cursor:pointer;" @click="toHome"></svg-icon>
 <!--        搜索框-->
         <div class="topBar-search">
           <input class="topBar-searchInput" v-model="inputVal" @focus="searchInpFocus(inputVal)" :style="{backgroundColor: topSearchBarBC}">
@@ -106,6 +106,11 @@
               @closeResultList="closeResultList"
               @songID="playSong"
               @tracks="pushPreparedSongList"
+              @audioState="playOrPause"
+              :audioRefState="isPlay"
+              :inPlay="song.src"
+              :timeChange="songTimeChange"
+              :fmIsEnded="fmIsEnded"
               v-slot="{Component}">
             <keep-alive>
               <component :is="Component" :key="$route.name" v-if="$route.meta.keepAlive" ></component>
@@ -312,7 +317,9 @@ import {router} from "@/router/routes";
 import {ElMessage, ElMessageBox} from "element-plus";
 import NavigationBar from "@/components/navigationComponents/navigationBar";
 import Cookies from "js-cookie";
+import {useRoute} from "vue-router";
 
+const route = useRoute()
 let inputVal = ref('') //顶部搜索框变量
 let songSuggestionList = reactive({}) //建议歌单列表
 let suggestionTimer = null //建议歌单列表的定时器
@@ -372,6 +379,8 @@ let commentsRef = ref(null)//歌曲详情页ref
 let refreshCommentTimer = null //评论刷新定时器
 let cancel = true //评论懒加载间隔时间段
 let elInfiniteScroll = ref(null) //懒加载滚动条
+let songTimeChange = ref() //歌曲播放时间的变化，供FM页面使用
+let fmIsEnded = ref(false) //当前fm是否已播放完毕
 
 //关闭登录弹窗
 const closePop = (e) => {
@@ -464,7 +473,7 @@ const playSong = (e) => {
 
 //播放上一首
 const previousSong = () => {
-  if (!preparedSongList.value){
+  if (route.path==='personalFm' || !preparedSongList.value){
     return
   }
   if (presentSongIndexInPreparedList === 0){
@@ -477,7 +486,7 @@ const previousSong = () => {
 
 //播放下一首
 const nextSong = () => {
-  if (!preparedSongList.value){
+  if (route.path==='personalFm' || !preparedSongList.value){
     return
   }
   if (presentSongIndexInPreparedList >= preparedSongList.value.length-1){
@@ -532,6 +541,10 @@ const pushPreparedSongList = (e) => {
 
 //歌曲弹窗上移
 const movingWindowUp = () => {
+  //处于FM页面时禁止上移歌曲详情页
+  if (route.name === "personalFmPage"){
+    return
+  }
   songMovingWindowTop.value = 70
   playBarLeft.value = 20
   playerPageTopBC.value = '#2c2c2c'
@@ -566,7 +579,7 @@ const getLyric = (id) => {
       lyric[i] = {time: lyricTimeFormat(lyricList[0]+']'),content:lyricList[1],tlyric:null}
     }
     let tempTLyric = []
-    if (res.data.tlyric.lyric.length>=1){
+    if (res.data.tlyric && res.data.tlyric.lyric.length>=1){
       let tlyric = (res.data.tlyric.lyric).toString().split('\n')
       let tlyricReg = /^\[[0-9]{2}:[0-9]{2}\.[0-9]{2,3}$/
       for (let i = 0;i<tlyric.length;i++){
@@ -831,6 +844,13 @@ const dailySignin = () => {
   })
 }
 
+//返回首页
+const toHome = () => {
+  router.push('/')
+  movingWindowDown()
+  preparedSongListRight.value = -400
+}
+
 //跳转至编辑用户界面
 const toEditUserInfoPage = () => {
   if (!user.value) return
@@ -861,11 +881,13 @@ watch(() => inputVal.value,(newVal) => {
 watch(() => song.lyric,(next) => {
   if (next){
     lyricSum.value = 0
-      for(let i in song.lyric){
-        if (song.lyric[i].time > audioRef.value.currentTime){
-          lyricSum.value = i
+    let a = 0
+      for(let i of song.lyric){
+        if (i.time > audioRef.value.currentTime){
+          lyricSum.value = a
           break
         }
+        ++a
     }
   }
 })
@@ -899,6 +921,7 @@ onMounted(() => {
   }
   //播放时间变化
   audioRef.value.ontimeupdate = () => {
+    songTimeChange.value = audioRef.value.currentTime
     //进度条和进度点变化
     if (!onBarMark){
       durationBarWidth.value = (audioRef.value.currentTime/audioRef.value.duration)*600
@@ -922,6 +945,7 @@ onMounted(() => {
   }
   // 音频播放完毕
   audioRef.value.onended = () => {
+    fmIsEnded.value = song.id
     if (!preparedSongList.value){
       return
     }

@@ -63,12 +63,26 @@ const routes = [
                 component: () => import("../components/rightComponents/albumDetailPageComponents/infoPage")
             },
         ],
+        meta: {
+            keepAlive: false
+        },
     },
     {
         path: '/dailyRecommendation',
         name: 'dailyRecommendationPage',
-        component: () => import("../components/rightComponents/dailyRecommendationPage")
-    }
+        component: () => import("../components/rightComponents/dailyRecommendationPage"),
+        meta: {
+            keepAlive: false
+        },
+    },
+    {
+        path: '/personalFm',
+        name: 'personalFmPage',
+        component: () => import("../components/rightComponents/personalFm"),
+        meta: {
+            keepAlive: true
+        },
+    },
 ]
 
 export const router = createRouter({

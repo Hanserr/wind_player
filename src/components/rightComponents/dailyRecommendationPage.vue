@@ -2,7 +2,9 @@
   <div class="dailyRecommendation">
     <el-scrollbar>
       <div class="dailyRecommendation-top">
-        <span>{{new Date().getDate()}}</span>
+        <div>
+          <span>{{new Date().getDate()}}</span>
+        </div>
         <svg-icon name="calender" id="recCalender"></svg-icon>
         <span>每日音乐推荐</span>
         <span>根据你的听歌风格生成的歌单，每日6点刷新</span>

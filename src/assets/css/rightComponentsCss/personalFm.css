@@ -1,0 +1,111 @@
+body{
+    padding: 0;
+    margin: 0;
+}
+.personalFm{
+    width: 920px;
+    height: 450px;
+}
+.personalFm-left{
+    width: 450px;
+    height: 450px;
+    display: inline-block;
+    overflow: hidden;
+}
+.personalFm-right{
+    width: 430px;
+    height: 450px;
+    display: inline-block;
+}
+.personalFm-left div{
+    position: absolute;
+}
+.personalFm-left img{
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+}
+.personalFm-control{
+    height: 40px;
+    width: 40px;
+    border-radius: 25px;
+    background-color: rgba(255, 255, 255, 0.64);
+    position: absolute;
+    z-index: 93;
+    cursor: pointer;
+    transition: 0.2s linear;
+}
+.personalFMBottom{
+    position: relative;
+    top: 9px;
+    left: 8px;
+}
+.personalFm-left-bottom{
+    width: 180px;
+    height: 40px;
+    position: relative;
+    top: 330px;
+    left: 140px;
+}
+.personalFm-left-bottom div{
+    width: 30px;
+    height: 30px;
+    position: relative;
+    display: inline-block;
+    margin-left: 22px;
+    top: 5px;
+    cursor: pointer;
+}
+.personalFm-header{
+    text-align: center;
+    position: relative;
+    top: -60px;
+    width: 380px;
+    height: 35px;
+    margin: 0 auto;
+    font-size: 15px;
+    color: #7A797C;
+}
+#personalFmSongName{
+    font-size: 30px;
+    line-height: 40px;
+    text-align: center;
+    position: relative;
+    top: -8px;
+    color: #D4D4D4;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 380px;
+}
+.personalFm-ar{
+    text-align: center;
+    position: relative;
+    top: -35px;
+    width: 380px;
+    height: 20px;
+    margin: 0 auto;
+    font-size: 15px;
+    color: #7A797C;
+}
+.personalFm-ar p{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    line-height: 15px;
+    display: inline;
+}
+.personalFm-lyric{
+    color: #606266;
+    text-align: center;
+    height: 300px;
+}
+.personalFm-lyricContent{
+    width: 380px;
+    padding: 0;
+}
+.personalFm-lyricContent li{
+    width: 430px;
+    list-style: none;
+    margin-top: 20px;
+    white-space:pre-wrap;
+}

@@ -64,16 +64,9 @@ const getDailyRecommendSongLists = () => {
   recommendSongs.value.push({name:"每日歌曲推荐",id:-1})
   axios.get(`/recommend/resource`).then(res => {
     if (res.data.code === 200){
-      for(let i in res.data.recommend){
-        recommendSongs.value.push(res.data.recommend[i])
+      for(let i of res.data.recommend){
+        recommendSongs.value.push(i)
       }
-      axios.get('/top/playlist/highquality?limit=3').then(res => {
-        if (res.data.code === 200){
-          for(let i in res.data.playlists){
-            recommendSongs.value.push(res.data.playlists[i])
-          }
-        }
-      })
     }
   })
 }

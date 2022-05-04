@@ -744,8 +744,8 @@ const volumeBarVisibleAfterFunc = () => {
 }
 
 //获取评论
-const getComments = async (id) => {
- await axios.get(`/comment/music?id=${id}&limit=30&offset=${commentsOffset}`).then( res => {
+const getComments = (id) => {
+ axios.get(`/comment/music?id=${id}&limit=30&offset=${commentsOffset}`).then( res => {
     if (res.data.code === 200){
       song.total = res.data.total
       song.hotComments = res.data.hotComments
@@ -756,6 +756,9 @@ const getComments = async (id) => {
           song.comments.push(res.data.comments[i])
         }
       }
+      refreshCommentTimer = setTimeout(() => {
+        cancel = true
+      },1000)
       commentsOffset += 30
     }
  })
@@ -766,9 +769,6 @@ const infiniteScroll = (e) => {
   if (commentsRef.value.clientHeight - e.scrollTop < 800 && cancel){
     cancel = false
     getComments(song.id)
-    refreshCommentTimer = setTimeout(() => {
-      cancel = true
-    },5000)
   }
 }
 

@@ -125,9 +125,7 @@ const toAlterSongList = () => {
 //收藏歌单
 const collectSongList = () => {
   hadCollected.value = !hadCollected.value
-  axios.get(`/playlist/subscribe?t=${hadCollected.value?1:2}&id=${route.params.songListId}`).then(res => {
-    console.log(res.data)
-  })
+  axios.get(`/playlist/subscribe?t=${hadCollected.value?1:2}&id=${route.params.songListId}`)
 }
 
 

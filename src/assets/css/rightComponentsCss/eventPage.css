@@ -1,0 +1,126 @@
+body{
+    padding: 0;
+    margin: 0;
+}
+.eventPageWrap{
+    width: 920px;
+    height: 450px;
+}
+.eventPage{
+    width: 920px;
+    height: auto;
+    overflow: hidden;
+}
+.eventPage p{
+    font-size: 25px;
+    color: #D5D5D5;
+    margin-left: 10px;
+}
+.eventContent{
+    width: 920px;
+    height: auto;
+    margin-top: 10px;
+    overflow: hidden;
+}
+.eventContent-userAvatar{
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    float: left;
+    margin-left: 10px;
+}
+.eventContent-right{
+    width: 800px;
+    height: auto;
+    display: inline-block;
+    position: relative;
+    left: 15px;
+    overflow: hidden;
+}
+.eventContent-divider{
+    width: 900px;
+    height: 1px;
+    border: none;
+    background-color: #434343;
+    margin: 5px auto;
+}
+.eventContent-right-middle{
+    width: 800px;
+    height: auto;
+    margin-top: 15px;
+    font-size: 0;
+}
+.eventContent-nickname{
+    font-size: 15px;
+    color: #a0a9d9;
+    position: relative;
+    top: 5px;
+}
+.eventContent-right-top span:nth-child(2){
+    font-size: 15px;
+    color: #9d9fa8;
+    position: relative;
+    top: 5px;
+    left: 5px;
+}
+.eventContent-right-top span:nth-child(4){
+    font-size: 10px;
+    color: rgba(157, 159, 168, 0.6);
+    position: relative;
+    top: 5px;
+}
+.eventContent-right-middle-content{
+    color: #D5D5D5;
+    font-size: 14px;
+    white-space: pre-wrap;
+}
+.eventContent-right-middle-content a{
+    text-decoration: none;
+    color: #5f75ec;
+}
+.eventContent-right-middle-content a:hover{
+    color: #a0a9d9;
+}
+.eventContent-right-middle-pic{
+    overflow: hidden;
+    width: 440px;
+}
+.eventContent-right-middle-pic-wrap {
+    background-color: #5E5E5E;
+    border-radius: 5px;
+    display: inline-block;
+    margin-top: 10px;
+    margin-left: 5px;
+    overflow: hidden;
+}
+.completePicArea{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 920px;
+    height: 450px;
+}
+.carousel-wrapper{
+    width: 920px;
+    height: 450px;
+    background-color: rgba(0, 0, 0, 0.8);
+    text-align: center;
+}
+.eventContent-avatarArea{
+    width: 80px;
+    height: 60px;
+    float: left;
+    margin-left: 10px;
+}
+.event-avatar-badge{
+    width: 16px;
+    position: relative;
+    left: -15px;
+    top: 28px;
+}
+.event-avatar-NEMusician{
+    width: 20px;
+    position: relative;
+    left: -17px;
+    top: 28px;
+}

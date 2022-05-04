@@ -83,6 +83,14 @@ const routes = [
             keepAlive: true
         },
     },
+    {
+        path: '/event',
+        name: 'eventPage',
+        component: () => import("../components/rightComponents/eventPage"),
+        meta: {
+            keepAlive: false
+        },
+    },
 ]
 
 export const router = createRouter({

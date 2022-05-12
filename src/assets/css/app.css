@@ -7,7 +7,7 @@ body{
     width: 100vw;
     height: 100vh;
     background-color: #686c85;
-    background-size: 100% 100%;
+    background-size: 100vw 100vh;
     background-attachment: fixed;
     -webkit-background-size: cover;
     -o-background-size: cover;
@@ -216,10 +216,10 @@ body{
 .playerPageLeft{
     background-color: #2b2b2b;
     width: 179px;
-    height: 451px;
+    height: 450px;
     overflow-y: hidden;
     position: absolute;
-    top: 69px;
+    top: 70px;
     border-right: 1px solid rgba(84, 84, 84, 0.3);
 }
 

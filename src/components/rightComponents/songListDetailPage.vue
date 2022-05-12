@@ -1,6 +1,9 @@
 <template>
-  <div class="songListDetailPage" v-if="listDetail" v-loading="loading">
-    <div class="songListDetailPage-top">
+  <div class="songListDetailPage"
+       v-loading="loading"
+       element-loading-background="rgba(0, 0, 0, 0.8)"
+       element-loading-text="加载中···">
+    <div class="songListDetailPage-top" v-if="listDetail">
       <div class="songListDetailPage-top-img">
         <img :src="listDetail.playlist.coverImgUrl">
       </div>
@@ -16,16 +19,15 @@
         <button id="collect" @click="collectSongList" :disabled="!canCollect" :style="{backgroundColor:canCollect?'transparent':'#383838'}">{{hadCollected?'已收藏':'收藏'}}</button>
         <svg-icon name="alterSongList" style="position: absolute;top: 105px;left: 240px;cursor:pointer;" @click="toAlterSongList" v-show="!canCollect"></svg-icon>
         <p id="playCount">歌曲:{{listDetail.playlist.tracks.length}}</p>
-        <p id="songCount">播放:{{listDetail.playlist.playCount.toString().length>=100000000?
-            `${Math.floor(listDetail.playlist.playCount/1000000000)}亿`: listDetail.playlist.playCount.toString().length>=5?
+        <p id="songCount">播放:{{listDetail.playlist.playCount.toString().length>=9?
+            `${Math.floor(listDetail.playlist.playCount/100000000)}亿`: listDetail.playlist.playCount.toString().length>=5?
             `${Math.floor(listDetail.playlist.playCount/10000)}万`: listDetail.playlist.playCount}}
         </p>
         <p id="description">简介:{{listDetail.playlist.description}}</p>
       </div>
     </div>
-    <div class="songListDetailPage-bottom">
+    <div class="songListDetailPage-bottom" v-if="listDetail">
       <div class="songListDetailPage-bottom-title">
-        <p id="panel">操作</p>
         <p id="title">标题</p>
         <p id="artist">歌手</p>
         <p id="album">专辑</p>
@@ -39,11 +41,6 @@
             <div class="detailIndex">
               <p>{{(index+1).toString().length === 1?'0'+(index+1):(index+1)}}</p>
             </div>
-
-<!--            <div class="songOption">-->
-<!--              <svg-icon name="likeSong" v-if="song.liked"></svg-icon>-->
-<!--              <svg-icon name="unlikeSong" v-if="song.liked"></svg-icon>-->
-<!--            </div>-->
 
             <div class="detailName">
               <p>{{song.name}}</p>
@@ -88,6 +85,7 @@ let loading = ref(false) //遮罩
 
 //获取歌单详情
 const getSongListDetail = (id) => {
+  listDetail.value = null
   loading.value = true
   axios.get(`/playlist/detail?id=${id}`).then(res => {
     if (res.data.code === 200) {

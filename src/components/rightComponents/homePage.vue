@@ -13,7 +13,7 @@
       </div>
 
       <div class="homePage-bottom">
-        <div class="recommendListDiv" v-for="i in recommendSongs" :key="i">
+        <div class="recommendListDiv" v-for="i in recommendSongsList" :key="i">
           <img :src="i.picUrl || i.coverImgUrl ||cover" class="recommendListDivCover" @click="toSongListDetail(i.id)">
           {{i.name}}
         </div>
@@ -29,10 +29,11 @@ import {onMounted, ref} from "vue";
 import axios from "axios";
 import {ElCarousel} from "element-plus";
 import {router} from "@/router/routes";
+import Cookies from "js-cookie";
 
 let bannerList = ref({'':''}) //banner列表
 let beforeBanner = require('../../assets/pics/beforeBanner.webp') //banner未加载完成时的替代图
-let recommendSongs = ref([]) //日推歌曲
+let recommendSongsList = ref([]) //日推歌单
 let cover = require("../../assets/pics/cover.webp") //日推封面
 // eslint-disable-next-line no-undef
 const emits = defineEmits(['songID'])
@@ -61,11 +62,11 @@ const getBannerSong = (item) => {
 
 //获取日推歌单
 const getDailyRecommendSongLists = () => {
-  recommendSongs.value.push({name:"每日歌曲推荐",id:-1})
+  recommendSongsList.value.push({name:"每日歌曲推荐",id:-1})
   axios.get(`/recommend/resource`).then(res => {
     if (res.data.code === 200){
       for(let i of res.data.recommend){
-        recommendSongs.value.push(i)
+        recommendSongsList.value.push(i)
       }
     }
   })
@@ -81,6 +82,8 @@ const toSongListDetail = (id) => {
       }
     })
 }else if(id === -1){
+    if (!Cookies.get('MUSIC_U'))
+      return
     router.push('/dailyRecommendation')
   }
 }

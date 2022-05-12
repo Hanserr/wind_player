@@ -16,10 +16,13 @@ module.exports = defineConfig({
 },
     plugins[
         new VueLoaderPlugin()
-],
+    ],
     module[
         rules[
-            {test:/\.vue$/,use:'vue-loader'}
+                {
+                    test:/\.vue$/,
+                    use:'vue-loader'
+                }
             ]
-        ]
+        ],
 )

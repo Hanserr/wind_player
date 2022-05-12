@@ -51,7 +51,7 @@ let collectionSongList = ref() //收藏的歌单列表
 //获取用户歌单列表
 const getUserSongList = () => {
   let id = Cookies.get('UID')
-  if (id){
+  if (id && Cookies.get('MUSIC_U')){
     axios.get(`${baseUrl}/user/playlist?uid=${JSON.parse(id)}`).then(res => {
       if (res.data.code === 200){
         classifySongList(res.data.playlist)

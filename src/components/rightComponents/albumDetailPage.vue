@@ -1,6 +1,6 @@
 <template>
-  <div class="albumDetailPage" v-if="albumInfo">
-    <el-scrollbar @scroll="getScrollTop">
+  <div class="albumDetailPage" v-loading="loading" element-loading-background="rgba(0, 0, 0, 0.8)" element-loading-text="加载中···">
+    <el-scrollbar @scroll="getScrollTop" v-if="albumInfo" >
     <div class="albumDetailPage-top">
       <img :src="albumInfo.blurPicUrl" id="albumCover">
       <div class="albumDetailPage-top-rightInfo">
@@ -37,9 +37,11 @@ let albumInfo = ref() //专辑信息
 let emits = defineEmits(['songID','tracks'])
 let preparedSongList = ref()
 let tempScrollTop = ref()
+let loading = ref(false)
 
 //获取专辑详细信息
 const getAlbumInfo = (id) => {
+  loading.value = true
   axios.get(`/album?id=${id}`).then(res => {
     if (res.data.code === 200){
       albumInfo.value = res.data.album
@@ -50,6 +52,8 @@ const getAlbumInfo = (id) => {
         type:'error'
       })
     }
+  }).finally(() => {
+    loading.value = false
   })
 }
 

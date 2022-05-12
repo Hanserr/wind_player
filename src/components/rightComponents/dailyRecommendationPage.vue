@@ -1,7 +1,10 @@
 <template>
-  <div class="dailyRecommendation">
+  <div class="dailyRecommendation"
+       v-loading="loading"
+       element-loading-background="rgba(0, 0, 0, 0.8)"
+       element-loading-text="加载中···">
     <el-scrollbar>
-      <div class="dailyRecommendation-top">
+      <div class="dailyRecommendation-top" v-if="!loading">
         <div>
           <span>{{new Date().getDate()}}</span>
         </div>
@@ -45,9 +48,11 @@ import SvgIcon from "@/components/SvgIcon";
 // eslint-disable-next-line no-undef
 let emits = defineEmits(['songID','tracks'])
 let dailyList = ref() //日推歌单
+let loading = ref(false)
 
 //获取日推歌曲
 const getDailyRecommendSongs = () => {
+  loading.value = true
   axios.get(`/recommend/songs`).then(res => {
     if (res.data.code === 200){
       dailyList.value = res.data.data.dailySongs
@@ -57,6 +62,8 @@ const getDailyRecommendSongs = () => {
         type:'error'
       })
     }
+  }).finally(() => {
+    loading.value = false
   })
 }
 

@@ -9,24 +9,26 @@ body{
 .dailyRecommendation-top{
     width: 100%;
     height: 180px;
+    overflow: hidden;
+    position: relative;
 }
 #recCalender{
     width: 130px;
     height: 130px;
-    margin-left: 25px;
-    position: relative;
-    left: 0;
+    position: absolute;
+    left: 10px;
+    top: 0;
 }
 .dailyRecommendation-top span{
     color: #D5D5D5;
-    position: relative;
+    position: absolute;
 }
 .dailyRecommendation-top div:nth-child(1){
-    width: 70px;
-    height: 40px;
     position: absolute;
     top: 70px;
-    left: 55px;
+    left: 15px;
+    width: 70px;
+    height: 40px;
     text-align: center;
 }
 .dailyRecommendation-top span:nth-child(1){
@@ -37,13 +39,13 @@ body{
 }
 .dailyRecommendation-top span:nth-child(3){
     font-size: 25px;
-    top: -60px;
-    left: 0;
+    top: 40px;
+    left: 150px;
 }
 .dailyRecommendation-top span:nth-child(4){
     font-size: 15px;
-    top: -30px;
-    left: -150px;
+    top: 80px;
+    left: 150px;
 }
 .dailyRecommendation-top button{
     border: none;
@@ -54,16 +56,18 @@ body{
     color: #eeeeee;
     cursor: pointer;
     display: block;
+    position: absolute;
 }
 .dailyRecommendation-top button:nth-child(5) {
     background-color: #EC4141;
-    margin-left: 30px;
+    top: 130px;
+    left: 20px;
 }
 .dailyRecommendation-top button:nth-child(6) {
     background-color: transparent;
     border: 1px solid #eeeeee;
-    margin-left: 180px;
-    margin-top: -35px;
+    top: 130px;
+    left: 160px;
 }
 .dailyRecommendation-bottom{
     width: 100%;

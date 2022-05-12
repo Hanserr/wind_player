@@ -418,7 +418,7 @@ const playOrPause = (val) => {
   if (!song.src){
     return
   }
-  val === true?audioRef.value.pause():audioRef.value.play()
+  val?audioRef.value.pause():audioRef.value.play()
   isPlay.value = !val
   headerPosition(val)
 }
@@ -947,6 +947,7 @@ onMounted(() => {
   audioRef.value.onended = () => {
     fmIsEnded.value = song.id
     if (!preparedSongList.value){
+      playOrPause(true)
       return
     }
     playOrPause(true)

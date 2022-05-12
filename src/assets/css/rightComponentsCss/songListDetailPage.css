@@ -147,7 +147,7 @@ body{
     margin-left: 60px;
 }
 #title{
-    margin-left: 30px;
+    margin-left: 60px;
 }
 #artist{
     margin-left: 313px;
@@ -197,11 +197,11 @@ body{
 
 .detailName{
     width: 300px;
-    left: 118px;
+    left: 63px;
 }
 .detailAr{
     width: 100px;
-    left: 450px;
+    left: 395px;
 }
 .detailAr p{
     cursor: pointer;
@@ -209,12 +209,12 @@ body{
 }
 .detailAl{
     width: 170px;
-    left: 613px;
+    left: 555px;
 }
 .detailAl p{
     cursor: pointer;
 }
 .detailDuration{
-    left: 838px;
+    left: 780px;
     width: 60px;
 }

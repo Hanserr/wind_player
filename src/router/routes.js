@@ -91,6 +91,15 @@ const routes = [
             keepAlive: false
         },
     },
+    {
+        path: '/404',
+        name: '404',
+        component: () => import("../components/rightComponents/NotFound")
+    },
+    {
+        path: '/:pathMath(.*)',
+        redirect: '/404'
+    }
 ]
 
 export const router = createRouter({

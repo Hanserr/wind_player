@@ -867,11 +867,10 @@ watch(() => inputVal.value,(newVal) => {
         },300)
       }else {
         suggestionTimer = setTimeout(() => {
-          songSuggestionList.albums = undefined
-          songSuggestionList.artists = undefined
-          songSuggestionList.order = undefined
-          songSuggestionList.playlists = undefined
-          songSuggestionList.songs = undefined
+          for (let i in songSuggestionList){
+            // eslint-disable-next-line no-unused-vars
+            i = undefined
+          }
           resultListIsVisible.value = false
         },300)
       }

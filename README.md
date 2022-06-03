@@ -1,5 +1,10 @@
 # wind_player
 
+## Node Version
+```
+v16.14.0
+```
+
 ## Project setup
 ```
 npm install

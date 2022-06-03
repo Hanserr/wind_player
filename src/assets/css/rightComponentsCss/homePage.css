@@ -43,9 +43,6 @@ body{
     border-radius: 5px;
     cursor: pointer;
 }
-.recommendListDiv:nth-child(1){
-    margin-left: 0;
-}
 .recommendListDiv:nth-child(5n+1){
     margin-left: 0;
 }

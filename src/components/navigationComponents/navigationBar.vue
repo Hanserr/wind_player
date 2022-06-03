@@ -2,14 +2,12 @@
   <div class="navigationBar">
     <el-scrollbar height="450px">
       <p class="navigationBar-p" @click="router.push('/')">&nbsp;&nbsp;探索音乐</p>
-      <p class="navigationBar-p">&nbsp;&nbsp;Podcast播客</p>
       <p class="navigationBar-p">&nbsp;&nbsp;视频</p>
       <p class="navigationBar-p" @click="router.push('/event')">&nbsp;&nbsp;关注</p>
       <p class="navigationBar-p">&nbsp;&nbsp;直播</p>
       <p class="navigationBar-p" @click="router.push('/personalFm')">&nbsp;&nbsp;私人FM</p>
-      <p class="navigationBar-p-headline">&nbsp;&nbsp;我的音乐</p>
-      <p class="navigationBar-p">&nbsp;&nbsp;我的播客</p>
       <p class="navigationBar-p">&nbsp;&nbsp;我的收藏</p>
+      <p class="navigationBar-p">&nbsp;&nbsp;潘多拉魔盒</p>
 
       <div class="navigationBar-p-headline-wrap" @click="createdSongListIsFold = !createdSongListIsFold">
         <p class="navigationBar-p-headline">&nbsp;&nbsp;创建的歌单</p>

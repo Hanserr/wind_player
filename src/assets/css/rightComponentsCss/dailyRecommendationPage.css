@@ -26,10 +26,9 @@ body{
 .dailyRecommendation-top div:nth-child(1){
     position: absolute;
     top: 70px;
-    left: 15px;
-    width: 70px;
+    left: 53px;
+    width: 42px;
     height: 40px;
-    text-align: center;
 }
 .dailyRecommendation-top span:nth-child(1){
     font-size: 40px;

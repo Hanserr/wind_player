@@ -2,6 +2,7 @@ body{
     padding: 0;
     margin: 0;
     overflow: hidden;
+    font-family: Harmony;
 }
 #app{
     width: 100vw;
@@ -516,7 +517,6 @@ body{
 .preparedSongContent div:nth-child(3) span{
     color: #5E5E5E;
     margin-left: 7px;
-
 }
 
 /*歌曲详情页弹窗*/
@@ -575,7 +575,7 @@ body{
     top: 100px;
     left: 70px;
     border-radius: 115px;
-    animation: rotate 30s linear infinite;
+    animation: infinite rotate 30s linear;
     box-shadow: 0 0 1px 10px rgba(56, 58, 58, 0.51);
 }
 #vinyl-cover{

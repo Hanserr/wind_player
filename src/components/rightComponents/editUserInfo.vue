@@ -121,7 +121,7 @@ const alterUserProfile = () => {
       break
     }
   }
-  axios.get(`/user/update?gender=${user.gender}&signature=${user.intro}&city=${user.region}&nickname=${user.nickname}&birthday=${user.birthday}&province=${user.province}`).then(res => {
+  axios.get(`/user/update?gender=${user.gender}&signature=${user.intro}&city=${user.region}&nickname=${user.nickname}&birthday=${new Date(user.birthday).getTime()}&province=${user.province}`).then(res => {
    if (res.data.code === 200){
      ElMessage({
        message:"修改成功!",

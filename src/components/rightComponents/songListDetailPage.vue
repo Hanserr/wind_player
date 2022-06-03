@@ -88,6 +88,7 @@ const getSongListDetail = (id) => {
   listDetail.value = null
   loading.value = true
   axios.get(`/playlist/detail?id=${id}`).then(res => {
+    console.log(res.data)
     if (res.data.code === 200) {
       listDetail.value = res.data
       canCollect.value = res.data.playlist.userId !== parseInt(Cookies.get('UID'))

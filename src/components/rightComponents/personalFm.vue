@@ -58,21 +58,21 @@
 
     <div class="personalFm-right" v-if="song.artist&&song.album&&song.lyric">
 
-        <div class="personalFm-header">
-          <p id="personalFmSongName">{{song.name}}</p>
-          <div class="personalFm-ar">
-            <p v-for="i in song.artist" :key="i">{{i.name}}&nbsp;</p>
-            <p>{{song.album === null?'':'- '+song.album.name}}</p>
-          </div>
+      <div class="personalFm-header">
+        <p id="personalFmSongName">{{song.name}}</p>
+        <div class="personalFm-ar">
+          <p v-for="i in song.artist" :key="i">{{i.name}}&nbsp;</p>
+          <p>{{song.album === null?'':'- '+song.album.name}}</p>
         </div>
+      </div>
 
-        <div class="personalFm-lyric">
-          <el-scrollbar height="290px" ref="personalFmLyricContentWrap">
-            <ul class="personalFm-lyricContent" ref="personalFmLyricContent">
-              <li v-for="(i,index) in song.lyric" :key="i" :style="{color:index+1 === lyricSum?'#FFFFFF':'#606266'}">{{i.content}}{{i.tlyric===null?"":i.tlyric}}</li>
-            </ul>
-          </el-scrollbar>
-        </div>
+      <div class="personalFm-lyric">
+        <el-scrollbar height="290px" ref="personalFmLyricContentWrap">
+          <ul class="personalFm-lyricContent" ref="personalFmLyricContent">
+            <li v-for="(i,index) in song.lyric" :key="i" :style="{color:index+1 === lyricSum?'#FFFFFF':'#606266'}">{{i.content}}{{i.tlyric===null?"":i.tlyric}}</li>
+          </ul>
+        </el-scrollbar>
+      </div>
 
     </div>
 
@@ -80,11 +80,9 @@
 </template>
 
 <script setup>
-
 import axios from "axios";
 import {onMounted, reactive, ref, watch} from "vue";
 import SvgIcon from "@/components/SvgIcon";
-
 // eslint-disable-next-line no-undef
 const emits = defineEmits(['songID','audioState'])
 // eslint-disable-next-line no-undef
@@ -139,7 +137,6 @@ let song = reactive({
 let personalFmLyricContentWrap = ref(null)//歌词外层包裹
 let personalFmLyricContent = ref(null)//el-scrollBar
 let lyricSum = ref(0) //当前歌词下标
-
 //获取FM
 const getFm = () => {
   axios.get(`/personal_fm?timestamp=${Date.now()}`).then(res => {
@@ -155,7 +152,6 @@ const getFm = () => {
     }
   })
 }
-
 //播放音乐
 const playSong = (id) => {
   lyricSum.value = 0
@@ -172,14 +168,12 @@ const playSong = (id) => {
   }
   emits("songID",id)
 }
-
 //暂停歌曲
 const pause = () => {
   controlBottomPosition.value.left = 205
   controlBottomPosition.value.top = 165
   emits('audioState',true)
 }
-
 //下一首  列表内歌曲数小于等于3时再次获取
 const playNext = () => {
   lyricSum.value = 0
@@ -195,7 +189,6 @@ const playNext = () => {
     getFm()
   }
 }
-
 //切换歌曲时改变封面位置
 const changeCoverPosition = () => {
   let temp = cover3.value
@@ -203,18 +196,15 @@ const changeCoverPosition = () => {
   cover1.value = cover2.value
   cover2.value = temp
 }
-
 //私人FM音乐垃圾桶
 const toTrash = () => {
   axios.get(`/fm_trash?id=${songList.value[0].id}`)
   playNext()
 }
-
 //喜欢音乐
 const likeSong = () => {
   axios.get(`/like?id=${songList.value[0].id}`)
 }
-
 //获取歌词
 const getLyric = (id) => {
   axios.get(`/lyric?id=${id}`).then(res => {
@@ -247,7 +237,6 @@ const getLyric = (id) => {
     song.transUser = res.data.transUser
   })
 }
-
 //歌词时间格式化
 const lyricTimeFormat = (time) => {
   let temp = time.slice(1,time.length-1)
@@ -256,7 +245,6 @@ const lyricTimeFormat = (time) => {
   let sec = tList[1]
   return min*60+sec*1
 }
-
 watch(() => props.audioRefState, next => {
   if (next){
     controlBottomPosition.value.left = 315
@@ -266,7 +254,6 @@ watch(() => props.audioRefState, next => {
     controlBottomPosition.value.top = 165
   }
 })
-
 watch(() => props.timeChange, next => {
   //歌词滚动
   try {
@@ -281,11 +268,9 @@ watch(() => props.timeChange, next => {
     console.log(err)
   }
 })
-
 watch(() => props.fmIsEnded, () => {
   playNext()
 })
-
 onMounted(() => {
   getFm()
 })

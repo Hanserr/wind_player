@@ -1,0 +1,30 @@
+body{
+    padding: 0;
+    margin: 0;
+}
+.creationSongListPageMain{
+    width: 860px;
+    height: auto;
+    margin: 0 auto;
+}
+.playListDetail{
+    width: 200px;
+    height: auto;
+    float: left;
+    margin-left: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+.playListDetail:nth-child(4n+1){
+    margin-left: 0;
+}
+.playListDetail img{
+    width: 200px;
+    height: 200px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.playListDetailTitle{
+    width: 200px;
+    height: 100px;
+}

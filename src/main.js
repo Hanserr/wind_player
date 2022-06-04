@@ -52,6 +52,11 @@ app.config.globalProperties.$commentTimeFormat = (val) => {
     }
 }
 
+router.beforeEach((to,from) => {
+    if (to.name !== 'songListDetailPage')
+        return true
+    return !!(to.name === 'songListDetailPage' && to.params.songListId);
+})
 
 app.component('SvgIcon',SvgIcon)
 app.use(ElementPlus)

@@ -1,0 +1,30 @@
+body{
+    padding: 0;
+    margin: 0;
+}
+.collectedSongListPageMain{
+    width: 860px;
+    height: auto;
+    margin: 0 auto;
+}
+.collectedPlayListDetail{
+    width: 200px;
+    height: auto;
+    float: left;
+    margin-left: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+.collectedPlayListDetail:nth-child(4n+1){
+    margin-left: 0;
+}
+.collectedPlayListDetail img{
+    width: 200px;
+    height: 200px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.collectedPlayListDetailDesc{
+    width: 200px;
+    height: 100px;
+}

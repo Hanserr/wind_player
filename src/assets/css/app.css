@@ -70,6 +70,27 @@ body{
     top: 50%;
     margin-top: -13px;
 }
+.playerPageTop-control{
+    display: inline-block;
+    width: 32px;
+    height: 20px;
+    position: absolute;
+    top: 23px;
+    left: 380px;
+    border: 1px solid #8f8f8f;
+    border-radius: 5px;
+}
+.playerPageTop-control div{
+    width: 16px;
+    height: 20px;
+    border: none;
+    text-align: center;
+    display: inline-block;
+    color: #d5d5d5;
+}
+.playerPageTop-control div:hover {
+    background-color: #bd5757;
+}
 .topBar-search-el-icon{
     top: 0;
     left:194px;

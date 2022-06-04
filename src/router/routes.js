@@ -42,6 +42,24 @@ const routes = [
         },
     },
     {
+        path: '/userInfoPage',
+        name: 'userInfoPage',
+        component: () => import("../components/rightComponents/userInfoPage"),
+        redirect: '/userInfoPage/creation',
+        children: [
+            {
+                path: 'creation',
+                name: 'creation',
+                component: () => import('../components/rightComponents/userInfoComponents/creationSongListPage')
+            },
+            {
+                path: 'collected',
+                name: 'collected',
+                component: () => import('../components/rightComponents/userInfoComponents/collectedSongListPage')
+            }
+        ]
+    },
+    {
         path: '/albumDetail',
         name: 'albumDetailPage',
         component: () => import("../components/rightComponents/albumDetailPage"),

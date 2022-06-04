@@ -39,7 +39,6 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import {router} from "@/router/routes";
 
-const baseUrl = "https://netease-cloud-music-api-beta-lime.vercel.app" //地址前缀
 // eslint-disable-next-line no-undef
 let createdSongListIsFold = ref(true) //创建的歌单列表是否折叠
 let collectedSongIsFold = ref(true) //收藏的歌单是否折叠
@@ -50,7 +49,7 @@ let collectionSongList = ref() //收藏的歌单列表
 const getUserSongList = () => {
   let id = Cookies.get('UID')
   if (id && Cookies.get('MUSIC_U')){
-    axios.get(`${baseUrl}/user/playlist?uid=${JSON.parse(id)}`).then(res => {
+    axios.get(`/user/playlist?uid=${JSON.parse(id)}`).then(res => {
       if (res.data.code === 200){
         classifySongList(res.data.playlist)
       }

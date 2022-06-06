@@ -43,9 +43,8 @@ const routes = [
     },
     {
         path: '/userInfoPage',
-        name: 'userInfoPage',
+        name: 'userInfo',
         component: () => import("../components/rightComponents/userInfoPage"),
-        redirect: '/userInfoPage/creation',
         children: [
             {
                 path: 'creation',
@@ -57,7 +56,10 @@ const routes = [
                 name: 'collected',
                 component: () => import('../components/rightComponents/userInfoComponents/collectedSongListPage')
             }
-        ]
+        ],
+        meta: {
+            keepAlive: false
+        },
     },
     {
         path: '/albumDetail',
@@ -110,9 +112,20 @@ const routes = [
         },
     },
     {
+        path: '/artist',
+        name: 'artistPage',
+        component: () => import("../components/rightComponents/artistPage"),
+        meta: {
+            keepAlive: false
+        },
+    },
+    {
         path: '/404',
         name: '404',
-        component: () => import("../components/rightComponents/NotFound")
+        component: () => import("../components/rightComponents/NotFound"),
+        meta: {
+            keepAlive: false
+        },
     },
     {
         path: '/:pathMath(.*)',

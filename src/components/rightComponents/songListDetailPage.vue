@@ -10,9 +10,9 @@
       <div class="songListDetailPage-top-right">
         <p id="songList">歌单</p>
         <p id="listName">{{listDetail.playlist.name}}</p>
-        <img id="avatar" :src="listDetail.playlist.creator.avatarUrl">
+        <img id="avatar" :src="listDetail.playlist.creator.avatarUrl" @click="toCreator(listDetail.playlist.creator.userId)">
         <div id="creatorWrap">
-          <p id="creatorName">{{listDetail.playlist.creator.nickname}}</p>
+          <p id="creatorName" @click="toCreator(listDetail.playlist.creator.userId)">{{listDetail.playlist.creator.nickname}}</p>
           <p id="creationTime">{{this.$dateFormat(listDetail.playlist.createTime)}}创建</p>
         </div>
         <button id="play" @click="playAll">播放全部</button>
@@ -88,7 +88,6 @@ const getSongListDetail = (id) => {
   listDetail.value = null
   loading.value = true
   axios.get(`/playlist/detail?id=${id}`).then(res => {
-    console.log(res.data)
     if (res.data.code === 200) {
       listDetail.value = res.data
       canCollect.value = res.data.playlist.userId !== parseInt(Cookies.get('UID'))
@@ -132,6 +131,17 @@ const collectSongList = () => {
 const toAlbumDetail = (id) => {
   router.push(`/albumDetail/songlistPage/${id}`)
 }
+
+//跳转至歌单创建者页面
+const toCreator = (id) => {
+  router.push({
+    name:'creation',
+    params:{
+      uid:id
+    }
+  })
+}
+
 
 watch(() => route.params.songListId,(next) => {
   getSongListDetail(next)

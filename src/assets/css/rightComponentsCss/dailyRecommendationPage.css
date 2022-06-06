@@ -19,29 +19,29 @@ body{
     left: 10px;
     top: 0;
 }
-.dailyRecommendation-top span{
-    color: #D5D5D5;
-    position: absolute;
-}
 .dailyRecommendation-top div:nth-child(1){
     position: absolute;
-    top: 70px;
+    top: 65px;
     left: 53px;
     width: 42px;
-    height: 40px;
+    height: 50px;
+    text-align: center;
 }
 .dailyRecommendation-top span:nth-child(1){
     font-size: 40px;
     color: #EC4141;
     font-weight: bold;
-    top: -5px;
 }
 .dailyRecommendation-top span:nth-child(3){
+    color: #D5D5D5;
+    position: absolute;
     font-size: 25px;
     top: 40px;
     left: 150px;
 }
 .dailyRecommendation-top span:nth-child(4){
+    color: #D5D5D5;
+    position: absolute;
     font-size: 15px;
     top: 80px;
     left: 150px;

@@ -131,6 +131,15 @@ body{
     position: relative;
     top: -7px;
 }
+.scrollbar-demo-item{
+    line-height: 22px;
+    height: 22px;
+    margin: 0;
+    padding: 0;
+}
+.scrollbar-demo-item:hover {
+    background-color: #3f3f3f;
+}
 .userProfile{
     width: 200px;
     height: 70px;

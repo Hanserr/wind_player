@@ -23,6 +23,7 @@ body{
     height: 200px;
     border-radius: 5px;
     cursor: pointer;
+    -webkit-user-drag: none;
 }
 .collectedPlayListDetailDesc{
     width: 200px;

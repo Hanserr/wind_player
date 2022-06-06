@@ -26,6 +26,7 @@ body{
     border-radius: 75px;
     margin-left: 30px;
     margin-top: 30px;
+    -webkit-user-drag: none;
 }
 .userInfoRight-top{
     width: 700px;
@@ -90,11 +91,7 @@ body{
     font-size: 13px;
     color: #6e6e6e;
 }
-.userInfoRight-bottom span:nth-child(6){
-    color: #d5d5d5;
-    font-size: 12px;
-}
-.userInfoRight-bottom span:nth-child(8){
+.userInfoRight-bottom span:nth-child(6),.userInfoRight-bottom span:nth-child(8){
     color: #d5d5d5;
     font-size: 12px;
 }

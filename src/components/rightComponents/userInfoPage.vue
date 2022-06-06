@@ -1,7 +1,8 @@
 <template>
 <div class="userInfoPageMain"
- v-loading="loading"
- element-loading-background="rgba(0, 0, 0, 0.8)">
+     v-loading="loading"
+     element-loading-background="rgba(0, 0, 0, 0.8)"
+     element-loading-text="获取数据中···">
   <el-scrollbar height="450" v-if="profile">
     <div class="userInfoPageMain-top">
       <div class="userInfoLeft">
@@ -18,7 +19,7 @@
             <svg-icon name="female" v-if="profile.gender === 2" class="userGenderIcon"></svg-icon>
             <svg-icon name="secret" v-if="profile.gender === 3" class="userGenderIcon"></svg-icon>
           </div>
-          <button @click="$router.push('/editUserInfo')">修改个人信息</button>
+          <button @click="$router.push('/editUserInfo')" v-if="showButton">修改个人信息</button>
         </div>
         <div class="userInfoRight-bottom">
           <div class="userSubInfo" style="border-right: 1px solid #808080">
@@ -45,8 +46,8 @@
       </div>
     </div>
     <div class="userInfoPageMain-bottom">
-      <span style="margin-left: 30px" class="userInfoPageMain-bottom-title" @click="$router.push('/userInfoPage/creation')">创建的歌单</span>
-      <span style="margin-left: 40px" class="userInfoPageMain-bottom-title" @click="$router.push('/userInfoPage/collected')">收藏的歌单</span>
+      <span style="margin-left: 30px" class="userInfoPageMain-bottom-title" @click="toCreation">创建的歌单</span>
+      <span style="margin-left: 40px" class="userInfoPageMain-bottom-title" @click="toCollected">收藏的歌单</span>
       <router-view></router-view>
     </div>
   </el-scrollbar>
@@ -56,38 +57,49 @@
 <script setup>
 import axios from "axios";
 import {ElMessage} from "element-plus";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import SvgIcon from "@/components/SvgIcon";
 import {region} from "@/tools/region";
+import {useRoute} from "vue-router";
+import {router} from "@/router/routes";
 
+const route = useRoute()
 let profile = ref() //用户信息
-let accountInfo = ref() //账户信息
+let id = ref()
 let level = ref() //用户等级
 let loading = ref(false)
+let showButton = ref(true)
 
 //获取账号信息
-const getAccountInfo = async () => {
+const getId = async () => {
   loading.value = true
   await axios.get(`/user/account`).then(res => {
     if (res.data.code === 200){
-      profile.value = res.data.profile
-      accountInfo.value = res.data.account
-    }else {
-      ElMessage({
-        message:"获取用户信息失败",
-        type:"error"
-      })
+      id.value = res.data.account.id
     }
+  }).catch(() => {
+    loading.value = false
+    ElMessage({
+      message:"获取用户信息失败",
+      type:'error'
+    })
   })
 }
 
 //获取用户详细信息
-const getUserEvent = () => {
-  axios.get(`/user/detail?uid=${profile.value.userId}`).then(res => {
+const getUserEvent = (id) => {
+  loading.value = true
+  axios.get(`/user/detail?uid=${id}`).then(res => {
     if (res.data.code === 200){
       level.value = res.data.level
       profile.value = res.data.profile
     }
+  }).catch(() => {
+    loading.value = false
+    ElMessage({
+      message:"获取用户信息失败",
+      type:'error'
+    })
   }).finally(() => {
     loading.value = false
   })
@@ -106,11 +118,47 @@ const formatRegion = (province = null,r) => {
   }
 }
 
+//跳转至创建的歌单
+const toCreation = () => {
+  router.push({
+    name:'creation',
+    params:{
+      uid:id.value
+    }
+  })
+}
+
+//跳转至收藏的歌单
+const toCollected = () => {
+  router.push({
+    name:'collected',
+    params:{
+      uid:id.value
+    }
+  })
+}
+
+//获取用户信息
+const getInfo = () => {
+  if (id.value !== "0"){
+    showButton.value = false
+    getUserEvent(id.value)
+  }else {
+    showButton.value = true
+    getId().then(() => {
+      getUserEvent(id.value)
+    })
+  }
+}
+
+watch(() => route.params.uid,(n) => {
+  id.value = n
+  getInfo()
+})
 
 onMounted(() => {
-  getAccountInfo().then(() => {
-    getUserEvent()
-  })
+  id.value= route.params.uid
+  getInfo()
 })
 </script>
 

@@ -28,7 +28,7 @@
               <svg-icon name="song" style="width: 19px"></svg-icon>
               <p>单曲</p>
             </div>
-            <p v-for="item in songSuggestionList.songs" :key="item" class="scrollbar-demo-item">
+            <p v-for="item in songSuggestionList.songs" :key="item" class="scrollbar-demo-item" @click="playSong(item.id);resultListIsVisible = false">
               {{item.name+"-"}}
               <span v-for="(i,index) in item.artists" :key="index">{{i.name+" "}}</span>
             </p>
@@ -45,7 +45,7 @@
               <svg-icon name="album" style="width: 18px"></svg-icon>
               <p>专辑</p>
             </div>
-            <p v-for="item in songSuggestionList.albums" :key="item" class="scrollbar-demo-item">
+            <p v-for="item in songSuggestionList.albums" :key="item" class="scrollbar-demo-item" @click="$router.push(`/albumDetail/songlistPage/${item.id}`);resultListIsVisible = false">
               {{item.name}}
               <span v-for="(i,index) in item.artists" :key="index">{{i.name+" "}}</span>
             </p>
@@ -54,7 +54,7 @@
               <svg-icon name="list" style="width: 20px"></svg-icon>
               <p>歌单</p>
             </div>
-            <p v-for="item in songSuggestionList.playlists" :key="item" class="scrollbar-demo-item">
+            <p v-for="item in songSuggestionList.playlists" :key="item" class="scrollbar-demo-item" @click="toSongListPage(item.id);resultListIsVisible = false">
               {{item.name}}
               <span v-for="(i,index) in item.artists" :key="index">{{i.name+" "}}</span>
             </p>
@@ -64,7 +64,7 @@
 <!--        用户登录-->
         <div class="userProfile">
           <div class="topBar-profile">
-           <el-avatar class="topBar-profile-avatar" :size="35" :src="user?user.avatarUrl:''" @click="toUserInfoPage"></el-avatar>
+           <el-avatar class="topBar-profile-avatar" :size="35" :src="user?user.avatarUrl:''" @click="toUserInfoPage(0)"></el-avatar>
           </div>
           <a @click = "popVisible = true" id="topBar-login" v-if="user === undefined">登录</a>
           <p v-if="user !== undefined" id="topBar-nickname" @click="displayUserInfo = !displayUserInfo">{{user.nickname}}</p>
@@ -260,7 +260,7 @@
             <span id="allCommentsTitle" v-show="song.total">全部评论({{song.total}})</span>
 
             <div class="songHotCommentsContent" v-for="i in song.hotComments" :key="i">
-              <img :src="i.user.avatarUrl" alt="" class="commentsUserAvatar">
+              <img :src="i.user.avatarUrl" alt="" class="commentsUserAvatar" @click="toUserInfoPage(i.user.userId)">
               <div class="songCommentContentTop">
                 <span class="commentsUserName">{{i.user.nickname}}:</span>
                 <span class="commentsContent">{{i.content}}</span>
@@ -281,7 +281,7 @@
 
             <button id="checkMoreHotCommentsButton" v-show="song.total">更多精彩评论</button>
             <div class="songCommentContent" v-for="i in song.comments" :key="i">
-              <img :src="i.user.avatarUrl" alt="" class="commentsUserAvatar">
+              <img :src="i.user.avatarUrl" alt="" class="commentsUserAvatar" @click="toUserInfoPage(i.user.userId)">
 
               <div class="songCommentContentTop">
                 <span class="commentsUserName">{{i.user.nickname}}:</span>
@@ -386,6 +386,14 @@ let elInfiniteScroll = ref(null) //懒加载滚动条
 let songTimeChange = ref() //歌曲播放时间的变化，供FM页面使用
 let fmIsEnded = ref(false) //当前fm是否已播放完毕
 
+//路由守卫
+router.beforeEach((to,from) => {
+  resultListIsVisible.value = false
+  if (to.name !== 'songListDetailPage')
+    return true
+  return !!(to.name === 'songListDetailPage' && to.params.songListId);
+})
+
 //关闭登录弹窗
 const closePop = (e) => {
   popVisible.value = e
@@ -432,7 +440,6 @@ const playSong = (e) => {
   elInfiniteScroll.value.setScrollTop = 0
   clearSongInfo()
   if (e.ar && e.al){
-    //先获取歌词再获取播放地址防止报错
     getLyric(e.id)
     song.cover = e.al.picUrl
     song.artist = e.ar
@@ -441,7 +448,6 @@ const playSong = (e) => {
     song.id = e.id
   }else{
     song.id = e
-    //先获取歌词再获取播放地址防止报错
     getLyric(song.id)
     //如果传入的是歌曲id则会获取歌曲相关信息
     axios.get(`/song/detail?ids=${song.id}`).then(res => {
@@ -848,6 +854,16 @@ const dailySignin = () => {
   })
 }
 
+//跳转到歌单详情页
+const toSongListPage = (id) => {
+  router.push({
+    name:'songListDetailPage',
+    params:{
+      songListId:id
+    }
+  })
+}
+
 //返回首页
 const toHome = () => {
   router.push('/')
@@ -855,11 +871,17 @@ const toHome = () => {
   preparedSongListRight.value = -400
 }
 
-//跳转至编辑用户界面
-const toUserInfoPage = () => {
+//跳转至用户界面
+const toUserInfoPage = (id) => {
   if (!user.value)
     return
-  router.push("/userInfoPage")
+  router.push({
+    name:'creation',
+    params:{
+      uid:id
+    }
+  })
+  movingWindowDown()
 }
 
 //监听输入框值，返回建议结果

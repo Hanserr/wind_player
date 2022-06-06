@@ -12,17 +12,23 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import axios from "axios";
 import Cookies from "js-cookie";
 import {ElMessage} from "element-plus";
 import {router} from "@/router/routes";
+import {useRoute} from "vue-router";
 
+const route = useRoute()
 let createdSongList = ref()
+let id = 0
 
 //获取用户歌单列表
 const getPlayList = () => {
-  let id = Cookies.get('UID')
+  if (route.params.uid !== "0")
+    id = route.params.uid
+  else
+    id = Cookies.get('UID')
   if (id && Cookies.get('MUSIC_U')){
     axios.get(`/user/playlist?uid=${JSON.parse(id)}`).then(res => {
       if (res.data.code === 200){
@@ -42,7 +48,7 @@ const classifySongList = (list) => {
   let temp = []
   createdSongList.value = {}
   for(let i of list){
-    if (!i.subscribed){
+    if (i.creator.userId.toString() === id){
       temp.push(i)
     }
     createdSongList.value = temp
@@ -58,6 +64,10 @@ const toSongListPage = (id) => {
     }
   })
 }
+
+watch(() => route.params.uid,(n,p) => {
+  getPlayList()
+})
 
 onMounted(() => {
   getPlayList()

@@ -81,7 +81,7 @@
               <span v-if="user !== undefined" class="topBar-profile-popWindow-numberArea-p1">{{user.followeds}}</span>
               <span class="topBar-profile-popWindow-numberArea-p2">粉丝</span>
             </div>
-            <button @click="dailySignin">签到</button>
+            <button @click="dailySignin" :disabled="checkSign">{{checkSign?"已签到":"签到"}}</button>
             <div class="topBar-profile-popWindow-bottomDiv">
               我的会员
               <svg-icon name="arrowsRight" class="topBar-profile-popWindow-svg"></svg-icon>
@@ -385,6 +385,7 @@ let cancel = true //评论懒加载间隔时间段
 let elInfiniteScroll = ref(null) //懒加载滚动条
 let songTimeChange = ref() //歌曲播放时间的变化，供FM页面使用
 let fmIsEnded = ref(false) //当前fm是否已播放完毕
+let checkSign = ref(false) //签到文本
 
 //路由守卫
 router.beforeEach((to,from) => {
@@ -845,10 +846,11 @@ const dailySignin = () => {
     })
     return
   }
+  checkSign.value = true
   axios.get(`/daily_signin`).then(res => {
     if (res.data.code === 200){
       Cookies.set('signed','1',{
-        expires:new Date(new Date(new Date().toLocaleDateString()).getTime() +24 * 60 * 60 * 1000 -1)
+        expires:new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 -1)
       })
     }
   })
@@ -927,13 +929,12 @@ watch(() => songMovingWindowTop.value,(next) => {
 
 onMounted(() => {
   getUserProfile()
-
+  checkSign.value = !!Cookies.get('signed')
   addEventListener('mouseup',() => {
     if (onBarMark){
       onBarMark = false
     }
   })
-
 
   // 加载歌曲时缓冲
   audioRef.value.onprogress = () => {

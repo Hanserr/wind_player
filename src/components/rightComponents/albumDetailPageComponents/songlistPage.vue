@@ -11,7 +11,7 @@
     <div v-for="(i,index) in albumSongs" :key="i"  class="albumPageBottomContent-bottom" @dblclick="play(i.id)">
       <span class="albumSongIndex">{{(index+1).toString().length<2?"0"+(index+1):index+1}}</span>
       <div class="albumSongTitle"><span>{{i.name}}</span></div>
-      <div class="albumSongAr"><span v-for="ar in i.ar" :key="ar">{{ar.name}}&nbsp;&nbsp;</span></div>
+      <div class="albumSongAr"><span v-for="ar in i.ar" :key="ar" @click="this.pushingTools.toArPage(ar.id)">{{ar.name}}&nbsp;&nbsp;</span></div>
       <div class="albumSongName"><span>{{i.al.name}}</span></div>
       <div class="albumSongDt"><span>{{this.$durationFormat(i.dt)}}</span></div>
       <div class="albumSongPop">
@@ -27,6 +27,7 @@ import axios from "axios";
 import {ElMessage} from "element-plus";
 import {useRoute} from "vue-router";
 import {onMounted, ref} from "vue";
+import {router} from "@/router/routes";
 
 const route = useRoute()
 let albumSongs = ref() //专辑歌曲内容

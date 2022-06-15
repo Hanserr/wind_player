@@ -14,7 +14,7 @@
 
       <div class="homePage-bottom">
         <div class="recommendListDiv" v-for="i in recommendSongsList" :key="i">
-          <img :src="i.picUrl || i.coverImgUrl ||cover" class="recommendListDivCover" @click="toSongListDetail(i.id)">
+          <img :src="i.picUrl || i.coverImgUrl ||cover" class="recommendListDivCover" @click="this.$pushingTools.toSongListDetail(i.id)">
           {{i.name}}
         </div>
       </div>
@@ -70,22 +70,6 @@ const getDailyRecommendSongLists = () => {
       }
     }
   })
-}
-
-//跳转至歌单详情页
-const toSongListDetail = (id) => {
-  if (id !== -1 && id !== ''){
-    router.push({
-      name:'songListDetailPage',
-      params:{
-        songListId:id
-      }
-    })
-}else if(id === -1){
-    if (!Cookies.get('MUSIC_U'))
-      return
-    router.push('/dailyRecommendation')
-  }
 }
 
 onMounted(() => {

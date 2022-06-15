@@ -46,8 +46,8 @@
       </div>
     </div>
     <div class="userInfoPageMain-bottom">
-      <span style="margin-left: 30px" class="userInfoPageMain-bottom-title" @click="toCreation">创建的歌单</span>
-      <span style="margin-left: 40px" class="userInfoPageMain-bottom-title" @click="toCollected">收藏的歌单</span>
+      <span style="margin-left: 30px" class="userInfoPageMain-bottom-title" @click="this.pushingTools.toCreation">创建的歌单</span>
+      <span style="margin-left: 40px" class="userInfoPageMain-bottom-title" @click="this.pushingTools.toCollected">收藏的歌单</span>
       <router-view></router-view>
     </div>
   </el-scrollbar>
@@ -116,26 +116,6 @@ const formatRegion = (province = null,r) => {
   }else {
 
   }
-}
-
-//跳转至创建的歌单
-const toCreation = () => {
-  router.push({
-    name:'creation',
-    params:{
-      uid:id.value
-    }
-  })
-}
-
-//跳转至收藏的歌单
-const toCollected = () => {
-  router.push({
-    name:'collected',
-    params:{
-      uid:id.value
-    }
-  })
 }
 
 //获取用户信息

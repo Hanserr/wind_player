@@ -56,6 +56,9 @@ body{
     margin-left: 28px;
     height: 100%;
 }
+.albumSongAr span{
+    cursor: pointer;
+}
 .albumSongName{
     width: 120px;
     margin-left: 40px;

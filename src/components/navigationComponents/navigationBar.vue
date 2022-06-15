@@ -16,7 +16,7 @@
       </div>
 
       <div class="createdSongList" v-show="!createdSongListIsFold">
-        <p v-for="item in createdSongList" :key="item" class="createdSongList-p" @click="toSongListPage(item.id)">&nbsp;&nbsp;{{item.name}}</p>
+        <p v-for="item in createdSongList" :key="item" class="createdSongList-p" @click="this.$pushingTools.toSongListDetail(item.id)">&nbsp;&nbsp;{{item.name}}</p>
       </div>
 
       <div class="navigationBar-p-headline-wrap" @click="collectedSongIsFold = !collectedSongIsFold">
@@ -26,7 +26,7 @@
       </div>
 
       <div class="collectedSongList" v-show="!collectedSongIsFold">
-        <p v-for="item in collectionSongList" :key="item" class="createdSongList-p" @click="toSongListPage(item.id)">&nbsp;&nbsp;{{item.name}}</p>
+        <p v-for="item in collectionSongList" :key="item" class="createdSongList-p" @click="this.$pushingTools.toSongListDetail(item.id)">&nbsp;&nbsp;{{item.name}}</p>
       </div>
     </el-scrollbar>
   </div>
@@ -72,16 +72,6 @@ const classifySongList = (list) => {
     createdSongList.value = temp2
     collectionSongList.value = temp1
   }
-}
-
-//跳转到歌单详情页
-const toSongListPage = (id) => {
-  router.push({
-    name:'songListDetailPage',
-    params:{
-      songListId:id
-    }
-  })
 }
 
 onMounted(() => {

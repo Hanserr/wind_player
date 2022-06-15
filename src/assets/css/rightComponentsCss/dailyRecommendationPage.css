@@ -115,14 +115,22 @@ body{
     width: 160px;
     margin-left: 26px;
     height: 100%;
-
+}
+.dailyRecommendationSongAr span{
+    cursor: pointer;
+}
+.dailyRecommendationSongAr span:nth-child(n+2){
+    margin-left: 10px;
 }
 .dailyRecommendationSongName{
     width: 130px;
     margin-left: 48px;
     height: 100%;
-
 }
+.dailyRecommendationSongName span{
+    cursor: pointer;
+}
+
 .dailyRecommendationSongDt{
     width: 60px;
     margin-left: 35px;
@@ -142,5 +150,5 @@ body{
     position: relative;
     top: -10px;
     border-radius: 5px;
-    background-color: #484848;
+    background-color: #565656;
 }

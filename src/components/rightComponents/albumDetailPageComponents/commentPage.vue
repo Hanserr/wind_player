@@ -46,7 +46,6 @@ const getComments = (id) => {
         for(let i of res.data.data.comments){
           commentsList.value.push(i)
         }
-        console.log(res.data)
       }else{
         ElMessage({
           message:'未能获取相关评论，请稍候再试',
@@ -57,7 +56,7 @@ const getComments = (id) => {
 }
 
 //点赞或取消点赞评论
-const  isThumbUpComment = (cid,val) => {
+const isThumbUpComment = (cid,val) => {
   axios.get(`/comment/like?id=${route.params.id}&cid=${cid}&t=${val}&type=3`).then(res => {
     if (res.data.code !== 200){
       ElMessage({

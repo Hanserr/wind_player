@@ -42,10 +42,12 @@ body{
 /*顶部*/
 .playerPageTop{
     width: 1100px;
-    height: 70px;
+    height: 68px;
     position: absolute;
     background-color: #212121;
     transition: linear 0.2s;
+    border-bottom: 2px solid;
+    border-image: linear-gradient(90deg, #482b2a 0%, rgba(255, 84, 78, 0.7) 50%, #482b2a 100%) 2 2 2 2;
 }
 .topBar{
     width: 1100px;

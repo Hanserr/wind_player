@@ -88,6 +88,28 @@ const routes = [
         },
     },
     {
+      path: '/artistPage',
+      name: 'artist',
+      component: () => import("../components/rightComponents/artistPage"),
+      children: [
+          {
+              path: 'artistAlbumInfo',
+              name:'artistAlbumInfo',
+              component:() => import("../components/rightComponents/artistComponents/artistAlbumInfo")
+          },
+          {
+              path: 'artistDesc',
+              name:'artistDesc',
+              component:() => import("../components/rightComponents/artistComponents/artistDesc")
+          },
+          {
+              path: 'similarArtist',
+              name:'similarArtist',
+              component:() => import("../components/rightComponents/artistComponents/similarArtist")
+          }
+      ]
+    },
+    {
         path: '/dailyRecommendation',
         name: 'dailyRecommendationPage',
         component: () => import("../components/rightComponents/dailyRecommendationPage"),

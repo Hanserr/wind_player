@@ -9,7 +9,7 @@ module.exports = defineConfig({
   chainWebpack:config => {
     config.plugin('html')
         .tap(args => {
-          args[0].title='WindPlayer'
+          args[0].title='风吟音乐'
           return args
         })
   }

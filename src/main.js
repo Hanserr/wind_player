@@ -2,12 +2,13 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import axios from "axios";
 import VueAxios from 'vue-axios'
-import Cookies from 'js-cookie'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import {router} from './router/routes.js'
 import './assets/css/HarmonyFont.css'
 import SvgIcon from "@/components/SvgIcon";
+import pushingTools from './tools/pushingTools'
+
 const app = createApp(App)
 
 //默认携带cookie
@@ -51,10 +52,12 @@ app.config.globalProperties.$commentTimeFormat = (val) => {
         return `${y}年${m}月${d}日 ${H}:${mm}`
     }
 }
+//跳转歌手页
+app.config.globalProperties.$pushingTools= pushingTools
 
 app.component('SvgIcon',SvgIcon)
+
 app.use(ElementPlus)
     .use(VueAxios,axios)
-    .use(Cookies)
     .use(router)
     .mount('#app')

@@ -10,14 +10,14 @@
       <div class="songListDetailPage-top-right">
         <p id="songList">歌单</p>
         <p id="listName">{{listDetail.playlist.name}}</p>
-        <img id="avatar" :src="listDetail.playlist.creator.avatarUrl" @click="toCreator(listDetail.playlist.creator.userId)">
+        <img id="avatar" :src="listDetail.playlist.creator.avatarUrl" @click="this.PushingTools.toCreator(listDetail.playlist.creator.userId)">
         <div id="creatorWrap">
-          <p id="creatorName" @click="toCreator(listDetail.playlist.creator.userId)">{{listDetail.playlist.creator.nickname}}</p>
+          <p id="creatorName" @click="this.PushingTools.toCreator(listDetail.playlist.creator.userId)">{{listDetail.playlist.creator.nickname}}</p>
           <p id="creationTime">{{this.$dateFormat(listDetail.playlist.createTime)}}创建</p>
         </div>
         <button id="play" @click="playAll">播放全部</button>
         <button id="collect" @click="collectSongList" :disabled="!canCollect" :style="{backgroundColor:canCollect?'transparent':'#383838'}">{{hadCollected?'已收藏':'收藏'}}</button>
-        <svg-icon name="alterSongList" style="position: absolute;top: 105px;left: 240px;cursor:pointer;" @click="toAlterSongList" v-show="!canCollect"></svg-icon>
+        <svg-icon name="alterSongList" style="position: absolute;top: 105px;left: 240px;cursor:pointer;" @click="this.$pushingTools.toAlterSongList" v-show="!canCollect"></svg-icon>
         <p id="playCount">歌曲:{{listDetail.playlist.tracks.length}}</p>
         <p id="songCount">播放:{{listDetail.playlist.playCount.toString().length>=9?
             `${Math.floor(listDetail.playlist.playCount/100000000)}亿`: listDetail.playlist.playCount.toString().length>=5?
@@ -47,11 +47,11 @@
             </div>
 
             <div class="detailAr">
-              <p v-for="(n,index) in song.ar" :key="index">{{n.name}}</p>
+              <p v-for="(n,index) in song.ar" :key="index" @click="this.$pushingTools.toArPage(n.id)">{{n.name}}</p>
             </div>
 
             <div class="detailAl">
-              <p @click="toAlbumDetail(song.al.id)">{{song.al.name}}</p>
+              <p @click="this.pushingTools.toAlbumDetail(song.al.id)">{{song.al.name}}</p>
             </div>
 
             <div class="detailDuration">
@@ -110,38 +110,11 @@ const playAll = () => {
   emits('tracks',[preparedSongList,0])
 }
 
-//跳转至修改歌单页面
-const toAlterSongList = () => {
-  router.push({
-    name:'editSongListInfo',
-    params:{
-      editSongListInfoId:route.params.songListId
-    }
-  })
-}
-
 //收藏歌单
 const collectSongList = () => {
   hadCollected.value = !hadCollected.value
   axios.get(`/playlist/subscribe?t=${hadCollected.value?1:2}&id=${route.params.songListId}`)
 }
-
-
-//跳转至专辑详情页
-const toAlbumDetail = (id) => {
-  router.push(`/albumDetail/songlistPage/${id}`)
-}
-
-//跳转至歌单创建者页面
-const toCreator = (id) => {
-  router.push({
-    name:'creation',
-    params:{
-      uid:id
-    }
-  })
-}
-
 
 watch(() => route.params.songListId,(next) => {
   getSongListDetail(next)

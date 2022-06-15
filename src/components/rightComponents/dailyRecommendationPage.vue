@@ -26,8 +26,8 @@
           <div v-for="(i,index) in dailyList" :key="i"  class="dailyRecommendationPageBottomContent-bottom" @dblclick="playMusic(i.id)">
             <span class="dailyRecommendationSongIndex">{{(index+1).toString().length<2?"0"+(index+1):index+1}}</span>
             <div class="dailyRecommendationSongTitle"><span>{{i.name}}</span></div>
-            <div class="dailyRecommendationSongAr"><span v-for="ar in i.ar" :key="ar">{{ar.name}}&nbsp;&nbsp;</span></div>
-            <div class="dailyRecommendationSongName"><span>{{i.al.name}}</span></div>
+            <div class="dailyRecommendationSongAr"><span v-for="ar in i.ar" :key="ar" @click="this.$pushingTools.toArPage(ar.id)">{{ar.name}}</span></div>
+            <div class="dailyRecommendationSongName"><span @click="this.pushingTools.toAlbumDetail(i.al.id)">{{i.al.name}}</span></div>
             <div class="dailyRecommendationSongDt"><span>{{this.$durationFormat(i.dt)}}</span></div>
             <div class="dailyRecommendationSongPop">
               <div class="dailyRecommendationSongPop-content" :style="{width:i.pop+'%'}"></div>
@@ -44,6 +44,7 @@ import {onMounted,ref} from "vue";
 import axios from "axios";
 import {ElMessage} from "element-plus";
 import SvgIcon from "@/components/SvgIcon";
+import {router} from "@/router/routes";
 
 // eslint-disable-next-line no-undef
 let emits = defineEmits(['songID','tracks'])

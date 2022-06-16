@@ -3,6 +3,8 @@ import Cookies from "js-cookie";
 
 //跳转至歌手页
 const toArPage = (id) => {
+    if (!id)
+        return
      router.push({
         name: 'artistAlbumInfo',
         params: {
@@ -27,11 +29,11 @@ const toCreator = (id) => {
 }
 
 //跳转至修改歌单页面
-const toAlterSongList = () => {
+const toAlterSongList = (id) => {
      router.push({
         name:'editSongListInfo',
         params:{
-            editSongListInfoId:route.params.songListId
+            editSongListInfoId:id
         }
     })
 }

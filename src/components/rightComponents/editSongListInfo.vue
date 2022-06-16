@@ -1,7 +1,7 @@
 <template>
 <div class="editSongListInfo">
   <div class="leftContent">
-    <p id="title">编辑歌单信息</p>
+    <p>编辑歌单信息</p>
     <span>歌单名:</span>
     <input type="text" id="listNameInp" v-model="songList.name">
     <br>

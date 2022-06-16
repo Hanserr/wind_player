@@ -388,11 +388,9 @@ let fmIsEnded = ref(false) //当前fm是否已播放完毕
 let checkSign = ref(false) //签到文本
 
 //路由守卫
-router.beforeEach((to,from) => {
+router.beforeEach((to) => {
   resultListIsVisible.value = false
-  if (to.name !== 'songListDetailPage')
-    return true
-  return !!(to.name === 'songListDetailPage' && to.params.songListId);
+  return !(to.name === 'songListDetailPage' && to.params.songListId === undefined);
 })
 
 //关闭登录弹窗

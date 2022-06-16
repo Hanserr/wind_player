@@ -13,7 +13,7 @@ body{
     color: #D5D5D5;
     display: inline-block;
 }
-#title{
+.leftContent span:nth-child(1){
     font-size: 25px;
     margin-left: 20px;
     font-weight: bold;

@@ -10,14 +10,14 @@
       <div class="songListDetailPage-top-right">
         <p id="songList">歌单</p>
         <p id="listName">{{listDetail.playlist.name}}</p>
-        <img id="avatar" :src="listDetail.playlist.creator.avatarUrl" @click="this.PushingTools.toCreator(listDetail.playlist.creator.userId)">
+        <img id="avatar" :src="listDetail.playlist.creator.avatarUrl" @click="this.$PushingTools.toCreator(listDetail.playlist.creator.userId)">
         <div id="creatorWrap">
-          <p id="creatorName" @click="this.PushingTools.toCreator(listDetail.playlist.creator.userId)">{{listDetail.playlist.creator.nickname}}</p>
+          <p id="creatorName" @click="this.$PushingTools.toCreator(listDetail.playlist.creator.userId)">{{listDetail.playlist.creator.nickname}}</p>
           <p id="creationTime">{{this.$dateFormat(listDetail.playlist.createTime)}}创建</p>
         </div>
         <button id="play" @click="playAll">播放全部</button>
         <button id="collect" @click="collectSongList" :disabled="!canCollect" :style="{backgroundColor:canCollect?'transparent':'#383838'}">{{hadCollected?'已收藏':'收藏'}}</button>
-        <svg-icon name="alterSongList" style="position: absolute;top: 105px;left: 240px;cursor:pointer;" @click="this.$pushingTools.toAlterSongList" v-show="!canCollect"></svg-icon>
+        <svg-icon name="alterSongList" style="position: absolute;top: 105px;left: 240px;cursor:pointer;" @click="this.$pushingTools.toAlterSongList(route.params.songListId)" v-show="!canCollect"></svg-icon>
         <p id="playCount">歌曲:{{listDetail.playlist.tracks.length}}</p>
         <p id="songCount">播放:{{listDetail.playlist.playCount.toString().length>=9?
             `${Math.floor(listDetail.playlist.playCount/100000000)}亿`: listDetail.playlist.playCount.toString().length>=5?
@@ -28,38 +28,22 @@
     </div>
     <div class="songListDetailPage-bottom" v-if="listDetail">
       <div class="songListDetailPage-bottom-title">
-        <p id="title">标题</p>
-        <p id="artist">歌手</p>
-        <p id="album">专辑</p>
-        <p id="duration">时间</p>
+        <span>标题</span>
+        <span>歌手</span>
+        <span>专辑</span>
+        <span>时间</span>
       </div>
       <div class="songListDetailPage-bottom-content">
         <el-scrollbar height="240px">
-
           <div class="songDetail" v-for="(song,index) in listDetail.playlist.tracks" :key="song" @dblclick="playSong(song.id,index)">
-
-            <div class="detailIndex">
-              <p>{{(index+1).toString().length === 1?'0'+(index+1):(index+1)}}</p>
-            </div>
-
-            <div class="detailName">
-              <p>{{song.name}}</p>
-            </div>
-
-            <div class="detailAr">
-              <p v-for="(n,index) in song.ar" :key="index" @click="this.$pushingTools.toArPage(n.id)">{{n.name}}</p>
-            </div>
-
-            <div class="detailAl">
-              <p @click="this.pushingTools.toAlbumDetail(song.al.id)">{{song.al.name}}</p>
-            </div>
-
-            <div class="detailDuration">
-              <p>{{this.$durationFormat(song.dt)}}</p>
-            </div>
-
+              <span class="songDetailIndex">{{index+1 < 10?'0'+(index+1):(index+1)}}</span>
+              <span class="songDetailName">{{song.name}}</span>
+              <div class="detailAr">
+                <span v-for="(n,index) in song.ar" :key="index" @click="this.$pushingTools.toArPage(n.id)">{{n.name}}{{index !== song.ar.length - 1?'&nbsp;/&nbsp;':''}}</span>
+              </div>
+              <span @click="this.$pushingTools.toAlbumDetail(song.al.id)" class="songDetailAl">{{song.al.name}}</span>
+              <span class="songDetailDt">{{this.$durationFormat(song.dt)}}</span>
           </div>
-
         </el-scrollbar>
       </div>
     </div>
@@ -71,7 +55,6 @@ import {onMounted, ref, watch} from "vue";
 import {useRoute} from "vue-router"
 import axios from "axios"
 import SvgIcon from "@/components/SvgIcon";
-import {router} from "@/router/routes";
 import Cookies from "js-cookie";
 
 const route = useRoute()
@@ -90,6 +73,7 @@ const getSongListDetail = (id) => {
   axios.get(`/playlist/detail?id=${id}`).then(res => {
     if (res.data.code === 200) {
       listDetail.value = res.data
+      console.log(res.data)
       canCollect.value = res.data.playlist.userId !== parseInt(Cookies.get('UID'))
       hadCollected.value = res.data.playlist.subscribed
   }

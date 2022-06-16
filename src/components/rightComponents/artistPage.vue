@@ -65,6 +65,7 @@ const getArInfo = (id) => {
   })
 }
 onMounted(() => {
+  console.log(route.params.arID)
   getArInfo(route.params.arID)
 })
 </script>

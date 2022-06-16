@@ -25,7 +25,7 @@
                 <br>
                 <span v-for="i in JSON.parse(i.json).song.artists" :key="i">{{i.name}}</span>
               </div>
-              <div class="eventContent-right-middle-share" v-if="i.info.commentThread.resourceInfo.eventType === 19" @click="this.pushingTools.toAlbumDetail(JSON.parse(i.json).album.id)">
+              <div class="eventContent-right-middle-share" v-if="i.info.commentThread.resourceInfo.eventType === 19" @click="this.$pushingTools.toAlbumDetail(JSON.parse(i.json).album.id)">
                 <img :src="JSON.parse(i.json).album.picUrl" alt="">
                 <span>{{JSON.parse(i.json).album.name}}</span>
                 <br>

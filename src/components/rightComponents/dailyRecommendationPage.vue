@@ -27,7 +27,7 @@
             <span class="dailyRecommendationSongIndex">{{(index+1).toString().length<2?"0"+(index+1):index+1}}</span>
             <div class="dailyRecommendationSongTitle"><span>{{i.name}}</span></div>
             <div class="dailyRecommendationSongAr"><span v-for="ar in i.ar" :key="ar" @click="this.$pushingTools.toArPage(ar.id)">{{ar.name}}</span></div>
-            <div class="dailyRecommendationSongName"><span @click="this.pushingTools.toAlbumDetail(i.al.id)">{{i.al.name}}</span></div>
+            <div class="dailyRecommendationSongName"><span @click="this.$pushingTools.toAlbumDetail(i.al.id)">{{i.al.name}}</span></div>
             <div class="dailyRecommendationSongDt"><span>{{this.$durationFormat(i.dt)}}</span></div>
             <div class="dailyRecommendationSongPop">
               <div class="dailyRecommendationSongPop-content" :style="{width:i.pop+'%'}"></div>

@@ -49,12 +49,18 @@ const routes = [
             {
                 path: 'creation',
                 name: 'creation',
-                component: () => import('../components/rightComponents/userInfoComponents/creationSongListPage')
+                component: () => import('../components/rightComponents/userInfoComponents/creationSongListPage'),
+                meta: {
+                    keepAlive: false
+                },
             },
             {
                 path: 'collected',
                 name: 'collected',
-                component: () => import('../components/rightComponents/userInfoComponents/collectedSongListPage')
+                component: () => import('../components/rightComponents/userInfoComponents/collectedSongListPage'),
+                meta: {
+                    keepAlive: false
+                },
             }
         ],
         meta: {
@@ -70,17 +76,26 @@ const routes = [
             {
                 path:'songlistPage/:id',
                 name:'songlistPage',
-                component: () => import("../components/rightComponents/albumDetailPageComponents/songlistPage")
+                component: () => import("../components/rightComponents/albumDetailPageComponents/songlistPage"),
+                meta: {
+                    keepAlive: false
+                },
             },
             {
                 path:'commentPage/:id',
                 name:'commentPage',
-                component: () => import("../components/rightComponents/albumDetailPageComponents/commentPage")
+                component: () => import("../components/rightComponents/albumDetailPageComponents/commentPage"),
+                meta: {
+                    keepAlive: false
+                },
             },
             {
                 path:'infoPage/:id',
                 name:'infoPage',
-                component: () => import("../components/rightComponents/albumDetailPageComponents/infoPage")
+                component: () => import("../components/rightComponents/albumDetailPageComponents/infoPage"),
+                meta: {
+                    keepAlive: false
+                },
             },
         ],
         meta: {
@@ -95,19 +110,31 @@ const routes = [
           {
               path: 'artistAlbumInfo',
               name:'artistAlbumInfo',
-              component:() => import("../components/rightComponents/artistComponents/artistAlbumInfo")
+              component:() => import("../components/rightComponents/artistComponents/artistAlbumInfo"),
+              meta: {
+                  keepAlive: false
+              },
           },
           {
               path: 'artistDesc',
               name:'artistDesc',
-              component:() => import("../components/rightComponents/artistComponents/artistDesc")
+              component:() => import("../components/rightComponents/artistComponents/artistDesc"),
+              meta: {
+                  keepAlive: false
+              },
           },
           {
               path: 'similarArtist',
               name:'similarArtist',
-              component:() => import("../components/rightComponents/artistComponents/similarArtist")
+              component:() => import("../components/rightComponents/artistComponents/similarArtist"),
+              meta: {
+                  keepAlive: false
+              },
           }
-      ]
+      ],
+        meta: {
+            keepAlive: true
+        },
     },
     {
         path: '/dailyRecommendation',

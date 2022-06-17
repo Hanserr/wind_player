@@ -5,26 +5,36 @@ body{
 .artistAlbumInfoMain{
     width: 100%;
     height: auto;
+    min-height: 300px;
 }
-#top50Songs{
+#top50Songs,.hotAlbums{
     width: 100%;
-    height: auto;
 }
-#top50Songs ul{
+#top50Songs ul,.hotAlbums ul{
     width: 600px;
     height: auto;
     float: left;
     margin-left: 10px;
     list-style: none;
+    min-height: 140px;
+    padding-bottom: 10px;
 }
-#top50Songs li{
+#top50Songs li,.hotAlbums li{
     height: 25px;
     color: #b4b4b4;
     font-size: 14px;
     position: relative;
     line-height: 25px;
 }
-#top50Songs li:nth-child(odd){
+#top50SongsTitle,.hotAlbumsTitle{
+    color: #e3e3e3;
+    width: 600px;
+    margin: 20px 0 0 50px;
+    float: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+#top50Songs li:nth-child(odd),.hotAlbums li:nth-child(odd){
     background-color: #2E2E2E;
 }
 #top50Songs li:nth-last-child(1){
@@ -33,23 +43,21 @@ body{
     font-size: 12px;
     position: relative;
     line-height: 25px;
-    text-align: right;
-    cursor: pointer;
     background-color: transparent;
 }
-#top50Songs li span:nth-child(1){
+#top50Songs li span:nth-child(1),.hotAlbums li span:nth-child(1){
     position: absolute;
     left: 20px;
 }
-#top50Songs li span:nth-child(2){
+#top50Songs li span:nth-child(2),.hotAlbums li span:nth-child(2){
     position: absolute;
     left: 60px;
 }
-#top50Songs li span:nth-child(3){
+#top50Songs li span:nth-child(3),.hotAlbums li span:nth-child(3){
     position: absolute;
     left: 550px;
 }
-#top50SongsBanner{
+#top50SongsBanner,.hotAlbumsBanner{
     float: left;
     width: 150px;
     height: 150px;
@@ -58,9 +66,16 @@ body{
     text-align: center;
     overflow: hidden;
     margin: 20px 0 0 0;
+    font-weight: bolder;
+    letter-spacing: 2px;
+}
+.hotAlbumsBanner img{
+    width: 150px;
+    height: 150px;
 }
 #top50SongsBanner p{
     font-size: 30px;
     color: rgb(79, 79, 79);
-    font-weight: bold;
+    margin: 0;
+    line-height: 150px;
 }

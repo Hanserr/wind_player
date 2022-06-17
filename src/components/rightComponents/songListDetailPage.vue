@@ -39,7 +39,12 @@
               <span class="songDetailIndex">{{index+1 < 10?'0'+(index+1):(index+1)}}</span>
               <span class="songDetailName">{{song.name}}</span>
               <div class="detailAr">
-                <span v-for="(n,index) in song.ar" :key="index" @click="this.$pushingTools.toArPage(n.id)">{{n.name}}{{index !== song.ar.length - 1?'&nbsp;/&nbsp;':''}}</span>
+                <span v-for="(n,index) in song.ar"
+                      :key="index"
+                      @click="this.$pushingTools.toArPage(n.id)"
+                      :style="{cursor:n.id!==0?'pointer':'default',color:n.id!==0?'#d5d5d5':'#757575'}">
+                  {{n.name}}{{index !== song.ar.length - 1?'&nbsp;/&nbsp;':''}}
+                </span>
               </div>
               <span @click="this.$pushingTools.toAlbumDetail(song.al.id)" class="songDetailAl">{{song.al.name}}</span>
               <span class="songDetailDt">{{this.$durationFormat(song.dt)}}</span>
@@ -73,7 +78,6 @@ const getSongListDetail = (id) => {
   axios.get(`/playlist/detail?id=${id}`).then(res => {
     if (res.data.code === 200) {
       listDetail.value = res.data
-      console.log(res.data)
       canCollect.value = res.data.playlist.userId !== parseInt(Cookies.get('UID'))
       hadCollected.value = res.data.playlist.subscribed
   }

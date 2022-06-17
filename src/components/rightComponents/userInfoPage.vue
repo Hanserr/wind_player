@@ -46,8 +46,8 @@
       </div>
     </div>
     <div class="userInfoPageMain-bottom">
-      <span style="margin-left: 30px" class="userInfoPageMain-bottom-title" @click="this.$pushingTools.toCreation">创建的歌单</span>
-      <span style="margin-left: 40px" class="userInfoPageMain-bottom-title" @click="this.$pushingTools.toCollected">收藏的歌单</span>
+      <span style="margin-left: 30px" class="userInfoPageMain-bottom-title" @click="this.$pushingTools.toCreation(id)">创建的歌单</span>
+      <span style="margin-left: 40px" class="userInfoPageMain-bottom-title" @click="this.$pushingTools.toCollected(id)">收藏的歌单</span>
       <router-view></router-view>
     </div>
   </el-scrollbar>

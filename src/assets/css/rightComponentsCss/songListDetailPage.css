@@ -202,7 +202,6 @@ body{
     left: 780px;
 }
 .detailAr{
-    color: #d5d5d5;
     width: 120px;
     left: 400px;
     position: absolute;
@@ -211,6 +210,5 @@ body{
     overflow: hidden;
 }
 .detailAr span{
-    cursor: pointer;
     display: inline-block;
 }

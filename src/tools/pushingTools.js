@@ -1,7 +1,7 @@
 import {router} from "@/router/routes";
 import Cookies from "js-cookie";
 
-//跳转至歌手页
+//跳转至歌手专辑页
 const toArPage = (id) => {
     if (!id)
         return
@@ -9,6 +9,27 @@ const toArPage = (id) => {
         name: 'artistAlbumInfo',
         params: {
             arID: id
+        }
+    })
+}
+
+//跳转至歌手介绍页
+const toArDescPage = (d,id) => {
+    router.push({
+        name: 'artistDesc',
+        params: {
+            desc: d,
+            arID:id
+        }
+    })
+}
+
+//跳转至相似歌手页
+const toSimilarArPage = (id) => {
+    router.push({
+        name: 'similarArtist',
+        params: {
+            arID:id
         }
     })
 }
@@ -39,21 +60,21 @@ const toAlterSongList = (id) => {
 }
 
 //跳转至创建的歌单
-const toCreation = () => {
+const toCreation = (id) => {
      router.push({
         name:'creation',
         params:{
-            uid:id.value
+            uid:id
         }
     })
 }
 
 //跳转至收藏的歌单
-const toCollected = () => {
+const toCollected = (id) => {
     router.push({
         name:'collected',
         params:{
-            uid:id.value
+            uid:id
         }
     })
 }
@@ -76,6 +97,8 @@ const toSongListDetail = (id) => {
 
 export default {
     toArPage,
+    toArDescPage,
+    toSimilarArPage,
     toAlbumDetail,
     toCreator,
     toAlterSongList,

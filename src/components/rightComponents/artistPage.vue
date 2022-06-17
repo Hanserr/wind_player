@@ -5,19 +5,21 @@
      element-loading-text="加载中···">
   <el-scrollbar v-if="mark">
   <div class="ARPageMain-Top">
-    <img :src="user.avatarUrl" alt="">
-    <span id="ARPageMainArName">{{user.nickname}}</span>
+    <div class="ARPageMain-Top-imgWrap">
+      <img :src="artist.cover" alt="">
+    </div>
+    <span id="ARPageMainArName">{{artist.name}}</span>
     <button>收藏</button>
-    <button>个人主页</button>
+    <button @click="this.$pushingTools.toCreation(route.params.arID)" v-show="hasAccount">个人主页</button>
     <span>单曲数:{{artist.musicSize}}</span>
     <br>
     <span>专辑数:{{artist.albumSize}}</span>
   </div>
   <div class="ARPageMain-bottom">
-    <span class="ARPageMain-bottom-title">专辑</span>
-    <span class="ARPageMain-bottom-title">歌手详情</span>
-    <span class="ARPageMain-bottom-title">相似歌手</span>
-    <router-view></router-view>
+    <span class="ARPageMain-bottom-title" @click="this.$pushingTools.toArPage(route.params.arID)">专辑</span>
+    <span class="ARPageMain-bottom-title" @click="this.$pushingTools.toArDescPage(artist.briefDesc,route.params.arID)">歌手详情</span>
+    <span class="ARPageMain-bottom-title" @click="this.$pushingTools.toSimilarArPage(route.params.arID)">相似歌手</span>
+    <router-view @playMusic="playMusic"></router-view>
   </div>
   </el-scrollbar>
 </div>
@@ -32,10 +34,12 @@ import {router} from "@/router/routes";
 import {ElMessage} from "element-plus";
 
 const route = useRoute()
-let user = ref() //用户信息
 let artist = ref() //歌手信息
 let loading = ref(false)
 let mark = ref(false) //当前页面数据是否加载完成
+let emits = defineEmits(['songID'])
+let hasAccount = ref(false)
+
 //获取歌手信息
 const getArInfo = (id) => {
   if (!id){
@@ -43,10 +47,11 @@ const getArInfo = (id) => {
     return
   }
   loading.value = true
+  mark.value = false
   axios.get(`/artist/detail?id=${id}`).then(res => {
     if (res.data.code === 200){
-      user.value = res.data.data.user
       artist.value = res.data.data.artist
+      hasAccount.value = !!res.data.data.user
       mark.value = true
     }else {
       ElMessage({
@@ -54,7 +59,6 @@ const getArInfo = (id) => {
         type:"error"
       })
     }
-    console.log(res.data)
   }).catch(() => {
     ElMessage({
       message:"获取歌手信息失败",
@@ -64,8 +68,13 @@ const getArInfo = (id) => {
     loading.value = false
   })
 }
+
+//播放歌曲
+const playMusic = (id) => {
+  emits('songID',id)
+}
+
 onMounted(() => {
-  console.log(route.params.arID)
   getArInfo(route.params.arID)
 })
 </script>

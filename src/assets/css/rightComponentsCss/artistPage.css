@@ -13,13 +13,18 @@ body{
     height: 240px;
     position: relative;
 }
-.ARPageMain-Top img{
-    width: 180px;
+.ARPageMain-Top-imgWrap{
     height: 180px;
+    width: 180px;
+    overflow: hidden;
     border-radius: 10px;
     margin-left: 20px;
     margin-top: 30px;
 }
+.ARPageMain-Top img{
+    height: 180px;
+}
+
 #ARPageMainArName{
     position: absolute;
     top: 20px;
@@ -67,6 +72,7 @@ body{
 .ARPageMain-bottom-title{
     color: #d5d5d5;
     font-size: 20px;
+    cursor: pointer;
 }
 .ARPageMain-bottom-title:nth-child(n+2){
     margin-left: 20px;

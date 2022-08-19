@@ -87,3 +87,10 @@
     top: 0;
     left: 148px;
 }
+#registerButton{
+    position: absolute;
+    font-size: 10px;
+    color: #6d75a2;
+    bottom: 5px;
+    right: 10px;
+}

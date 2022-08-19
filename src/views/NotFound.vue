@@ -1,6 +1,6 @@
 <template>
 <div class="main404">
-  <img src="../../assets/pics/404.webp">
+  <img src="../assets/pics/404.webp">
   <span>404</span>
   <br>
   <span>啊咧~页面失踪了~</span>
@@ -14,5 +14,5 @@
 </script>
 
 <style scoped>
-@import "../../assets/css/rightComponentsCss/NotFound.css";
+@import "../assets/css/views/NotFound.css";
 </style>

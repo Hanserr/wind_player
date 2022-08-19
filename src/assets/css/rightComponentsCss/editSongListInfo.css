@@ -22,6 +22,9 @@ body{
     margin-left: 20px;
     font-size: 13px;
 }
+.leftContent p{
+    margin-left: 19px;
+}
 #songListInfoDesc{
     position: relative;
     top: -95px;

@@ -62,6 +62,7 @@
         <el-button @click="invisible">取消</el-button>
         <el-button type="primary" @click="option === 2?verificatonLogin(form.phone,form.code):phoneLogin(form.phone,form.pwd)">登录</el-button>
       </span>
+       <a id="registerButton">→注册</a>
      </template>
    </el-dialog>
  </div>
@@ -87,7 +88,6 @@ let option = ref(0)
 let verificationTimer  = 0
 let buttonIsDisable = ref(false)
 let verTime = ref(60)
-const baseUrl = "https://netease-cloud-music-api-beta-lime.vercel.app"
 const form = reactive({
   phone:'',
   pwd:'',
@@ -127,7 +127,7 @@ watch(() => option.value,(nextOption) => {
 
 //获取用户登陆状态
 const getUserStatus = () => {
-  axios.post(`${baseUrl}/login/status`).then(res => {
+  axios.post(`/login/status`).then(res => {
     if (res.data.data.code !== 200 || !res.data.data.account){
       ElMessage({
         message:'登陆失败，请稍后再试',
@@ -135,76 +135,81 @@ const getUserStatus = () => {
       })
     }else {
       location.reload()
+      Cookies.set('UID',res.data.data.account.id)
     }
   })
 }
 
-//手机号登录
+// 手机号登录
 const phoneLogin = (phone,pwd) => {
-  let phoneReg = /^[1][3,4,5,7,8][0-9]{9}$/
-  if (!phoneReg.test(phone) || pwd === ''){
-    ElMessage({
-      message:'请检查手机号或密码格式',
-      type:"warning"
-    })
-    return
-  }
-  load.value = true
-  axios.post(`${baseUrl}/login/cellphone?phone=${phone}&password=${pwd}`).then(res=>{
-    console.log(res.data)
-    if (res.data.code === 200) {
-      let cookiesList = res.data.cookie.split(';;')
-      for (let i = 0;i<cookiesList.length;i++){
-        let d = cookiesList[i].split(';')
-        let name = d[0].split('=')[0]
-        let val = d[0].split('=')[1]
-        let expire = new Date(d[2].split('=')[1])
-        let p = d[3].split('=')[1]
-        Cookies.set(name,val,{
-          expires:expire,
-          path:p
-        })
-      }
-      Cookies.set('UID',res.data.profile.userId,{
-        expires: 15
-      })
-      invisible()
-      location.reload()
-    }else {
-      ElMessage({
-        message:"手机号或密码错误",
-        type:"error"
-      })
-    }
-  }).catch((err)=>{
-    console.log(err)
-    ElMessage({
-      message:"出错啦",
-      type:"error"
-    })
-  }).finally(() => {
-    load.value = false
+  ElMessage({
+    message:'因网易增加了网易云盾验证,密码登录暂时无法使用。请使用二维码登陆',
+    type:"warning"
   })
+  // let phoneReg = /^[1][3,4,5,7,8][0-9]{9}$/
+  // if (!phoneReg.test(phone) || pwd === ''){
+  //   ElMessage({
+  //     message:'请检查手机号或密码格式',
+  //     type:"warning"
+  //   })
+  //   return
+  // }
+  // load.value = true
+  // axios.post(`/login/cellphone?phone=${phone}&password=${pwd}`).then(res=>{
+  //   console.log(res.data)
+  //   if (res.data.code === 200) {
+  //     let cookiesList = res.data.cookie.split(';;')
+  //     for (let i = 0;i<cookiesList.length;i++){
+  //       let d = cookiesList[i].split(';')
+  //       let name = d[0].split('=')[0]
+  //       let val = d[0].split('=')[1]
+  //       let expire = new Date(d[2].split('=')[1])
+  //       let p = d[3].split('=')[1]
+  //       Cookies.set(name,val,{
+  //         expires:expire,
+  //         path:p
+  //       })
+  //     }
+  //     Cookies.set('UID',res.data.profile.userId,{
+  //       expires: 15
+  //     })
+  //     invisible()
+  //     location.reload()
+  //   }else {
+  //     ElMessage({
+  //       message:"手机号或密码错误",
+  //       type:"error"
+  //     })
+  //   }
+  // }).catch((err)=>{
+  //   console.log(err)
+  //   ElMessage({
+  //     message:"出错啦",
+  //     type:"error"
+  //   })
+  // }).finally(() => {
+  //   load.value = false
+  // })
 }
 
-//二维码登录
+// 二维码登录
 const getQRCode = async () => {
   let QR = null
   //先获取unikey  防止被缓存 这里传入时间戳
-  let unikeyData = (await axios.get(`${baseUrl}/login/qr/key?timestamp=${Date.now()}`)).data.data
+  let unikeyData = (await axios.get(`/login/qr/key?timestamp=${Date.now()}`)).data.data
   if (unikeyData.code === 200) {
     //传入前面的unikey获取二维码base64编码
-    QR = await axios.get(`${baseUrl}/login/qr/create?&key=${unikeyData.unikey}&qrimg=true`)
+    QR = await axios.get(`/login/qr/create?&key=${unikeyData.unikey}&qrimg=true`)
     if (QR.data.code === 200) {
       QRCodeBase64.value = QR.data.data.qrimg
       //开始轮询接口获取二维码状态
       QRCodeTimer = setInterval(async () => {
-        let status = await axios.get(`${baseUrl}/login/qr/check?key=${unikeyData.unikey}`)
+        let status = await axios.get(`/login/qr/check?key=${unikeyData.unikey}&timestamp=${Date.now()}`)
         //800 为二维码过期,801 为等待扫码,802 为待确认,803 为授权登录成功(803 状态码下会返回 cookies)
         if (status.data.code === 800) {
           getQRCode()
         }else if (status.data.code === 803) {
-          axios.get(`${baseUrl}/login/status`).then(res => {
+          axios.get(`/login/status`).then(res => {
           Cookies.set('UID',res.data.data.account.id,{
             expires:15
           })
@@ -239,88 +244,98 @@ const getQRCode = async () => {
   }
 }
 
-//获取验证码
+// 获取验证码
 const getVerificationCode = (phoneNumber) => {
-  //获取前先判定cookie中是否有未过期的获取记录
-  if (Cookies.get("verExpireTime")){
-    ElMessage({
-      message:'获取验证码间隔时间过短',
-      type:'warning'
-    })
-    return;
-  }
-  //正则检查手机号格式
-  const phoneReg = /^[1][3,4,5,7,8][0-9]{9}$/;
-  if (!phoneReg.test(phoneNumber)){
-    ElMessage({
-      message:'请检查手机号格式',
-      type:'warning'
-    })
-    return;
-  }
-  buttonIsDisable.value = true
-  axios.post(`${baseUrl}/captcha/sent?phone=${phoneNumber}`).then(res => {
-    if(res.data.code === 200){
-      Cookies.set("verExpireTime"," ",{
-        expires:new Date(new Date()*1+1000*60)
-      })
-      ElMessage({
-        message:"验证码已发送，请注意查收",
-        type:"success"
-      })
-      //设置验证码倒计时
-      verificationTimer = setInterval(() => {
-      verTime.value--
-      if (verTime.value === 0){
-        buttonIsDisable.value = false
-        verTime.value = 60
-        clearInterval(verificationTimer)
-      }
-    },1000)
-    }else if (res.data.code === 400){
-      buttonIsDisable.value = false
-      ElMessage({
-        message:res.data.message,
-        type:"warning"
-      })
-    }
+  ElMessage({
+    message:'因网易增加了网易云盾验证,验证码登录暂时无法使用。请使用二维码登陆',
+    type:"warning"
   })
+  //获取前先判定cookie中是否有未过期的获取记录
+  // if (Cookies.get("verExpireTime")){
+  //   ElMessage({
+  //     message:'获取验证码间隔时间过短',
+  //     type:'warning'
+  //   })
+  //   return;
+  // }
+  // //正则检查手机号格式
+  // const phoneReg = /^[1][3,4,5,7,8][0-9]{9}$/;
+  // if (!phoneReg.test(phoneNumber)){
+  //   ElMessage({
+  //     message:'请检查手机号格式',
+  //     type:'warning'
+  //   })
+  //   return;
+  // }
+  // buttonIsDisable.value = true
+  // axios.post(`/captcha/sent?phone=${phoneNumber}`).then(res => {
+  //   if(res.data.code === 200){
+  //     Cookies.set("verExpireTime"," ",{
+  //       expires:new Date(new Date()*1+1000*60)
+  //     })
+  //     ElMessage({
+  //       message:"验证码已发送，请注意查收",
+  //       type:"success"
+  //     })
+  //     //设置验证码倒计时
+  //     verificationTimer = setInterval(() => {
+  //     verTime.value--
+  //     if (verTime.value === 0){
+  //       buttonIsDisable.value = false
+  //       verTime.value = 60
+  //       clearInterval(verificationTimer)
+  //     }
+  //   },1000)
+  //   }else if (res.data.code === 400){
+  //     buttonIsDisable.value = false
+  //     ElMessage({
+  //       message:res.data.message,
+  //       type:"warning"
+  //     })
+  //   }
+  // })
 }
 
 //验证码登录
 const verificatonLogin = (phoneNumber,code) => {
-  const phoneReg = /^[1][3,4,5,7,8][0-9]{9}$/;
-  if (!phoneReg.test(phoneNumber) || code === ''){
-    ElMessage({
-      message:'请检查手机号或验证码格式',
-      type:'warning'
-    })
-    return;
-  }
-  load.value = true
-  axios.post(`${baseUrl}/captcha/verify?phone=${phoneNumber}&captcha=${code}`).then(res => {
-    if (res.data.code === 503){
-      ElMessage({
-        message:res.data.message,
-        type:"error"
-      })
-      form.code = ''
-    }else if(res.data.code === 200){
-      axios.get(`${baseUrl}/login/status`).then(res => {
-        if (res.data.data.code === 200){
-          Cookies.set('UID',res.data.data.account.id)
-        }
-      })
-      getUserStatus()
-      ElMessage({
-        message:'登陆成功',
-        type:"success"
-      })
-      invisible()
-    }
-  }).finally(() => {
-    load.value = false
+  ElMessage({
+    message:'因网易增加了网易云盾验证,验证码登录暂时无法使用。请使用二维码登陆',
+    type:"warning"
   })
+//   const phoneReg = /^[1][3,4,5,7,8][0-9]{9}$/;
+//   if (!phoneReg.test(phoneNumber) || code === ''){
+//     ElMessage({
+//       message:'请检查手机号或验证码格式',
+//       type:'warning'
+//     })
+//     return;
+//   }
+//   load.value = true
+//   axios.post(`/captcha/verify?phone=${phoneNumber}&captcha=${code}`).then(res => {
+//     console.log(res.data)
+//     if (res.data.code === 503){
+//       ElMessage({
+//         message:res.data.message,
+//         type:"error"
+//       })
+//       form.code = ''
+//     }else if(res.data.code === 200){
+//         axios.post(`/login/status`).then(res => {
+//         console.log(res.data)
+//         if (res.data.data.code === 200){
+//           Cookies.set('UID',res.data.data.account.id)
+//         }
+//       })
+//       // getUserStatus()
+//       ElMessage({
+//         message:'登陆成功',
+//         type:"success"
+//       })
+//       invisible()
+//     }
+//   }).finally(() => {
+//     load.value = false
+//   })
 }
 
 onUnmounted(() => {

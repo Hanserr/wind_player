@@ -1,5 +1,7 @@
 <template>
-<div class="editSongListInfo">
+<div class="editSongListInfo"
+     v-loading="loading"
+     element-loading-background="rgba(0, 0, 0, 0.8)">
   <div class="leftContent">
     <p>编辑歌单信息</p>
     <span>歌单名:</span>
@@ -44,6 +46,7 @@ let songList = reactive({
 })
 let showUploadingProgress = ref(false) //上传进度条
 let uploadingProgress = ref(0) //上传进度
+let loading = ref(false)
 
 //获取歌单信息
 const getSongListInfo = (id) => {
@@ -56,6 +59,7 @@ const getSongListInfo = (id) => {
 
 //修改歌单
 const alterSongListInfo = () => {
+  loading.value = true
   axios(`/playlist/update?id=${songList.id}&name=${songList.name}&desc=${songList.description}`).then(res => {
     if (res.data.code === 200){
       ElMessage({
@@ -68,7 +72,9 @@ const alterSongListInfo = () => {
         type:"error"
       })
   }
-})
+}).finally(() => {
+  loading.value = false
+  })
 }
 
 // 修改歌单封面

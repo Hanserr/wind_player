@@ -1,0 +1,57 @@
+body{
+    padding: 0;
+    margin: 0;
+    background-color: #6d75a2;
+}
+#registerPage{
+    width: 320px;
+    height: 450px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -160px;
+    margin-top: -225px;
+    border-radius: 10px;
+    background: url("../../pics/registerBG.webp");
+    background-size: cover;
+    background-position-y: -200px;
+}
+#registerPage input{
+    border: none;
+    border-radius: 5px;
+    width: 220px;
+    height: 32px;
+    display: block;
+    margin: 12px auto;
+    background-color: rgba(255, 255, 255, 0.8);
+    font-weight: bold;
+    outline: none;
+    font-size: 13px;
+    text-indent: 5px;
+    color: #222c69;
+}
+#registerPage input:nth-child(1){
+    margin-top: 160px;
+}
+#registerPage input:nth-child(4){
+    margin: 0 0 0 49px;
+    width: 100px;
+    display: inline-block;
+    overflow: hidden;
+}
+#registerPage button{
+    border: none;
+    width: 112px;
+    height: 38px;
+    margin-left: 5px;
+    border-radius: 5px;
+    background-color: rgba(109, 117, 162, 0.9);
+    color: gainsboro;
+    cursor: pointer;
+}
+#registerPage button:nth-child(6) {
+    width: 220px;
+    height: 38px;
+    display: block;
+    margin: 10px auto;
+}

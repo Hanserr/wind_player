@@ -62,7 +62,7 @@
         <el-button @click="invisible">取消</el-button>
         <el-button type="primary" @click="option === 2?verificatonLogin(form.phone,form.code):phoneLogin(form.phone,form.pwd)">登录</el-button>
       </span>
-       <a id="registerButton">→注册</a>
+      <a id="registerButton" href="/register" target="_blank">→注册</a>
      </template>
    </el-dialog>
  </div>

@@ -179,6 +179,14 @@ const routes = [
         ]
     },
     {
+      path: '/register',
+      name: 'registerPage',
+      component: () => import("../views/register"),
+      meta: {
+          keepAlive: false
+      }
+    },
+    {
         path: '/404',
         name: '404',
         component: () => import("../views/NotFound"),

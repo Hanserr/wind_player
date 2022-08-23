@@ -90,8 +90,8 @@
             等级
             <svg-icon name="arrowsRight" class="topBar-profile-popWindow-svg"></svg-icon>
           </div>
-          <div class="topBar-profile-popWindow-bottomDiv">
-            个人信息设置
+          <div class="topBar-profile-popWindow-bottomDiv" @click="router.push('/settings')">
+            设置
             <svg-icon name="arrowsRight" class="topBar-profile-popWindow-svg"></svg-icon>
           </div>
           <div class="topBar-profile-popWindow-bottomDiv" @click="checkLogoutAgain()">

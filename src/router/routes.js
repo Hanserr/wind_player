@@ -1,10 +1,10 @@
-import {createRouter,createWebHistory} from "vue-router";
+import {createRouter,createWebHistory} from 'vue-router';
 
 const routes = [
     {
         path:'/',
         name: 'main',
-        component: () => import("../main.vue"),
+        component: () => import('../main.vue'),
         meta: {
             keepAlive: true
         },
@@ -12,7 +12,7 @@ const routes = [
             {
                 path: '',
                 name: 'homePage',
-                component: () => import("../components/rightComponents/homePage"),
+                component: () => import('../components/rightComponents/homePage'),
                 meta:{
                     keepAlive:true
                 }
@@ -20,7 +20,7 @@ const routes = [
             {
                 path: 'searchResultPage',
                 name: 'searchResultPage',
-                component: () => import("../components/rightComponents/searchResultPage"),
+                component: () => import('../components/rightComponents/searchResultPage'),
                 meta: {
                     keepAlive: false
                 },
@@ -28,7 +28,7 @@ const routes = [
             {
                 path: 'songListDetail',
                 name: 'songListDetailPage',
-                component: () => import("../components/rightComponents/songListDetailPage"),
+                component: () => import('../components/rightComponents/songListDetailPage'),
                 meta:{
                     keepAlive:true
                 }
@@ -36,7 +36,7 @@ const routes = [
             {
                 path:'editSongListInfo',
                 name:'editSongListInfo',
-                component: () => import("../components/rightComponents/editSongListInfo"),
+                component: () => import('../components/rightComponents/editSongListInfo'),
                 meta: {
                     keepAlive: false
                 },
@@ -44,7 +44,7 @@ const routes = [
             {
                 path: 'editUserInfo',
                 name: 'editUserInfo',
-                component: () => import("../components/rightComponents/editUserInfo"),
+                component: () => import('../components/rightComponents/editUserInfo'),
                 meta: {
                     keepAlive: false
                 },
@@ -52,7 +52,7 @@ const routes = [
             {
                 path: 'userInfoPage',
                 name: 'userInfo',
-                component: () => import("../components/rightComponents/userInfoPage"),
+                component: () => import('../components/rightComponents/userInfoPage'),
                 children: [
                     {
                         path: 'creation',
@@ -78,13 +78,13 @@ const routes = [
             {
                 path: 'albumDetail',
                 name: 'albumDetailPage',
-                component: () => import("../components/rightComponents/albumDetailPage"),
+                component: () => import('../components/rightComponents/albumDetailPage'),
                 redirect:'/albumDetail/songlistPage/:id',
                 children:[
                     {
                         path:'songlistPage/:id',
                         name:'songlistPage',
-                        component: () => import("../components/rightComponents/albumDetailPageComponents/songlistPage"),
+                        component: () => import('../components/rightComponents/albumDetailPageComponents/songlistPage'),
                         meta: {
                             keepAlive: false
                         },
@@ -92,7 +92,7 @@ const routes = [
                     {
                         path:'commentPage/:id',
                         name:'commentPage',
-                        component: () => import("../components/rightComponents/albumDetailPageComponents/commentPage"),
+                        component: () => import('../components/rightComponents/albumDetailPageComponents/commentPage'),
                         meta: {
                             keepAlive: false
                         },
@@ -100,7 +100,7 @@ const routes = [
                     {
                         path:'infoPage/:id',
                         name:'infoPage',
-                        component: () => import("../components/rightComponents/albumDetailPageComponents/infoPage"),
+                        component: () => import('../components/rightComponents/albumDetailPageComponents/infoPage'),
                         meta: {
                             keepAlive: false
                         },
@@ -113,12 +113,12 @@ const routes = [
             {
                 path: 'artistPage',
                 name: 'artist',
-                component: () => import("../components/rightComponents/artistPage"),
+                component: () => import('../components/rightComponents/artistPage'),
                 children: [
                     {
                         path: 'artistAlbumInfo',
                         name:'artistAlbumInfo',
-                        component:() => import("../components/rightComponents/artistComponents/artistAlbumInfo"),
+                        component:() => import('../components/rightComponents/artistComponents/artistAlbumInfo'),
                         meta: {
                             keepAlive: false
                         },
@@ -126,7 +126,7 @@ const routes = [
                     {
                         path: 'artistDesc',
                         name:'artistDesc',
-                        component:() => import("../components/rightComponents/artistComponents/artistDesc"),
+                        component:() => import('../components/rightComponents/artistComponents/artistDesc'),
                         meta: {
                             keepAlive: false
                         },
@@ -134,7 +134,7 @@ const routes = [
                     {
                         path: 'similarArtist',
                         name:'similarArtist',
-                        component:() => import("../components/rightComponents/artistComponents/similarArtist"),
+                        component:() => import('../components/rightComponents/artistComponents/similarArtist'),
                         meta: {
                             keepAlive: false
                         },
@@ -147,7 +147,7 @@ const routes = [
             {
                 path: 'dailyRecommendation',
                 name: 'dailyRecommendationPage',
-                component: () => import("../components/rightComponents/dailyRecommendationPage"),
+                component: () => import('../components/rightComponents/dailyRecommendationPage'),
                 meta: {
                     keepAlive: false
                 },
@@ -155,7 +155,7 @@ const routes = [
             {
                 path: 'personalFm',
                 name: 'personalFmPage',
-                component: () => import("../components/rightComponents/personalFm"),
+                component: () => import('../components/rightComponents/personalFm'),
                 meta: {
                     keepAlive: true
                 },
@@ -163,7 +163,7 @@ const routes = [
             {
                 path: 'event',
                 name: 'eventPage',
-                component: () => import("../components/rightComponents/eventPage"),
+                component: () => import('../components/rightComponents/eventPage'),
                 meta: {
                     keepAlive: false
                 },
@@ -171,17 +171,25 @@ const routes = [
             {
                 path: 'artist',
                 name: 'artistPage',
-                component: () => import("../components/rightComponents/artistPage"),
+                component: () => import('../components/rightComponents/artistPage'),
                 meta: {
                     keepAlive: false
                 },
             },
+            {
+                name: 'settingsPage',
+                path: '/settings',
+                component: () => import('../components/rightComponents/settings'),
+                meta: {
+                    keepAlive: false
+                }
+            }
         ]
     },
     {
       path: '/register',
       name: 'registerPage',
-      component: () => import("../views/register"),
+      component: () => import('../views/register'),
       meta: {
           keepAlive: false
       }
@@ -189,7 +197,7 @@ const routes = [
     {
         path: '/404',
         name: '404',
-        component: () => import("../views/NotFound"),
+        component: () => import('../views/NotFound'),
         meta: {
             keepAlive: false
         },

@@ -1,0 +1,48 @@
+.el-tabs__item{
+    color: gainsboro;
+}
+#appInfo{
+    color: #cccccc;
+    line-height: 30px;
+}
+#appInfo a{
+    text-decoration: none;
+    color: #b6c0ff;
+}
+#updatePhoneInp1,#updatePhoneInp2{
+    outline: none;
+    border: none;
+    width: 180px;
+    height: 30px;
+    border-radius: 5px;
+    margin-top: 10px;
+    display: block;
+}
+#updatePhone input:nth-child(4){
+    outline: none;
+    border: none;
+    width: 90px;
+    height: 30px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+#updatePhone button:nth-child(5){
+    outline: none;
+    border: none;
+    width: 80px;
+    height: 32px;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+#updatePhoneTitle{
+    color: #b2baf8;
+    font-size: 20px;
+}
+#updatePhoneButton{
+    border: none;
+    border-radius: 5px;
+    width: 184px;
+    height: 30px;
+    margin-top: 10px;
+}

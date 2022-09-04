@@ -64,7 +64,7 @@
       <!--        用户登录-->
       <div class="userProfile">
         <div class="topBar-profile">
-          <el-avatar class="topBar-profile-avatar" :size="35" :src="user?user.avatarUrl:''" @click="this.$pushingTools.toCreation(0)"></el-avatar>
+          <el-avatar class="topBar-profile-avatar" :size="35" :src="user?user.avatarUrl:''" @click="Cookies.get('UID')?this.$pushingTools.toCreation(0):0"></el-avatar>
         </div>
         <a @click = "popVisible = true" id="topBar-login" v-if="user === undefined">登录</a>
         <p v-if="user !== undefined" id="topBar-nickname" @click="displayUserInfo = !displayUserInfo">{{user.nickname}}</p>

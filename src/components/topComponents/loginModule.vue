@@ -35,6 +35,9 @@
        </div>
        <p>打开手机网易云音乐扫一扫</p>
        <img :src="QRCodeBase64" v-show="QRCodeBase64 !== 0"/>
+       <div id="loginQRCodeWrapper" v-if="code802">
+         <span>请在手机上确认登录</span>
+       </div>
      </div>
      <!--      验证码-->
      <el-form :model="form" v-show="option === 2">
@@ -88,6 +91,7 @@ let option = ref(0)
 let verificationTimer  = 0
 let buttonIsDisable = ref(false)
 let verTime = ref(60)
+let code802 = ref(false)
 const form = reactive({
   phone:'',
   pwd:'',
@@ -208,7 +212,10 @@ const getQRCode = async () => {
         //800 为二维码过期,801 为等待扫码,802 为待确认,803 为授权登录成功(803 状态码下会返回 cookies)
         if (status.data.code === 800) {
           getQRCode()
+        }else if(status.data.code === 802){
+          code802.value = true
         }else if (status.data.code === 803) {
+          code802.value = false
           axios.get(`/login/status`).then(res => {
           Cookies.set('UID',res.data.data.account.id,{
             expires:15

@@ -95,3 +95,16 @@
     right: 10px;
     text-decoration: none;
 }
+#loginQRCodeWrapper{
+    width: 180px;
+    height: 180px;
+    background-color: rgba(45, 45, 45, 0.96);
+    position: absolute;
+    top: 120px;
+}
+#loginQRCodeWrapper span{
+    font-size: 18px;
+    color: gainsboro;
+    display: inline-block;
+    margin-top: 80px;
+}

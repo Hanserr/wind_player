@@ -84,12 +84,25 @@ const getVerCode = () => {
 
 //
 const next = () => {
+  oldCaptcha = captcha.value
   if (stage === 2)
     rebind()
-  oldCaptcha = captcha.value
-  button1Title.value = "确认修改"
-  newPhoneInput.value = true
-  stage = 2
+  else {
+    axios.get(`/captcha/verify?phone=${oldPhone.value}&captcha=${oldCaptcha}`).then(res => {
+      if (res.data.code === 200){
+        button1Title.value = "确认修改"
+        newPhoneInput.value = true
+        stage = 2
+        clearInterval(updatePhoneTimer)
+      }else {
+        ElMessage({
+          message:'验证码错误',
+          type:"error"
+        })
+        captcha.value = ''
+      }
+    })
+  }
 }
 
 //换绑手机

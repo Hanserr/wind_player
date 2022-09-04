@@ -14,7 +14,7 @@
 
       <div class="homePage-bottom">
         <div class="recommendListDiv" v-for="i in recommendSongsList" :key="i">
-          <img :src="i.picUrl || i.coverImgUrl ||cover" class="recommendListDivCover" @click="this.$pushingTools.toSongListDetail(i.id)">
+          <img :src="i.picUrl || i.coverImgUrl || cover" class="recommendListDivCover" @click="this.$pushingTools.toSongListDetail(i.id)">
           {{i.name}}
         </div>
       </div>
@@ -27,7 +27,7 @@
 
 import {onMounted, ref} from "vue";
 import axios from "axios";
-import {ElCarousel} from "element-plus";
+import {ElCarousel, ElMessage} from "element-plus";
 import {router} from "@/router/routes";
 import Cookies from "js-cookie";
 
@@ -51,7 +51,7 @@ const getBanner = () => {
 const getBannerSong = (item) => {
   if (item.targetType === 1){
     emits("songID",item.targetId)
-  } else if(item.targetType === 10){
+  }else if(item.targetType === 10){
     router.push(`/albumDetail/songlistPage/${item.targetId}`)
   }else if (item.targetType === 1000){
     toSongListDetail(item.targetId)
@@ -72,9 +72,32 @@ const getDailyRecommendSongLists = () => {
   })
 }
 
+//获取登录状态
+const getStatus = () => {
+  axios.get(`/login/status`).then(res => {
+    if (res.data.data.code !== 200){
+      ElMessage({
+        message:"网络异常",
+        type:"error"
+      })
+      return
+    }
+    if (res.data.data.account === null){
+      Cookies.remove('UID')
+      Cookies.remove('MUSIC_U')
+      ElMessage({
+        message:"登陆后展示完整数据",
+        type:"info"
+      })
+    }else {
+      getDailyRecommendSongLists()
+    }
+  })
+}
+
 onMounted(() => {
+  getStatus()
   getBanner()
-  getDailyRecommendSongLists()
 })
 </script>
 

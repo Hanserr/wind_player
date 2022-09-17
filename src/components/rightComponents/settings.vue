@@ -7,13 +7,15 @@
         <input placeholder="原手机号" id="updatePhoneInp1" v-model="oldPhone">
         <input placeholder="新手机号" id="updatePhoneInp2" v-show="newPhoneInput" v-model="newPhone">
         <input placeholder="验证码" v-model="captcha">
-        <button @click="getVerCode" :disabled=buttonIsDisable>获取验证码</button>
+        <button @click="getVerCode" :disabled=buttonIsDisable>{{buttonIsDisable?updatePhoneTime+'秒':'获取验证码'}}</button>
         <br>
         <button id="updatePhoneButton" @click="next">{{button1Title}}</button>
         <p>修改密码</p>
       </div>
     </el-tab-pane>
-    <el-tab-pane label="工具">Config</el-tab-pane>
+    <el-tab-pane label="工具">
+      <span style="color: #6d75a2">暂未上线工具哦，请耐心等候</span>
+    </el-tab-pane>
     <el-tab-pane label="关于风吟音乐">
       <span id="appInfo">
         风吟音乐是基于<a href="https://github.com/Binaryify/NeteaseCloudMusicApi" target="_blank">网易云音乐API</a>开发的一款Web端音乐播放器
@@ -32,6 +34,7 @@ import {onUnmounted, ref} from "vue";
 import axios from "axios";
 import {ElMessage} from "element-plus";
 import Cookies from "js-cookie";
+import {router} from "@/router/routes";
 
 let oldPhone = ref()
 let newPhone = ref()
@@ -82,7 +85,7 @@ const getVerCode = () => {
   })
 }
 
-//
+//验证旧手机号验证码，进行下一步换绑操作
 const next = () => {
   oldCaptcha = captcha.value
   if (stage === 2)
@@ -93,6 +96,9 @@ const next = () => {
         button1Title.value = "确认修改"
         newPhoneInput.value = true
         stage = 2
+        captcha.value = ''
+        buttonIsDisable.value = false
+        updatePhoneTime.value = 60
         clearInterval(updatePhoneTimer)
       }else {
         ElMessage({
@@ -113,6 +119,8 @@ const rebind = () => {
         message:"修改成功",
         type:"success"
       })
+      buttonIsDisable = false
+      router.push('/')
     }else {
       ElMessage({
         message:"修改失败",

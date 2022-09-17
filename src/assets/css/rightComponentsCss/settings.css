@@ -34,6 +34,7 @@
     border-radius: 5px;
     margin-top: 10px;
     margin-left: 10px;
+    color: #6d75a2;
 }
 #updatePhoneTitle{
     color: #b2baf8;
@@ -45,4 +46,7 @@
     width: 184px;
     height: 30px;
     margin-top: 10px;
+}
+#updatePhone input{
+    text-indent: 1em;
 }

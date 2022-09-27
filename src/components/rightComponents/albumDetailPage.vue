@@ -76,6 +76,7 @@ const getScrollTop = (e) => {
 onMounted(() => {
   getAlbumInfo(route.params.id)
 })
+
 </script>
 <style scoped>
 @import "../../assets/css/rightComponentsCss/albumDetailPage.css";

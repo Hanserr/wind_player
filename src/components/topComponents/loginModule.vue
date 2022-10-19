@@ -115,6 +115,7 @@ const props = defineProps({
 
 //关闭弹窗
 const invisible = () => {
+  clearInterval(QRCodeTimer)
   option.value = 0
   emits('changeVisible',false)
 }
@@ -347,6 +348,7 @@ const verificatonLogin = (phoneNumber,code) => {
 
 onUnmounted(() => {
   clearInterval(verificationTimer)
+  clearInterval(QRCodeTimer)
 })
 </script>
 

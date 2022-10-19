@@ -78,7 +78,6 @@ import axios from "axios";
 import {onMounted, onUnmounted, ref} from "vue";
 import {ElMessage} from "element-plus";
 import SvgIcon from "@/components/SvgIcon";
-import {router} from "@/router/routes";
 
 let lastTime = -1
 let eventsList = ref() //动态列表
@@ -100,7 +99,6 @@ const getEvents = () => {
   eventGettingMark = false
   loading.value = true
   axios.get(`/event?pagesize=20&lasttime=${lastTime}`).then(res => {
-    console.log(res.data)
     if (res.data.code === 200){
       lastTime = res.data.lasttime
       if (eventsList.value){

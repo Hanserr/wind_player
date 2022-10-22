@@ -64,7 +64,7 @@
       <!--        用户登录-->
       <div class="userProfile">
         <div class="topBar-profile">
-          <el-avatar class="topBar-profile-avatar" :size="35" :src="user?user.avatarUrl:''" @click="Cookies.get('UID')?this.$pushingTools.toCreation(0):0"></el-avatar>
+          <el-avatar class="topBar-profile-avatar" :size="35" :src="user?user.avatarUrl:''" @click="user.userId !== undefined?this.$pushingTools.toCreation(0):0"></el-avatar>
         </div>
         <a @click = "popVisible = true" id="topBar-login" v-if="user === undefined">登录</a>
         <p v-if="user !== undefined" id="topBar-nickname" @click="displayUserInfo = !displayUserInfo">{{user.nickname}}</p>
@@ -514,14 +514,15 @@ const formatTime = (time) => {
 
 //获取用户登陆状态
 const getUserProfile = () => {
-  if (Cookies.get('UID') || Cookies.get('MUSIC_U')){
-    let uid = Cookies.get('UID')
-    axios.get(`/user/detail?uid=${uid}`).then(res => {
-      if (res.data.code === 200){
-        user.value = res.data.profile
-      }
-    })
-  }
+  axios.post(`/login/status?timestamp=${Date.now()}`).then(res => {
+    if (res.data.data.code === 200){
+      axios.get(`/user/detail?uid=${res.data.data.account.id}`).then(res => {
+        if (res.data.code === 200){
+          user.value = res.data.profile
+        }
+      })
+    }
+  })
 }
 
 //顶部搜索

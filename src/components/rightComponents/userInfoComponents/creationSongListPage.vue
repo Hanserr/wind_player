@@ -27,10 +27,12 @@ let id = 0
 const getPlayList = () => {
   if (route.params.uid !== "0")
     id = route.params.uid
-  else
-    id = Cookies.get('UID')
-  if (id && Cookies.get('MUSIC_U')){
-    axios.get(`/user/playlist?uid=${JSON.parse(id)}`).then(res => {
+  else{
+    axios.get(`/login/status`).then(res => {
+      id = res.data.data.account.id
+    })
+  }
+    axios.get(`/user/playlist?uid=${id}`).then(res => {
       if (res.data.code === 200){
         classifySongList(res.data.playlist)
       }else{
@@ -40,7 +42,6 @@ const getPlayList = () => {
         })
       }
     })
-  }
 }
 
 //歌单分类
@@ -64,10 +65,6 @@ const toSongListPage = (id) => {
     }
   })
 }
-
-watch(() => route.params.uid,(n,p) => {
-  getPlayList()
-})
 
 onMounted(() => {
   getPlayList()

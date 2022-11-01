@@ -45,13 +45,24 @@ let collectedSongIsFold = ref(true) //收藏的歌单是否折叠
 let createdSongList = ref() //创建的歌单列表
 let collectionSongList = ref() //收藏的歌单列表
 
-//获取用户歌单列表
+//获取歌单列表
+const getSongList = (id) => {
+  axios.get(`/user/playlist?uid=${id}`).then(res => {
+    if (res.data.code === 200){
+      classifySongList(res.data.playlist)
+    }
+  })
+}
+
+//获取歌单列表前判断
 const getUserSongList = () => {
-  let id = Cookies.get('UID')
-  if (id && Cookies.get('MUSIC_U')){
-    axios.get(`/user/playlist?uid=${JSON.parse(id)}`).then(res => {
-      if (res.data.code === 200){
-        classifySongList(res.data.playlist)
+  if (Cookies.get('UID')){
+    getSongList(Cookies.get('UID'))
+  }else{
+    axios.get(`/login/status`).then(res => {
+      if (res.data.data.code === 200 && res.data.data.account){
+        Cookies.set('UID', res.data.data.account.id)
+        getSongList(res.data.data.account.id)
       }
     })
   }

@@ -282,7 +282,6 @@
           <button id="checkMoreHotCommentsButton" v-show="song.total">更多精彩评论</button>
           <div class="songCommentContent" v-for="i in song.comments" :key="i">
             <img :src="i.user.avatarUrl" alt="" class="commentsUserAvatar" @click="toUserInfoPage(i.user.userId)">
-
             <div class="songCommentContentTop">
               <span class="commentsUserName">{{i.user.nickname}}:</span>
               <span class="commentsContent">{{i.content}}</span>
@@ -401,7 +400,7 @@ const closeResultList = (e) => {
 
 //输入框聚焦事件
 const searchInpFocus = (val) => {
-  if (val !== ''){
+  if (!val){
     resultListIsVisible.value = true
   }
 }
@@ -515,7 +514,7 @@ const formatTime = (time) => {
 //获取用户登陆状态
 const getUserProfile = () => {
   axios.post(`/login/status?timestamp=${Date.now()}`).then(res => {
-    if (res.data.data.code === 200){
+    if (res.data.data.code === 200 && res.data.data.account){
       axios.get(`/user/detail?uid=${res.data.data.account.id}`).then(res => {
         if (res.data.code === 200){
           user.value = res.data.profile
@@ -796,6 +795,13 @@ const openCommentArea = (cid,targetUser) => {
     confirmButtonText: '发送',
     cancelButtonText: '取消',
   }).then(({value}) => {
+    if (!value){
+      ElMessage({
+        message: '评论不能为空',
+        type: "warning"
+      })
+      return
+    }
     axios.get(`/comment?t=2&type=0&id=${song.id}&commentId=${cid}&content=${value}`).then(res => {
       if (res.data.code !== 200){
         ElMessage({

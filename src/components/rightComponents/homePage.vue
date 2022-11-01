@@ -86,7 +86,7 @@ const getStatus = () => {
       Cookies.remove('UID')
       Cookies.remove('MUSIC_U')
       ElMessage({
-        message:"登陆后展示完整数据",
+        message:"登陆后获取精准推送",
         type:"info"
       })
     }else {

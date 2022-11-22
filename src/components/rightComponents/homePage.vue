@@ -30,6 +30,7 @@ import axios from "axios";
 import {ElCarousel, ElMessage} from "element-plus";
 import {router} from "@/router/routes";
 import Cookies from "js-cookie";
+import {Auth} from "@/store";
 
 let bannerList = ref({'':''}) //banner列表
 let beforeBanner = require('../../assets/pics/beforeBanner.webp') //banner未加载完成时的替代图
@@ -37,6 +38,7 @@ let recommendSongsList = ref([]) //日推歌单
 let cover = require("../../assets/pics/cover.webp") //日推封面
 // eslint-disable-next-line no-undef
 const emits = defineEmits(['songID'])
+const store = Auth()
 
 //获取首页轮播图
 const getBanner = () => {
@@ -74,6 +76,9 @@ const getDailyRecommendSongLists = () => {
 
 //获取登录状态
 const getStatus = () => {
+  if (store.getUID){
+
+  }
   axios.get(`/login/status`).then(res => {
     if (res.data.data.code !== 200){
       ElMessage({

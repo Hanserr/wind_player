@@ -321,13 +321,16 @@ import {ElMessage, ElMessageBox} from "element-plus";
 import NavigationBar from "@/components/navigationComponents/navigationBar";
 import Cookies from "js-cookie";
 import {useRoute} from "vue-router";
+import {Auth} from "@/store"
+import {storeToRefs} from "pinia";
 
+const store = Auth()
 const route = useRoute()
 let inputVal = ref('') //顶部搜索框变量
 let songSuggestionList = reactive({}) //建议歌单列表
 let suggestionTimer = null //建议歌单列表的定时器
 let popVisible = ref(false) //登录弹窗是否可见
-let user = ref() //用户信息
+let user = storeToRefs(store).user//用户信息
 let displayUserInfo = ref(false) //展示用户部分信息（vip时间，注销···）弹窗
 let resultListIsVisible = ref(false) //建议歌单是否可见
 let isPlay = ref(false) //是否播放中
@@ -513,15 +516,7 @@ const formatTime = (time) => {
 
 //获取用户登陆状态
 const getUserProfile = () => {
-  axios.post(`/login/status?timestamp=${Date.now()}`).then(res => {
-    if (res.data.data.code === 200 && res.data.data.account){
-      axios.get(`/user/detail?uid=${res.data.data.account.id}`).then(res => {
-        if (res.data.code === 200){
-          user.value = res.data.profile
-        }
-      })
-    }
-  })
+  store.getUserStatus()
 }
 
 //顶部搜索
@@ -918,6 +913,8 @@ watch(() => songMovingWindowTop.value,(next) => {
 onMounted(() => {
   getUserProfile()
   checkSign.value = !!Cookies.get('signed')
+  if (!Cookies.get('UID'))
+    Cookies.set('UID',store.getUID)
   addEventListener('mouseup',() => {
     if (onBarMark){
       onBarMark = false
@@ -973,7 +970,7 @@ onMounted(() => {
   }
 })
 
-onUnmounted(()=>{
+onUnmounted(() => {
   clearInterval(suggestionTimer)
   clearTimeout(refreshCommentTimer)
 })

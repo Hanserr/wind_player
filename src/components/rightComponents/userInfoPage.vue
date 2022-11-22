@@ -61,7 +61,6 @@ import {onMounted, ref, watch} from "vue";
 import SvgIcon from "@/components/SvgIcon";
 import {region} from "@/tools/region";
 import {useRoute} from "vue-router";
-import {router} from "@/router/routes";
 
 const route = useRoute()
 let profile = ref() //用户信息

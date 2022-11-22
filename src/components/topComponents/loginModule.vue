@@ -61,7 +61,7 @@
        <a @click="option = 2" v-if="option !== 2">{{loginOption[2]}}&emsp;</a>
      </div>
      <template #footer>
-      <span class="dialog-footer">
+      <span class="dialog-footer" v-show="option !== 1">
         <el-button @click="invisible">取消</el-button>
         <el-button type="primary" @click="option === 2?verificatonLogin(form.phone,form.code):phoneLogin(form.phone,form.pwd)">登录</el-button>
       </span>
@@ -79,6 +79,7 @@ import {onUnmounted, reactive, ref, watch} from "vue";
 import axios from "axios";
 import Cookies from "js-cookie";
 import {ElMessage} from "element-plus";
+import {Auth} from "@/store";
 
 let pwdIsVisible = ref(false)
 let dialogWidth = 300
@@ -102,6 +103,7 @@ const loginOption = [
   '二维码登录',
   '验证码登录'
 ]
+const store = Auth()
 
 // eslint-disable-next-line no-undef
 const emits = defineEmits(["changeVisible"])
@@ -132,17 +134,10 @@ watch(() => option.value,(nextOption) => {
 
 //获取用户登陆状态
 const getUserStatus = () => {
-  axios.post(`/login/status`).then(res => {
-    if (res.data.data.code !== 200 || !res.data.data.account){
-      ElMessage({
-        message:'登陆失败，请稍后再试',
-        type:'error'
-      })
-    }else {
-      location.reload()
-      Cookies.set('UID',res.data.data.account.id)
-    }
-  })
+  if (store.getUID)
+    return
+  if (store.getUserStatus())
+    location.reload()
 }
 
 // 手机号登录
@@ -151,50 +146,6 @@ const phoneLogin = (phone,pwd) => {
     message:'因网易增加了网易云盾验证,密码登录暂时无法使用。请使用二维码登陆',
     type:"warning"
   })
-  // let phoneReg = /^[1][3,4,5,7,8][0-9]{9}$/
-  // if (!phoneReg.test(phone) || pwd === ''){
-  //   ElMessage({
-  //     message:'请检查手机号或密码格式',
-  //     type:"warning"
-  //   })
-  //   return
-  // }
-  // load.value = true
-  // axios.post(`/login/cellphone?phone=${phone}&password=${pwd}`).then(res=>{
-  //   console.log(res.data)
-  //   if (res.data.code === 200) {
-  //     let cookiesList = res.data.cookie.split(';;')
-  //     for (let i = 0;i<cookiesList.length;i++){
-  //       let d = cookiesList[i].split(';')
-  //       let name = d[0].split('=')[0]
-  //       let val = d[0].split('=')[1]
-  //       let expire = new Date(d[2].split('=')[1])
-  //       let p = d[3].split('=')[1]
-  //       Cookies.set(name,val,{
-  //         expires:expire,
-  //         path:p
-  //       })
-  //     }
-  //     Cookies.set('UID',res.data.profile.userId,{
-  //       expires: 15
-  //     })
-  //     invisible()
-  //     location.reload()
-  //   }else {
-  //     ElMessage({
-  //       message:"手机号或密码错误",
-  //       type:"error"
-  //     })
-  //   }
-  // }).catch((err)=>{
-  //   console.log(err)
-  //   ElMessage({
-  //     message:"出错啦",
-  //     type:"error"
-  //   })
-  // }).finally(() => {
-  //   load.value = false
-  // })
 }
 
 // 二维码登录
@@ -217,29 +168,7 @@ const getQRCode = async () => {
           code802.value = true
         }else if (status.data.code === 803) {
           code802.value = false
-          axios.get(`/login/status`).then(res => {
-          Cookies.set('UID',res.data.data.account.id,{
-            expires:15
-          })
-          })
-          status.data.cookie.split(/csrf=.{0,120};;/)
-          let MU = status.data.cookie.match(/MUSIC_U=.{0,230}GMT;/)
-          status.data.cookie.split(/MUSIC_U=.{0,230}GMT;/)
-          Cookies.set('MUSIC_U',MU,{
-            expires:15
-          })
-          let cookiesList =  status.data.cookie.split('HTTPOnly;')
-          for (let i = 0;i<cookiesList.length;i++){
-            let d = cookiesList[i].split(';')
-            let name = d[0].split('=')[0]
-            let val = d[0].split('=')[1]
-            let expire = new Date(d[2].split('=')[1])
-            let p = d[3].split('=')[1]
-            Cookies.set(name,val,{
-              expires:expire,
-              path:p,
-            })
-          }
+          store.processCookie(status.data.cookie)
           clearInterval(QRCodeTimer)
           getUserStatus()
           ElMessage({
@@ -258,50 +187,6 @@ const getVerificationCode = (phoneNumber) => {
     message:'因网易增加了网易云盾验证,验证码登录暂时无法使用。请使用二维码登陆',
     type:"warning"
   })
-  //获取前先判定cookie中是否有未过期的获取记录
-  // if (Cookies.get("verExpireTime")){
-  //   ElMessage({
-  //     message:'获取验证码间隔时间过短',
-  //     type:'warning'
-  //   })
-  //   return;
-  // }
-  // //正则检查手机号格式
-  // const phoneReg = /^[1][3,4,5,7,8][0-9]{9}$/;
-  // if (!phoneReg.test(phoneNumber)){
-  //   ElMessage({
-  //     message:'请检查手机号格式',
-  //     type:'warning'
-  //   })
-  //   return;
-  // }
-  // buttonIsDisable.value = true
-  // axios.post(`/captcha/sent?phone=${phoneNumber}`).then(res => {
-  //   if(res.data.code === 200){
-  //     Cookies.set("verExpireTime"," ",{
-  //       expires:new Date(new Date()*1+1000*60)
-  //     })
-  //     ElMessage({
-  //       message:"验证码已发送，请注意查收",
-  //       type:"success"
-  //     })
-  //     //设置验证码倒计时
-  //     verificationTimer = setInterval(() => {
-  //     verTime.value--
-  //     if (verTime.value === 0){
-  //       buttonIsDisable.value = false
-  //       verTime.value = 60
-  //       clearInterval(verificationTimer)
-  //     }
-  //   },1000)
-  //   }else if (res.data.code === 400){
-  //     buttonIsDisable.value = false
-  //     ElMessage({
-  //       message:res.data.message,
-  //       type:"warning"
-  //     })
-  //   }
-  // })
 }
 
 //验证码登录
@@ -310,40 +195,6 @@ const verificatonLogin = (phoneNumber,code) => {
     message:'因网易增加了网易云盾验证,验证码登录暂时无法使用。请使用二维码登陆',
     type:"warning"
   })
-//   const phoneReg = /^[1][3,4,5,7,8][0-9]{9}$/;
-//   if (!phoneReg.test(phoneNumber) || code === ''){
-//     ElMessage({
-//       message:'请检查手机号或验证码格式',
-//       type:'warning'
-//     })
-//     return;
-//   }
-//   load.value = true
-//   axios.post(`/captcha/verify?phone=${phoneNumber}&captcha=${code}`).then(res => {
-//     console.log(res.data)
-//     if (res.data.code === 503){
-//       ElMessage({
-//         message:res.data.message,
-//         type:"error"
-//       })
-//       form.code = ''
-//     }else if(res.data.code === 200){
-//         axios.post(`/login/status`).then(res => {
-//         console.log(res.data)
-//         if (res.data.data.code === 200){
-//           Cookies.set('UID',res.data.data.account.id)
-//         }
-//       })
-//       // getUserStatus()
-//       ElMessage({
-//         message:'登陆成功',
-//         type:"success"
-//       })
-//       invisible()
-//     }
-//   }).finally(() => {
-//     load.value = false
-//   })
 }
 
 onUnmounted(() => {

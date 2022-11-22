@@ -65,7 +65,7 @@ const toSongListPage = (id) => {
   })
 }
 
-watch(() => route.params.uid,(n,p) => {
+watch(() => route.params.uid,() => {
   getPlayList()
 })
 

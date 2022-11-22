@@ -8,7 +8,9 @@ import {router} from './router/routes.js'
 import './assets/css/HarmonyFont.css'
 import SvgIcon from "@/components/SvgIcon";
 import pushingTools from './tools/pushingTools'
+import {createPinia} from "pinia";
 
+const pinia = createPinia()
 const app = createApp(App)
 
 //默认携带cookie
@@ -52,7 +54,7 @@ app.config.globalProperties.$commentTimeFormat = (val) => {
         return `${y}年${m}月${d}日 ${H}:${mm}`
     }
 }
-//跳转歌手页
+//跳转
 app.config.globalProperties.$pushingTools= pushingTools
 
 app.component('SvgIcon',SvgIcon)
@@ -60,4 +62,5 @@ app.component('SvgIcon',SvgIcon)
 app.use(ElementPlus)
     .use(VueAxios,axios)
     .use(router)
+    .use(pinia)
     .mount('#app')

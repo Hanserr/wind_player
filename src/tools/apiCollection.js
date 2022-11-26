@@ -25,7 +25,7 @@ const api = {
     POLLING_LOGIN_QR_STATUS:"/login/qr/check",
     //获取账户信息
     GET_ACCOUNT_INFO:"/user/account",
-    //获取账户详情
+    //获取用户详情
     GET_USER_DETAIL:"/user/detail",
     //获取歌单详情
     GET_PLAYLIST_DETAIL:"/playlist/detail",

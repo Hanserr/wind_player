@@ -18,30 +18,26 @@ import {ElMessage} from "element-plus";
 import {router} from "@/router/routes";
 import {useRoute} from "vue-router";
 import api from "@/tools/apiCollection";
+import {Auth} from "@/store"
 
 const route = useRoute()
+const store = Auth()
 let createdSongList = ref()
 let id = 0
 
 //获取用户歌单列表
 const getPlayList = () => {
-  if (route.params.uid !== "0")
-    id = route.params.uid
-  else{
-    axios.get(api.GET_LOGIN_STATUS).then(res => {
-      id = res.data.data.account.id
-    })
-  }
-    axios.get(`${api.GET_USER_PLAYLIST}?uid=${id}`).then(res => {
-      if (res.data.code === 200){
-        classifySongList(res.data.playlist)
-      }else{
-        ElMessage({
-          message:"获取歌单信息失败",
-          type:"error"
-        })
-      }
-    })
+  id = route.params.uid === "0"?store.getUID:route.params.uid
+  axios.get(`${api.GET_USER_PLAYLIST}?uid=${id}`).then(res => {
+    if (res.data.code === 200){
+      classifySongList(res.data.playlist)
+    }else{
+      ElMessage({
+        message:"获取歌单信息失败",
+        type:"error"
+      })
+    }
+  })
 }
 
 //歌单分类
@@ -65,7 +61,9 @@ const toSongListPage = (id) => {
     }
   })
 }
-
+watch(() => route.params.uid,() => {
+  getPlayList()
+})
 onMounted(() => {
   getPlayList()
 })

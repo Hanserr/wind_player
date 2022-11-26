@@ -14,7 +14,6 @@
 <script setup>
 import {onMounted, ref, watch} from "vue";
 import axios from "axios";
-import Cookies from "js-cookie";
 import {ElMessage} from "element-plus";
 import {router} from "@/router/routes";
 import {useRoute} from "vue-router";
@@ -28,22 +27,17 @@ const store = Auth()
 
 //获取用户歌单列表
 const getPlayList = () => {
-  if (route.params.uid !== "0")
-    id = route.params.uid
-  else
-    id = Cookies.get('UID')
-  if (id && Cookies.get('MUSIC_U')){
-    axios.get(`${api.GET_USER_PLAYLIST}?uid=${JSON.parse(id)}`).then(res => {
-      if (res.data.code === 200){
-        classifySongList(res.data.playlist)
-      }else{
-        ElMessage({
-          message:"获取歌单信息失败",
-          type:"error"
-        })
-      }
-    })
-  }
+  id = route.params.uid === "0"?store.getUID:route.params.uid
+  axios.get(`${api.GET_USER_PLAYLIST}?uid=${id}`).then(res => {
+    if (res.data.code === 200){
+      classifySongList(res.data.playlist)
+    }else{
+      ElMessage({
+        message:"获取歌单信息失败",
+        type:"error"
+      })
+    }
+  })
 }
 
 //歌单分类
@@ -71,7 +65,6 @@ const toSongListPage = (id) => {
 watch(() => route.params.uid,() => {
   getPlayList()
 })
-
 onMounted(() => {
   getPlayList()
 })

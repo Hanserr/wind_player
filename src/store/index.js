@@ -2,6 +2,7 @@ import {defineStore} from 'pinia'
 import axios from "axios";
 import Cookies from "js-cookie";
 import {ElMessage} from "element-plus";
+import api from "@/tools/apiCollection";
 
 export const Auth = defineStore('auth',{
     state:() => {
@@ -61,29 +62,40 @@ export const Auth = defineStore('auth',{
             }
         },
         // 获取/刷新用户登录状态
-        getUserStatus(){
-            axios.get(`/login/status?timestamp=${Date.now()}`).then(res => {
-                if (res.data.data.code === 200){
-                    this.saveUserInfo(
-                        res.data.data.profile.userId,
-                        res.data.data.profile.nickname,
-                        res.data.data.profile.avatarUrl,
-                        res.data.data.profile.city,
-                        res.data.data.profile.birthday,
-                        res.data.data.profile.signature,
-                        res.data.data.profile.eventCount,
-                        res.data.data.profile.follows,
-                        res.data.data.profile.followeds
-                    )
-                    return true
-                }else{
+        async getUserStatus(){
+            let fetchUserStatus = await axios.get(`${api.GET_LOGIN_STATUS}?timestamp=${Date.now()}`)
+            if (fetchUserStatus.data.data.code === 200){
+                axios.get(`${api.GET_USER_DETAIL}?uid=${fetchUserStatus.data.data.profile.userId}`).then(res => {
+                    if (res.data.code === 200){
+                        this.saveUserInfo(
+                            res.data.profile.userId,
+                            res.data.profile.nickname,
+                            res.data.profile.avatarUrl,
+                            res.data.profile.city,
+                            res.data.profile.birthday,
+                            res.data.profile.signature,
+                            res.data.profile.eventCount,
+                            res.data.profile.follows,
+                            res.data.profile.followeds
+                        )
+                    }else{
+                        ElMessage({
+                            message:'获取用户状态失败，请稍后再试',
+                            type:'error'
+                        })
+                    }
+                }).catch(() => {
                     ElMessage({
                         message:'获取用户状态失败，请稍后再试',
                         type:'error'
                     })
-                    return false
-                }
-            })
-        },
+                })
+            }else{
+                ElMessage({
+                    message:'获取用户状态失败，请稍后再试',
+                    type:'error'
+                })
+            }
+        }
     }
 })

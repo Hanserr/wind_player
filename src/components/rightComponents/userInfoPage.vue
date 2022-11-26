@@ -113,8 +113,6 @@ const formatRegion = (province = null,r) => {
         return `${i[1]} ${i[2][r]}`
       }
     }
-  }else {
-
   }
 }
 

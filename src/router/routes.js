@@ -59,7 +59,7 @@ const routes = [
                         name: 'creation',
                         component: () => import('../components/rightComponents/userInfoComponents/creationSongListPage'),
                         meta: {
-                            keepAlive: false
+                            keepAlive: true
                         },
                     },
                     {
@@ -67,12 +67,12 @@ const routes = [
                         name: 'collected',
                         component: () => import('../components/rightComponents/userInfoComponents/collectedSongListPage'),
                         meta: {
-                            keepAlive: false
+                            keepAlive: true
                         },
                     }
                 ],
                 meta: {
-                    keepAlive: false
+                    keepAlive: true
                 },
             },
             {

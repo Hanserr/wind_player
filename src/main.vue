@@ -912,10 +912,11 @@ watch(() => songMovingWindowTop.value,(next) => {
 })
 
 onMounted(() => {
-  getUserProfile()
-  checkSign.value = !!Cookies.get('signed')
-  if (!Cookies.get('UID'))
+  if (!store.getUID){
+    getUserProfile()
     Cookies.set('UID',store.getUID)
+  }
+  checkSign.value = !!Cookies.get('signed')
   addEventListener('mouseup',() => {
     if (onBarMark){
       onBarMark = false

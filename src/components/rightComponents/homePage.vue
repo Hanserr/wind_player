@@ -24,13 +24,13 @@
 </template>
 
 <script setup>
-
 import {onMounted, ref} from "vue";
 import axios from "axios";
 import {ElCarousel, ElMessage} from "element-plus";
 import {router} from "@/router/routes";
 import Cookies from "js-cookie";
 import {Auth} from "@/store";
+import api from "@/tools/apiCollection";
 
 let bannerList = ref({'':''}) //banner列表
 let beforeBanner = require('../../assets/pics/beforeBanner.webp') //banner未加载完成时的替代图
@@ -42,7 +42,7 @@ const store = Auth()
 
 //获取首页轮播图
 const getBanner = () => {
-  axios.get(`/banner`).then(res => {
+  axios.get(api.GET_BANNER).then(res => {
     if (res.data.code === 200){
       bannerList.value = res.data.banners
     }
@@ -65,7 +65,7 @@ const getBannerSong = (item) => {
 //获取日推歌单
 const getDailyRecommendSongLists = () => {
   recommendSongsList.value.push({name:"每日歌曲推荐",id:-1})
-  axios.get(`/recommend/resource`).then(res => {
+  axios.get(api.GET_DAILY_RECOMMEND_LIST).then(res => {
     if (res.data.code === 200){
       for(let i of res.data.recommend){
         recommendSongsList.value.push(i)
@@ -79,7 +79,7 @@ const getStatus = () => {
   if (store.getUID){
 
   }
-  axios.get(`/login/status`).then(res => {
+  axios.get(api.GET_LOGIN_STATUS).then(res => {
     if (res.data.data.code !== 200){
       ElMessage({
         message:"网络异常",

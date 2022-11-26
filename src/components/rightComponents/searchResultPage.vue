@@ -32,6 +32,7 @@
 import axios from "axios";
 import {onMounted, onUnmounted, reactive, ref, watch} from "vue";
 import {useRoute} from "vue-router"
+import api from "@/tools/apiCollection";
 
 const route = useRoute()
 let resultList = reactive({})
@@ -57,7 +58,7 @@ const playSong = (detail) => {
 const getResult = (val) => {
   offset.value = 0
   loading.value = true
-  axios.get(`/cloudsearch?keywords=${val}&limit=50&offset=${offset.value}`).then(res => {
+  axios.get(`${api.SEARCH}?keywords=${val}&limit=50&offset=${offset.value}`).then(res => {
     if (res.data.code === 200){
       resultTimeCounter = 0
       resultList.songs = res.data.result.songs
@@ -72,7 +73,7 @@ const infiniteScroll = (e) => {
   if (resultListHeight.value - e.scrollTop <= 150 && mark.value && resultTimeCounter <=3){
     offset.value++
     mark.value = false
-    axios.get(`/cloudsearch?keywords=${route.params.inp}&limit=50&offset=${offset.value}`).then(res => {
+    axios.get(`${api.SEARCH}?keywords=${route.params.inp}&limit=50&offset=${offset.value}`).then(res => {
       if(res.data.code === 200){
         resultTimeCounter++
         resultListHeight.value = resultList.songs.length>17?10+(resultList.songs.length-16)*30:10

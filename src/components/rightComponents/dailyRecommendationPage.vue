@@ -44,7 +44,7 @@ import {onMounted,ref} from "vue";
 import axios from "axios";
 import {ElMessage} from "element-plus";
 import SvgIcon from "@/components/SvgIcon";
-import {router} from "@/router/routes";
+import api from "@/tools/apiCollection";
 
 // eslint-disable-next-line no-undef
 let emits = defineEmits(['songID','tracks'])
@@ -54,7 +54,7 @@ let loading = ref(false)
 //获取日推歌曲
 const getDailyRecommendSongs = () => {
   loading.value = true
-  axios.get(`/recommend/songs`).then(res => {
+  axios.get(api.GET_DAILY_RECOMMEND_SONGS).then(res => {
     if (res.data.code === 200){
       dailyList.value = res.data.data.dailySongs
     }else {

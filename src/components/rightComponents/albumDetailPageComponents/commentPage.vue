@@ -25,6 +25,7 @@ import {onMounted, ref, watch} from "vue";
 import {useRoute} from "vue-router";
 import {ElMessage} from "element-plus";
 import SvgIcon from "@/components/SvgIcon";
+import api from "@/tools/apiCollection";
 
 const route = useRoute()
 let presentPageNo = 1 //当前评论页数
@@ -40,7 +41,7 @@ let comment = ref() //评论
 
 //获取评论
 const getComments = (id) => {
-    axios.get(`/comment/new?type=3&id=${id}&sortType=2&pageNo=${presentPageNo}`).then(res => {
+    axios.get(`${api.GET_COMMENT_NEW}?type=3&id=${id}&sortType=2&pageNo=${presentPageNo}`).then(res => {
       if (res.data.code === 200){
         ++presentPageNo
         for(let i of res.data.data.comments){
@@ -57,7 +58,7 @@ const getComments = (id) => {
 
 //点赞或取消点赞评论
 const isThumbUpComment = (cid,val) => {
-  axios.get(`/comment/like?id=${route.params.id}&cid=${cid}&t=${val}&type=3`).then(res => {
+  axios.get(`${api.LIKE_COMMENT}?id=${route.params.id}&cid=${cid}&t=${val}&type=3`).then(res => {
     if (res.data.code !== 200){
       ElMessage({
         message:'操作失败，请稍后再试',
@@ -69,7 +70,7 @@ const isThumbUpComment = (cid,val) => {
 
 //发送评论
 const sendComment = (value) => {
-    axios.get(`/comment?t=1&type=3&id=${route.params.id}&content=${value}`).then(res => {
+    axios.get(`${api.COMMENT_SONG}?t=1&type=3&id=${route.params.id}&content=${value}`).then(res => {
       if (res.data.code !== 200){
         ElMessage({
           message:'发送失败，请稍后再试',

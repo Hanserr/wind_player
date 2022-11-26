@@ -11,12 +11,13 @@ import axios from "axios";
 import {ElMessage} from "element-plus";
 import {onMounted, ref} from "vue";
 import {useRoute} from "vue-router";
+import api from "@/tools/apiCollection";
 
 const route = useRoute()
 let des = ref() //专辑简介
 
 const getAlbumInfo = (id) => {
-  axios.get(`/album?id=${id}`).then(res => {
+  axios.get(`${api.GET_ALBUM}?id=${id}`).then(res => {
     if (res.data.code === 200){
       des.value = res.data.album.description
     }else {

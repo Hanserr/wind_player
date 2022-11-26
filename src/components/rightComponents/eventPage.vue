@@ -78,6 +78,7 @@ import axios from "axios";
 import {onMounted, onUnmounted, ref} from "vue";
 import {ElMessage} from "element-plus";
 import SvgIcon from "@/components/SvgIcon";
+import api from "@/tools/apiCollection";
 
 let lastTime = -1
 let eventsList = ref() //动态列表
@@ -98,7 +99,7 @@ const getEvents = () => {
     return
   eventGettingMark = false
   loading.value = true
-  axios.get(`/event?pagesize=20&lasttime=${lastTime}`).then(res => {
+  axios.get(`${api.GET_EVENT}?pagesize=20&lasttime=${lastTime}`).then(res => {
     if (res.data.code === 200){
       lastTime = res.data.lasttime
       if (eventsList.value){
@@ -154,7 +155,7 @@ const urlToText = (str,actID) => {
 
 //点赞
 const thumbup = (tid,t) => {
-  axios.get(`/resource/like?t=${t}&type=6&threadId=${tid}`)
+  axios.get(`${api.LIKE_RESOURCE}?t=${t}&type=6&threadId=${tid}`)
 }
 
 //播放

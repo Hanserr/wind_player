@@ -26,12 +26,12 @@
 </template>
 
 <script setup>
-
 import {onMounted, ref} from "vue";
 import axios from "axios";
 import {useRoute} from "vue-router";
 import {router} from "@/router/routes";
 import {ElMessage} from "element-plus";
+import api from "@/tools/apiCollection";
 
 const route = useRoute()
 let artist = ref() //歌手信息
@@ -48,7 +48,7 @@ const getArInfo = (id) => {
   }
   loading.value = true
   mark.value = false
-  axios.get(`/artist/detail?id=${id}`).then(res => {
+  axios.get(`${api.GET_ARTIST_DETAIL}?id=${id}`).then(res => {
     if (res.data.code === 200){
       artist.value = res.data.data.artist
       hasAccount.value = !!res.data.data.user

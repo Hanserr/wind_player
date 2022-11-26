@@ -323,6 +323,7 @@ import Cookies from "js-cookie";
 import {useRoute} from "vue-router";
 import {Auth} from "@/store"
 import {storeToRefs} from "pinia";
+import api from "./tools/apiCollection";
 
 const store = Auth()
 const route = useRoute()
@@ -410,7 +411,7 @@ const searchInpFocus = (val) => {
 
 //获取用户可能搜索的结果
 const searchSuggestion = (val) => {
-  axios.get(`/search/suggest?keywords=${val}`).then(res => {
+  axios.get(`${api.GET_SUGGEST_SEARCH}?keywords=${val}`).then(res => {
     if (res.data.code === 200){
       songSuggestionList.albums = res.data.result.albums
       songSuggestionList.artists = res.data.result.artists
@@ -447,14 +448,14 @@ const playSong = (e) => {
     song.id = e
     getLyric(song.id)
     //如果传入的是歌曲id则会获取歌曲相关信息
-    axios.get(`/song/detail?ids=${song.id}`).then(res => {
+    axios.get(`${api.GET_SONG_DETAIL}?ids=${song.id}`).then(res => {
       song.cover = res.data.songs[0].al.picUrl
       song.artist = res.data.songs[0].ar
       song.name = res.data.songs[0].name
       song.album = res.data.songs[0].al
     })
   }
-  axios.get(`/song/url?id=${song.id}`).then(res => {
+  axios.get(`${api.GET_SONG_URL}?id=${song.id}`).then(res => {
     if (res.data.code === 200){
       song.src = res.data.data[0].url
       //加个定时器给播放器预留缓冲时间
@@ -572,7 +573,7 @@ const headerPosition = (val) => {
 
 //获取歌词
 const getLyric = (id) => {
-  axios.get(`/lyric?id=${id}`).then(res => {
+  axios.get(`${api.GET_LYRIC}?id=${id}`).then(res => {
     let lyric = (res.data.lrc.lyric).toString().split('\n')
     for (let i in lyric){
       let lyricList = lyric[i].split(']')
@@ -640,7 +641,7 @@ const checkLogoutAgain = async () => {
         cancelButtonText: '取消',
         type: 'warning',
       }).then(() => {
-    axios.get(`/logout`).then(res => {
+    axios.get(api.LOGOUT).then(res => {
       if (res.data.code === 200){
         Cookies.remove('MUSIC_U')
         Cookies.remove('_remember_me')
@@ -745,7 +746,7 @@ const volumeBarVisibleAfterFunc = () => {
 
 //获取评论
 const getComments = (id) => {
-  axios.get(`/comment/music?id=${id}&limit=30&offset=${commentsOffset}`).then( res => {
+  axios.get(`${api.GET_SONG_COMMENT}?id=${id}&limit=30&offset=${commentsOffset}`).then( res => {
     if (res.data.code === 200){
       song.total = res.data.total
       song.hotComments = res.data.hotComments
@@ -774,7 +775,7 @@ const infiniteScroll = (e) => {
 
 //点赞或取消点赞评论
 const  isThumbUpComment = (cid,val) => {
-  axios.get(`/comment/like?id=${song.id}&cid=${cid}&t=${val}&type=0`).then(res => {
+  axios.get(`${api.LIKE_COMMENT}?id=${song.id}&cid=${cid}&t=${val}&type=0`).then(res => {
     if (res.data.code !== 200){
       ElMessage({
         message:'操作失败，请稍后再试',
@@ -797,7 +798,7 @@ const openCommentArea = (cid,targetUser) => {
       })
       return
     }
-    axios.get(`/comment?t=2&type=0&id=${song.id}&commentId=${cid}&content=${value}`).then(res => {
+    axios.get(`${api.COMMENT_SONG}?t=2&type=0&id=${song.id}&commentId=${cid}&content=${value}`).then(res => {
       if (res.data.code !== 200){
         ElMessage({
           message:'发送失败，请稍后再试',
@@ -818,7 +819,7 @@ const openCommentAreaToSong = () => {
     confirmButtonText: '发送',
     cancelButtonText: '取消',
   }).then(({value}) => {
-    axios.get(`/comment?t=2&type=0&id=${song.id}&content=${value}`).then(res => {
+    axios.get(`${api.COMMENT_SONG}?t=2&type=0&id=${song.id}&content=${value}`).then(res => {
       if (res.data.code !== 200){
         ElMessage({
           message:'发送失败，请稍后再试',
@@ -843,7 +844,7 @@ const dailySignin = () => {
     return
   }
   checkSign.value = true
-  axios.get(`/daily_signin`).then(res => {
+  axios.get(api.DAILY_SIGNIN).then(res => {
     if (res.data.code === 200){
       Cookies.set('signed','1',{
         expires:new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 -1)

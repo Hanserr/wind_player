@@ -18,10 +18,13 @@ import Cookies from "js-cookie";
 import {ElMessage} from "element-plus";
 import {router} from "@/router/routes";
 import {useRoute} from "vue-router";
+import {Auth} from "@/store";
+import api from "@/tools/apiCollection";
 
 const route = useRoute()
 let createdSongList = ref()
 let id = 0
+const store = Auth()
 
 //获取用户歌单列表
 const getPlayList = () => {
@@ -30,7 +33,7 @@ const getPlayList = () => {
   else
     id = Cookies.get('UID')
   if (id && Cookies.get('MUSIC_U')){
-    axios.get(`/user/playlist?uid=${JSON.parse(id)}`).then(res => {
+    axios.get(`${api.GET_USER_PLAYLIST}?uid=${JSON.parse(id)}`).then(res => {
       if (res.data.code === 200){
         classifySongList(res.data.playlist)
       }else{

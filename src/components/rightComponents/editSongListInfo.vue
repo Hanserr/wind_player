@@ -34,9 +34,9 @@ import {ElMessage} from "element-plus";
 import axios from "axios";
 import {useRoute} from "vue-router";
 import { Plus } from '@element-plus/icons-vue';
+import api from "@/tools/apiCollection";
 
 const route = useRoute()
-
 let songList = reactive({
   id:null,
   name:null,
@@ -50,7 +50,7 @@ let loading = ref(false)
 
 //获取歌单信息
 const getSongListInfo = (id) => {
-  axios.get(`/playlist/detail?id=${id}`).then(res => {
+  axios.get(`${api.GET_PLAYLIST_DETAIL}?id=${id}`).then(res => {
     songList.name = res.data.playlist.name
     songList.description = res.data.playlist.description
     songList.cover = res.data.playlist.coverImgUrl
@@ -60,7 +60,7 @@ const getSongListInfo = (id) => {
 //修改歌单
 const alterSongListInfo = () => {
   loading.value = true
-  axios(`/playlist/update?id=${songList.id}&name=${songList.name}&desc=${songList.description}`).then(res => {
+  axios.get(`${api.UPDATE_PLAYLIST_INFO}?id=${songList.id}&name=${songList.name}&desc=${songList.description}`).then(res => {
     if (res.data.code === 200){
       ElMessage({
         message:"修改成功",

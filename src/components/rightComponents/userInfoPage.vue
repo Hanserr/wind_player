@@ -61,6 +61,7 @@ import {onMounted, ref, watch} from "vue";
 import SvgIcon from "@/components/SvgIcon";
 import {region} from "@/tools/region";
 import {useRoute} from "vue-router";
+import api from "@/tools/apiCollection";
 
 const route = useRoute()
 let profile = ref() //用户信息
@@ -72,7 +73,7 @@ let showButton = ref(true)
 //获取账号信息
 const getId = async () => {
   loading.value = true
-  await axios.get(`/user/account`).then(res => {
+  await axios.get(api.GET_ACCOUNT_INFO).then(res => {
     if (res.data.code === 200){
       id.value = res.data.account.id
     }
@@ -88,7 +89,7 @@ const getId = async () => {
 //获取用户详细信息
 const getUserEvent = (id) => {
   loading.value = true
-  axios.get(`/user/detail?uid=${id}`).then(res => {
+  axios.get(`${api.GET_USER_DETAIL}?uid=${id}`).then(res => {
     if (res.data.code === 200){
       level.value = res.data.level
       profile.value = res.data.profile

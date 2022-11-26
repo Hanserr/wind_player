@@ -27,7 +27,7 @@ import axios from "axios";
 import {ElMessage} from "element-plus";
 import {useRoute} from "vue-router";
 import {onMounted, ref} from "vue";
-import {router} from "@/router/routes";
+import api from "@/tools/apiCollection";
 
 const route = useRoute()
 let albumSongs = ref() //专辑歌曲内容
@@ -36,7 +36,7 @@ let emits = defineEmits(['playMusic'])
 
 //获取专辑歌曲列表
 const getAlbumInfo = (id) => {
-  axios.get(`/album?id=${id}`).then(res => {
+  axios.get(`${api.GET_ALBUM}?id=${id}`).then(res => {
     if (res.data.code === 200){
       albumSongs.value = res.data.songs
     }else {

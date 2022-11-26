@@ -14,6 +14,7 @@
 import axios from "axios";
 import {onMounted, ref} from "vue";
 import {useRoute} from "vue-router";
+import api from "@/tools/apiCollection";
 
 const route = useRoute()
 let similarSingers = ref()
@@ -22,7 +23,7 @@ let similarArtistLoading = ref(false)
 //获取相似歌手
 const getSimilarSinger = (id) => {
   similarArtistLoading.value = true
-  axios.get(`/simi/artist?id=${id}`).then(res => {
+  axios.get(`${api.GET_SIMILAR_ARTIST}?id=${id}`).then(res => {
     if (res.data.code === 200){
       similarSingers.value = res.data.artists
     }

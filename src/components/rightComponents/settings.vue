@@ -35,6 +35,7 @@ import axios from "axios";
 import {ElMessage} from "element-plus";
 import Cookies from "js-cookie";
 import {router} from "@/router/routes";
+import api from "@/tools/apiCollection";
 
 let oldPhone = ref()
 let newPhone = ref()
@@ -57,7 +58,7 @@ const getVerCode = () => {
     })
     return
   }
-  axios.get(`/captcha/sent?phone=${stage === 1?oldPhone.value:newPhone.value}`).then(res => {
+  axios.get(`${api.GET_CAPTCHA}?phone=${stage === 1?oldPhone.value:newPhone.value}`).then(res => {
     if (res.data.code === 200){
       Cookies.set(`${stage === 1?'updateExpireTime1':'updateExpireTime2'}`," ",{
         expires:new Date(new Date()*1+1000*60)
@@ -91,7 +92,7 @@ const next = () => {
   if (stage === 2)
     rebind()
   else {
-    axios.get(`/captcha/verify?phone=${oldPhone.value}&captcha=${oldCaptcha}`).then(res => {
+    axios.get(`${api.VERIFY_CAPTCHA}?phone=${oldPhone.value}&captcha=${oldCaptcha}`).then(res => {
       if (res.data.code === 200){
         button1Title.value = "确认修改"
         newPhoneInput.value = true
@@ -113,7 +114,7 @@ const next = () => {
 
 //换绑手机
 const rebind = () => {
-  axios.get(`/rebind?phone=${newPhone.value}&oldcaptcha=${oldCaptcha.value}&captcha=${captcha.value}`).then(res => {
+  axios.get(`${api.REBIND_PHONE}?phone=${newPhone.value}&oldcaptcha=${oldCaptcha.value}&captcha=${captcha.value}`).then(res => {
     if (res.data.code === 200){
       ElMessage({
         message:"修改成功",

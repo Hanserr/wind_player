@@ -77,9 +77,9 @@ import {Hide} from "@element-plus/icons-vue";
 import {Loading} from "@element-plus/icons-vue";
 import {onUnmounted, reactive, ref, watch} from "vue";
 import axios from "axios";
-import Cookies from "js-cookie";
 import {ElMessage} from "element-plus";
 import {Auth} from "@/store";
+import api from "@/tools/apiCollection";
 
 let pwdIsVisible = ref(false)
 let dialogWidth = 300
@@ -152,15 +152,15 @@ const phoneLogin = (phone,pwd) => {
 const getQRCode = async () => {
   let QR = null
   //先获取unikey  防止被缓存 这里传入时间戳
-  let unikeyData = (await axios.get(`/login/qr/key?timestamp=${Date.now()}`)).data.data
+  let unikeyData = (await axios.get(`${api.GET_LOGIN_QR_UNIKEY}?timestamp=${Date.now()}`)).data.data
   if (unikeyData.code === 200) {
     //传入前面的unikey获取二维码base64编码
-    QR = await axios.get(`/login/qr/create?&key=${unikeyData.unikey}&qrimg=true`)
+    QR = await axios.get(`${api.GET_LOGIN_QR_BASE64}?&key=${unikeyData.unikey}&qrimg=true`)
     if (QR.data.code === 200) {
       QRCodeBase64.value = QR.data.data.qrimg
       //开始轮询接口获取二维码状态
       QRCodeTimer = setInterval(async () => {
-        let status = await axios.get(`/login/qr/check?key=${unikeyData.unikey}&timestamp=${Date.now()}`)
+        let status = await axios.get(`${api.POLLING_LOGIN_QR_STATUS}?key=${unikeyData.unikey}&timestamp=${Date.now()}`)
         //800 为二维码过期,801 为等待扫码,802 为待确认,803 为授权登录成功(803 状态码下会返回 cookies)
         if (status.data.code === 800) {
           getQRCode()

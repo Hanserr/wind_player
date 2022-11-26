@@ -38,6 +38,7 @@ import SvgIcon from "@/components/SvgIcon";
 import axios from "axios";
 import Cookies from "js-cookie";
 import {router} from "@/router/routes";
+import api from "@/tools/apiCollection";
 
 // eslint-disable-next-line no-undef
 let createdSongListIsFold = ref(true) //创建的歌单列表是否折叠
@@ -47,7 +48,7 @@ let collectionSongList = ref() //收藏的歌单列表
 
 //获取歌单列表
 const getSongList = (id) => {
-  axios.get(`/user/playlist?uid=${id}`).then(res => {
+  axios.get(`${api.GET_USER_PLAYLIST}?uid=${id}`).then(res => {
     if (res.data.code === 200){
       classifySongList(res.data.playlist)
     }
@@ -59,7 +60,7 @@ const getUserSongList = () => {
   if (Cookies.get('UID')){
     getSongList(Cookies.get('UID'))
   }else{
-    axios.get(`/login/status`).then(res => {
+    axios.get(api.GET_LOGIN_STATUS).then(res => {
       if (res.data.data.code === 200 && res.data.data.account){
         Cookies.set('UID', res.data.data.account.id)
         getSongList(res.data.data.account.id)

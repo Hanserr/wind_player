@@ -14,10 +14,10 @@
 <script setup>
 import {onMounted, ref, watch} from "vue";
 import axios from "axios";
-import Cookies from "js-cookie";
 import {ElMessage} from "element-plus";
 import {router} from "@/router/routes";
 import {useRoute} from "vue-router";
+import api from "@/tools/apiCollection";
 
 const route = useRoute()
 let createdSongList = ref()
@@ -28,11 +28,11 @@ const getPlayList = () => {
   if (route.params.uid !== "0")
     id = route.params.uid
   else{
-    axios.get(`/login/status`).then(res => {
+    axios.get(api.GET_LOGIN_STATUS).then(res => {
       id = res.data.data.account.id
     })
   }
-    axios.get(`/user/playlist?uid=${id}`).then(res => {
+    axios.get(`${api.GET_USER_PLAYLIST}?uid=${id}`).then(res => {
       if (res.data.code === 200){
         classifySongList(res.data.playlist)
       }else{

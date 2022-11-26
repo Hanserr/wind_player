@@ -54,6 +54,7 @@ import {onMounted, reactive, ref, watch} from "vue";
 import axios from "axios";
 import {ElMessage} from "element-plus";
 import { Plus } from '@element-plus/icons-vue';
+import api from "@/tools/apiCollection";
 
 let user = reactive({
   avatarUrl:null,
@@ -74,7 +75,7 @@ let showUploadingProgress = ref(false) //展示头像上传进度条
 //获取用户信息
 const getUserInfo = () => {
   if (Cookies.get("UID")){
-    axios.get(`/user/detail?uid=${Cookies.get("UID")}`).then(res => {
+    axios.get(`${api.GET_USER_DETAIL}?uid=${Cookies.get("UID")}`).then(res => {
       if (res.data.code === 200){
         user.nickname = res.data.profile.nickname
         user.avatarUrl = res.data.profile.avatarUrl
@@ -121,7 +122,7 @@ const alterUserProfile = () => {
       break
     }
   }
-  axios.get(`/user/update?gender=${user.gender}&signature=${user.intro}&city=${user.region}&nickname=${user.nickname}&birthday=${new Date(user.birthday).getTime()}&province=${user.province}`).then(res => {
+  axios.get(`${api.UPDATE_USER_INFO}?gender=${user.gender}&signature=${user.intro}&city=${user.region}&nickname=${user.nickname}&birthday=${new Date(user.birthday).getTime()}&province=${user.province}`).then(res => {
    if (res.data.code === 200){
      ElMessage({
        message:"修改成功!",

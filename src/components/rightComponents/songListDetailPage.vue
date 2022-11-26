@@ -61,6 +61,7 @@ import {useRoute} from "vue-router"
 import axios from "axios"
 import SvgIcon from "@/components/SvgIcon";
 import Cookies from "js-cookie";
+import api from "@/tools/apiCollection";
 
 const route = useRoute()
 // eslint-disable-next-line no-undef
@@ -75,7 +76,7 @@ let loading = ref(false) //遮罩
 const getSongListDetail = (id) => {
   listDetail.value = null
   loading.value = true
-  axios.get(`/playlist/detail?id=${id}`).then(res => {
+  axios.get(`${api.GET_PLAYLIST_DETAIL}?id=${id}`).then(res => {
     if (res.data.code === 200) {
       listDetail.value = res.data
       preparedSongList.value = res.data.playlist.tracks
@@ -102,7 +103,7 @@ const playAll = () => {
 //收藏歌单
 const collectSongList = () => {
   hadCollected.value = !hadCollected.value
-  axios.get(`/playlist/subscribe?t=${hadCollected.value?1:2}&id=${route.params.songListId}`)
+  axios.get(`${api.COLLECT_PLAYLIST}?t=${hadCollected.value?1:2}&id=${route.params.songListId}`)
 }
 
 watch(() => route.params.songListId,(next) => {

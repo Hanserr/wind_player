@@ -83,6 +83,8 @@
 import axios from "axios";
 import {onMounted, reactive, ref, watch} from "vue";
 import SvgIcon from "@/components/SvgIcon";
+import api from "@/tools/apiCollection";
+
 // eslint-disable-next-line no-undef
 const emits = defineEmits(['songID','audioState'])
 // eslint-disable-next-line no-undef
@@ -139,7 +141,7 @@ let personalFmLyricContent = ref(null)//el-scrollBar
 let lyricSum = ref(0) //当前歌词下标
 //获取FM
 const getFm = () => {
-  axios.get(`/personal_fm?timestamp=${Date.now()}`).then(res => {
+  axios.get(`${api.GET_FM}?timestamp=${Date.now()}`).then(res => {
     if (res.data.code === 200){
       if (songList.value){
         for (let i of res.data.data){
@@ -198,16 +200,16 @@ const changeCoverPosition = () => {
 }
 //私人FM音乐垃圾桶
 const toTrash = () => {
-  axios.get(`/fm_trash?id=${songList.value[0].id}`)
+  axios.get(`${api.MUSIC_TRASH}?id=${songList.value[0].id}`)
   playNext()
 }
 //喜欢音乐
 const likeSong = () => {
-  axios.get(`/like?id=${songList.value[0].id}`)
+  axios.get(`${api.LIKE_SONG}?id=${songList.value[0].id}`)
 }
 //获取歌词
 const getLyric = (id) => {
-  axios.get(`/lyric?id=${id}`).then(res => {
+  axios.get(`${api.GET_LYRIC}?id=${id}`).then(res => {
     let lyric = (res.data.lrc.lyric).toString().split('\n')
     for (let i in lyric){
       let lyricList = lyric[i].split(']')

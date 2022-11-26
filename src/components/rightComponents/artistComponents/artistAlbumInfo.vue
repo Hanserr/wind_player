@@ -43,6 +43,7 @@ import {computed, onMounted, ref} from "vue";
 import {useRoute} from "vue-router";
 import axios from "axios";
 import {ElMessage} from "element-plus";
+import api from "@/tools/apiCollection";
 
 const route = useRoute()
 let uid = 0
@@ -59,7 +60,7 @@ let topListLength = computed(() => {
 //获取专辑
 const getAlbum = (id) => {
   artistAlbumLoading.value = true
-  axios.get(`/artist/album?id=${id}`).then(res => {
+  axios.get(`${api.GET_ARTIST_ALBUM}?id=${id}`).then(res => {
     if (res.data.code === 200){
       albums.value = res.data.hotAlbums
       getSongsByAlbum()
@@ -74,7 +75,7 @@ const getAlbum = (id) => {
 
 //获取热门50首歌曲
 const getTopSongs = (id) => {
-  axios.get(`/artist/top/song?id=${id}`).then(res => {
+  axios.get(`${api.GET_ARTIST_TOP50_SONGS}?id=${id}`).then(res => {
     if (res.data.code === 200){
       for (let s = 0;s<res.data.songs.length;s++){
         s<20?topList.value.push(res.data.songs[s]):topListRemainList.value.push(res.data.songs[s])
@@ -86,7 +87,7 @@ const getTopSongs = (id) => {
 //获取专辑捏歌曲
 const getSongsByAlbum = (id) => {
   for (let s of albums.value){
-    axios.get(`/album?id=${s.id}`).then(res => {
+    axios.get(`${api.GET_ALBUM}?id=${s.id}`).then(res => {
       if (res.data.code === 200){
         s.songs = res.data.songs
       }

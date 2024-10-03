@@ -1,7 +1,6 @@
 <template>
   <div class="homePage">
     <el-scrollbar>
-
       <div class="homePage-top">
         <div class="homePage-carousel">
           <el-carousel :interval="4000" type="card" height="160px" arrow="never">
@@ -28,17 +27,15 @@ import {onMounted, ref} from "vue";
 import axios from "axios";
 import {ElCarousel, ElMessage} from "element-plus";
 import {router} from "@/router/routes";
-import Cookies from "js-cookie";
-import {Auth} from "@/store";
 import api from "@/tools/apiCollection";
+import {useUserStore} from "@/store/userStore";
 
 let bannerList = ref({'':''}) //banner列表
 let beforeBanner = require('../../assets/pics/beforeBanner.webp') //banner未加载完成时的替代图
 let recommendSongsList = ref([]) //日推歌单
 let cover = require("../../assets/pics/cover.webp") //日推封面
-// eslint-disable-next-line no-undef
 const emits = defineEmits(['songID'])
-const store = Auth()
+const userStore = useUserStore()
 
 //获取首页轮播图
 const getBanner = () => {
@@ -64,44 +61,22 @@ const getBannerSong = (item) => {
 
 //获取日推歌单
 const getDailyRecommendSongLists = () => {
-  recommendSongsList.value.push({name:"每日歌曲推荐",id:-1})
-  axios.get(api.GET_DAILY_RECOMMEND_LIST).then(res => {
-    if (res.data.code === 200){
-      for(let i of res.data.recommend){
-        recommendSongsList.value.push(i)
+  if (userStore.getLoginStatus()) {
+    //每日个性化定制歌单
+    recommendSongsList.value.push({name:"每日歌曲推荐",id:-1})
+    //其他推荐歌单
+    axios.get(api.GET_DAILY_RECOMMEND_LIST).then(res => {
+      if (res.data.code === 200){
+        for(let i of res.data.recommend){
+          recommendSongsList.value.push(i)
+        }
       }
-    }
-  })
-}
-
-//获取登录状态
-const getStatus = () => {
-  if (store.getUID){
-
+    })
   }
-  axios.get(api.GET_LOGIN_STATUS).then(res => {
-    if (res.data.data.code !== 200){
-      ElMessage({
-        message:"网络异常",
-        type:"error"
-      })
-      return
-    }
-    if (res.data.data.account === null){
-      Cookies.remove('UID')
-      Cookies.remove('MUSIC_U')
-      ElMessage({
-        message:"登陆后获取精准推送",
-        type:"info"
-      })
-    }else {
-      getDailyRecommendSongLists()
-    }
-  })
 }
 
 onMounted(() => {
-  getStatus()
+  getDailyRecommendSongLists()
   getBanner()
 })
 </script>

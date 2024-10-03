@@ -64,21 +64,21 @@
       <!--        用户登录-->
       <div class="userProfile">
         <div class="topBar-profile">
-          <el-avatar class="topBar-profile-avatar" :size="35" :src="user?user.avatarUrl:''" @click="user.userId !== undefined?this.$pushingTools.toCreation(0):0"></el-avatar>
+          <el-avatar class="topBar-profile-avatar" :size="35" :src="user?user.avatarUrl:''" @click="userStore.getLoginStatus()?this.$pushingTools.toCreation(0):0"></el-avatar>
         </div>
-        <a @click = "popVisible = true" id="topBar-login" v-if="user === undefined">登录</a>
-        <p v-if="user !== undefined" id="topBar-nickname" @click="displayUserInfo = !displayUserInfo">{{user.nickname}}</p>
+        <a @click = "popVisible = true" id="topBar-login" v-if="!userStore.getLoginStatus()">登录</a>
+        <p v-if="userStore.getLoginStatus()" id="topBar-nickname" @click="displayUserInfo = !displayUserInfo">{{userStore.getUserInfo().nickname}}</p>
         <div class="topBar-profile-popWindow" v-show="displayUserInfo">
           <div class="topBar-profile-popWindow-numberArea">
-            <span v-if="user !== undefined" class="topBar-profile-popWindow-numberArea-p1">{{user.eventCount}}</span>
+            <span v-if="userStore.getUserInfo()" class="topBar-profile-popWindow-numberArea-p1">{{userStore.getUserInfo().eventCount}}</span>
             <span class="topBar-profile-popWindow-numberArea-p2">动态</span>
           </div>
           <div class="topBar-profile-popWindow-numberArea">
-            <span v-if="user !== undefined" class="topBar-profile-popWindow-numberArea-p1">{{user.follows}}</span>
+            <span v-if="userStore.getUserInfo()" class="topBar-profile-popWindow-numberArea-p1">{{userStore.getUserInfo().follows}}</span>
             <span class="topBar-profile-popWindow-numberArea-p2">关注</span>
           </div>
           <div class="topBar-profile-popWindow-numberArea">
-            <span v-if="user !== undefined" class="topBar-profile-popWindow-numberArea-p1">{{user.followeds}}</span>
+            <span v-if="userStore.getUserInfo()" class="topBar-profile-popWindow-numberArea-p1">{{userStore.getUserInfo().follower}}</span>
             <span class="topBar-profile-popWindow-numberArea-p2">粉丝</span>
           </div>
           <button @click="dailySignin" :disabled="checkSign">{{checkSign?"已签到":"签到"}}</button>
@@ -241,10 +241,6 @@
                 </ul>
               </el-scrollbar>
             </div>
-            <div class="songMovingWindow-top-right">
-
-            </div>
-
           </div>
         </div>
 
@@ -321,17 +317,16 @@ import {ElMessage, ElMessageBox} from "element-plus";
 import NavigationBar from "@/components/navigationComponents/navigationBar";
 import Cookies from "js-cookie";
 import {useRoute} from "vue-router";
-import {Auth} from "@/store"
-import {storeToRefs} from "pinia";
+import {useUserStore} from "@/store/userStore";
 import api from "./tools/apiCollection";
 
-const store = Auth()
+const userStore = useUserStore();
 const route = useRoute()
 let inputVal = ref('') //顶部搜索框变量
 let songSuggestionList = reactive({}) //建议歌单列表
 let suggestionTimer = null //建议歌单列表的定时器
 let popVisible = ref(false) //登录弹窗是否可见
-let user = storeToRefs(store).user//用户信息
+let user = userStore.getUserInfo()//用户信息
 let displayUserInfo = ref(false) //展示用户部分信息（vip时间，注销···）弹窗
 let resultListIsVisible = ref(false) //建议歌单是否可见
 let isPlay = ref(false) //是否播放中
@@ -489,7 +484,6 @@ const previousSong = () => {
   }else {
     playSong(preparedSongList.value[--presentSongIndexInPreparedList].id)
   }
-
 }
 
 //播放下一首
@@ -513,11 +507,6 @@ const formatTime = (time) => {
   let min = Math.floor(time/60).toString().padStart(2,'0')
   let sec = Math.floor(time%60).toString().padStart(2,'0')
   return `${min}:${sec}`
-}
-
-//获取用户登陆状态
-const getUserProfile = () => {
-  store.getUserStatus()
 }
 
 //顶部搜索
@@ -912,9 +901,8 @@ watch(() => songMovingWindowTop.value,(next) => {
 })
 
 onMounted(() => {
-  if (!store.getUID){
-    getUserProfile()
-    Cookies.set('UID',store.getUID)
+  if (!userStore.getLoginStatus()){
+    userStore.updateUserInfo()
   }
   checkSign.value = !!Cookies.get('signed')
   addEventListener('mouseup',() => {

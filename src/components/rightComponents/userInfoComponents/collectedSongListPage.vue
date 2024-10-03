@@ -17,19 +17,19 @@ import axios from "axios";
 import {ElMessage} from "element-plus";
 import {router} from "@/router/routes";
 import {useRoute} from "vue-router";
-import {Auth} from "@/store";
+import {useUserStore} from "@/store/userStore";
 import api from "@/tools/apiCollection";
 
 const route = useRoute()
+const userStore = useUserStore();
 let createdSongList = ref()
 let id = 0
-const store = Auth()
 
 //获取用户歌单列表
 const getPlayList = () => {
-  id = route.params.uid === "0"?store.getUID:route.params.uid
+  id = route.params.uid === "0"?userStore.getUserInfo().userId:route.params.uid
   axios.get(`${api.GET_USER_PLAYLIST}?uid=${id}`).then(res => {
-    if (res.data.code === 200){
+    if (res.data.code === 200) {
       classifySongList(res.data.playlist)
     }else{
       ElMessage({

@@ -28,10 +28,25 @@ const CHECK_INPUT_STYLE = () => {
     })
 }
 
+const WRONG = () => {
+    ElMessage({
+        message:"出错啦，请稍后再试",
+        type:"error"
+    })
+}
+
+const GET_SONG_FAILED = () => {
+    ElMessage({
+        message:"获取歌曲信息失败",
+        type:"error"
+    })
+}
+
 export default {
     GET_USER_FAILED,
     SECRET_WRONG,
     LOGIN_FAILED,
     CHECK_INPUT_STYLE,
-
+    WRONG,
+    GET_SONG_FAILED,
 }

@@ -112,7 +112,7 @@
           @tracks="pushPreparedSongList"
           @audioState="playOrPause"
           :audioRefState="isPlay"
-          :inPlay="song.src"
+          :inPlay="songStore.getCurSong().value.src"
           :timeChange="songTimeChange"
           :fmIsEnded="fmIsEnded"
           v-slot="{Component}">
@@ -125,10 +125,10 @@
 
     <!--      底部播放栏-->
     <div class="playerBar">
-      <audio ref="audioRef" :src="song.src"></audio>
+<!--      <audio ref="audioRef" :src="songStore.getCurSong().value.src || null"></audio>-->
 
-      <!--        右侧歌曲封面及歌手-->
-      <div class="playerBar-left">
+      <!--        左侧歌曲封面及歌手-->
+      <div class="playerBar-left" v-if="songStore">
         <div class="playerBar-left-wrap" :style="{top:playBarLeft+'px'}">
           <div class="playerBar-left-top">
             <div id="playBar-left-top-flip" @click="movingWindowDown">
@@ -149,33 +149,33 @@
             <div id="cover" v-show="coverVisible" @mouseenter="coverVisible = true" @mouseleave="coverVisible = false" @click="movingWindowUp">
               <svg-icon name="topArrows" id="cover-arrows"></svg-icon>
             </div>
-            <svg-icon name="music" id="music-icon" v-show="!song.cover"></svg-icon>
-            <img :src="song.cover" v-show="song.cover" @mouseenter="coverVisible = true" @mouseleave="coverVisible = false" alt="">
-            <p id="playerBar-left-name">{{song.name}}</p>
+            <svg-icon name="music" id="music-icon" v-show="!songStore.getCurSong().value.cover"></svg-icon>
+            <img :src="songStore.getCurSong().value.cover" v-if="songStore.getCurSong().value.cover" @mouseenter="coverVisible = true" @mouseleave="coverVisible = false" alt="">
+            <p id="playerBar-left-name">{{songStore.getCurSong().value.name}}</p>
             <div id="playBar-left-ar-wrap">
-              <p id="playBar-left-ar" v-for="i in song.artist" :key="i">{{i.name}}&nbsp;&nbsp;</p>
+              <p id="playBar-left-ar" v-for="i in songStore.getCurSong().value.artist" :key="i">{{i.name}}&nbsp;&nbsp;</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="playerBar-audioContent">
+      <div class="playerBar-audioContent" v-if="songStore">
         <div class="playerBar-audioContent-panel">
           <svg-icon name="previous" style="margin-left: 290px;cursor: pointer" @click="previousSong"></svg-icon>
           <svg-icon name="pause" style="margin-left: 20px;cursor: pointer" @click="playOrPause(isPlay)" v-show="isPlay"></svg-icon>
           <svg-icon name="play" style="margin-left: 20px;cursor: pointer" @click="playOrPause(isPlay)" v-show="!isPlay"></svg-icon>
           <svg-icon name="next" style="margin-left: 20px;cursor: pointer"  @click="nextSong"></svg-icon>
         </div>
-        <p>{{formatTime(audioRef.currentTime)}}</p>
+        <p>{{formatTime(audioRef?.currentTime || 0)}}</p>
         <div class="playerBar-audioContent-progressBar">
           <div class="playerBar-audioContent-progressBar-wrap" @mousedown="mouseDown" @mouseup="mouseUp" @mousemove="mouseMove">
             <div class="playerBar-audioContent-progressBar-durationBar" :style="{width:durationBarWidth+'px'}"></div>
           </div>
         </div>
-        <p>{{formatTime(audioRef.duration)}}</p>
+        <p>{{formatTime(audioRef?.duration || 0)}}</p>
       </div>
-      <svg-icon name="volume" id="volumeIcon" v-show="!audioRef.muted" @click="isMuted" @mouseover="volumeBarVisibleBeforeFunc" @mouseleave="volumeBarVisibleAfterFunc"></svg-icon>
-      <svg-icon name="muted" id="volumeIcon" v-show="audioRef.muted" @click="isMuted" @mouseover="volumeBarVisibleBeforeFunc" @mouseleave="volumeBarVisibleAfterFunc"></svg-icon>
+      <svg-icon name="volume" id="volumeIcon" v-show="!audioRef?.muted" @click="isMuted" @mouseover="volumeBarVisibleBeforeFunc" @mouseleave="volumeBarVisibleAfterFunc"></svg-icon>
+      <svg-icon name="muted" id="volumeIcon" v-show="audioRef?.muted" @click="isMuted" @mouseover="volumeBarVisibleBeforeFunc" @mouseleave="volumeBarVisibleAfterFunc"></svg-icon>
       <div id="volumeIconBody" v-show="volumeBarVisible" @mouseover="volumeBarVisibleBeforeFunc" @mouseleave="volumeBarVisibleAfterFunc">
         <div id="volumeIconBodyContainer" @mousemove="volumeMouseMove" @mousedown="volumeMouseDown" @mouseup="volumeMouseUp" @mouseleave="volumeMouseOut">
           <div id="volumeIconBodyBar" :style="{height: volumeValue+'px'}"></div>
@@ -208,7 +208,7 @@
     </div>
 
     <!--        歌曲详情页-->
-    <div class="songMovingWindow" :style="{top:songMovingWindowTop+'px'}">
+    <div class="songMovingWindow" :style="{top:songMovingWindowTop+'px'}" v-if="songStore">
       <!--        发条评论吧-->
       <div id="sendAMessage" @click="openCommentAreaToSong">
         <svg-icon name="sendComment"></svg-icon>
@@ -221,23 +221,23 @@
           <div class="songMovingWindow-top-pan">
             <img src="./assets/pics/header.webp" id="header" :style="{transform:headerRotate}" alt="">
             <div class="songMovingWindow-top-pan-content" :style="{animationPlayState:panRotateState}">
-              <img :src="song.cover" id="vinyl-cover" v-show="song.cover" alt="">
+              <img :src="songStore.getCurSong().value.cover" id="vinyl-cover" v-if="songStore.getCurSong().value.cover" alt="">
               <img src="./assets/pics/pan.webp" id="vinyl" alt="">
             </div>
           </div>
 
-          <div class="songMovingWindow-top-middle" v-if="song.artist&&song.album&&song.lyric">
+          <div class="songMovingWindow-top-middle" v-if="songStore.getCurSong().value.artist&&songStore.getCurSong().value.album&&songStore.getCurSong().value.lyric">
             <div class="songMovingWindow-top-middle-header">
-              <p id="songName">{{song.name}}</p>
+              <p id="songName">{{songStore.getCurSong().value.name}}</p>
               <div class="songMovingWindow-top-middle-header-ar">
-                <p v-for="i in song.artist" :key="i">{{i.name}}&nbsp;</p>
-                <p>{{song.album === null?'':'- '+song.album.name}}</p>
+                <p v-for="i in songStore.getCurSong().value.artist" :key="i">{{i.name}}&nbsp;</p>
+                <p>{{songStore.getCurSong().value.album === null?'':'- '+songStore.getCurSong().value.album.name}}</p>
               </div>
             </div>
             <div class="songMovingWindow-top-middle-lyric">
               <el-scrollbar height="280px" ref="lyricContentWrap">
                 <ul class="lyricContent" ref="lyricContent">
-                  <li v-for="(i,index) in song.lyric" :key="i" :style="{color:index+1 === lyricSum?'#FFFFFF':'#606266'}" @click="toSpecificLyric(i.time,index)">{{i.content}}{{i.tlyric===null?"":i.tlyric}}</li>
+                  <li v-for="(i,index) in songStore.getCurSong().value.lyric" :key="i" :style="{color:index+1 === lyricIndex?'#FFFFFF':'#606266'}" @click="toSpecificLyric(i.time,index)">{{i.content}}{{i.tlyric===null?"":i.tlyric}}</li>
                 </ul>
               </el-scrollbar>
             </div>
@@ -250,12 +250,12 @@
             id="loadingCover"
             element-loading-text="评论加载中···"
             element-loading-background="transparent"
-            v-if="!song.total">
+            v-if="!songStore.getCurSong().value.total">
         </div>
         <div class="songMovingWindow-bottom" ref="commentsRef">
-          <span id="allCommentsTitle" v-show="song.total">全部评论({{song.total}})</span>
+          <span id="allCommentsTitle" v-if="songStore.getCurSong().value.total">全部评论({{songStore.getCurSong().value.total}})</span>
 
-          <div class="songHotCommentsContent" v-for="i in song.hotComments" :key="i">
+          <div class="songHotCommentsContent" v-for="i in songStore.getCurSong().value.hotComments" :key="i">
             <img :src="i.user.avatarUrl" alt="" class="commentsUserAvatar" @click="toUserInfoPage(i.user.userId)">
             <div class="songCommentContentTop">
               <span class="commentsUserName">{{i.user.nickname}}:</span>
@@ -275,8 +275,8 @@
             <div class="commentDivider"></div>
           </div>
 
-          <button id="checkMoreHotCommentsButton" v-show="song.total">更多精彩评论</button>
-          <div class="songCommentContent" v-for="i in song.comments" :key="i">
+          <button id="checkMoreHotCommentsButton" v-show="songStore.getCurSong().value.total">更多精彩评论</button>
+          <div class="songCommentContent" v-for="i in songStore.getCurSong().value.comments" :key="i">
             <img :src="i.user.avatarUrl" alt="" class="commentsUserAvatar" @click="toUserInfoPage(i.user.userId)">
             <div class="songCommentContentTop">
               <span class="commentsUserName">{{i.user.nickname}}:</span>
@@ -307,7 +307,7 @@
 </template>
 
 <script setup>
-import {onMounted, onUnmounted, reactive, ref, watch} from "vue";
+import {onMounted, onUnmounted, reactive, ref, toRaw, watch} from "vue";
 import {Search} from "@element-plus/icons-vue";
 import axios from "axios";
 import SvgIcon from "@/components/SvgIcon";
@@ -318,10 +318,13 @@ import NavigationBar from "@/components/navigationComponents/navigationBar";
 import Cookies from "js-cookie";
 import {useRoute} from "vue-router";
 import {useUserStore} from "@/store/userStore";
+import {useSongStore} from "@/store/songStore";
 import api from "./tools/apiCollection";
 
 const userStore = useUserStore();
+const songStore = useSongStore();
 const route = useRoute()
+const audioRef = ref() //播放器DOM
 let inputVal = ref('') //顶部搜索框变量
 let songSuggestionList = reactive({}) //建议歌单列表
 let suggestionTimer = null //建议歌单列表的定时器
@@ -330,27 +333,8 @@ let user = userStore.getUserInfo()//用户信息
 let displayUserInfo = ref(false) //展示用户部分信息（vip时间，注销···）弹窗
 let resultListIsVisible = ref(false) //建议歌单是否可见
 let isPlay = ref(false) //是否播放中
-let song = reactive({
-  id:null,
-  name:null,
-  src:null,
-  cover:null,
-  artist:null,
-  album:null,
-  duration:null,
-  currentTime:null,
-  lyric:null, //歌词
-  transUser:null, //翻译提供者
-  total:-1, //评论数
-  hotComments:[],
-  comments:[]
-}) //歌曲信息
 let playerTimer = null //播放器载入新歌曲地址后的定时器
 let durationBarWidth = ref(0) //进度条宽度
-let audioRef = ref({
-  currentTime:null,
-  duration:null
-}) //播放器DOM
 let coverVisible = ref(false) //歌曲遮罩
 let songMovingWindowTop = ref(520) //520歌曲详情弹窗上距
 let playBarLeft = ref(-60) //底部歌曲小页面上下移动距离
@@ -358,7 +342,7 @@ let playerPageTopBC = ref() //顶部搜索栏背景色
 let topSearchBarBC = ref('#2b2b2b') //顶部搜索框背景色
 let headerRotate = ref('rotate(0deg)') //磁头角度
 let panRotateState = ref('paused') //盘片是否旋转
-let lyricSum = ref(0) //当前歌词下标
+let lyricIndex = ref(0) //当前歌词下标
 let lyricContent = ref(null) //歌词外层包裹
 let lyricContentWrap = ref(null) //el-scrollBar
 let preparedSongList = ref() //待播放歌曲列表
@@ -420,58 +404,22 @@ const searchSuggestion = (val) => {
 
 //播放或暂停
 const playOrPause = (val) => {
-  if (!song.src){
-    return
+  if(val) {
+    songStore.shareAudio.pause()
+  } else {
+    songStore.shareAudio.play()
   }
-  val?audioRef.value.pause():audioRef.value.play()
   isPlay.value = !val
   headerPosition(val)
 }
 
-// params:e 传入的歌曲id或歌曲完整信息
-const playSong = (e) => {
-  elInfiniteScroll.value.setScrollTop = 0
-  clearSongInfo()
-  if (e.ar && e.al){
-    getLyric(e.id)
-    song.cover = e.al.picUrl
-    song.artist = e.ar
-    song.name = e.name
-    song.album = e.al
-    song.id = e.id
-  }else{
-    song.id = e
-    getLyric(song.id)
-    //如果传入的是歌曲id则会获取歌曲相关信息
-    axios.get(`${api.GET_SONG_DETAIL}?ids=${song.id}`).then(res => {
-      song.cover = res.data.songs[0].al.picUrl
-      song.artist = res.data.songs[0].ar
-      song.name = res.data.songs[0].name
-      song.album = res.data.songs[0].al
-    })
+const playSong = () => {
+  if(songStore.shareAudio){
+    playerTimer = setTimeout(() => {
+      playOrPause(false)
+    },150)
+    elInfiniteScroll.value.setScrollTop = 0
   }
-  axios.get(`${api.GET_SONG_URL}?id=${song.id}`).then(res => {
-    if (res.data.code === 200){
-      song.src = res.data.data[0].url
-      //加个定时器给播放器预留缓冲时间
-      playerTimer = setTimeout(() => {
-        audioRef.value.pause()
-        audioRef.value.play()
-        isPlay.value = true
-        playOrPause(false)
-      },150)
-    }else {
-      ElMessage({
-        message:'出错啦，请稍后再试',
-        type:"warning"
-      })
-    }
-  }).catch(() => {
-    ElMessage({
-      message:'出错啦，请稍后再试',
-      type:"warning"
-    })
-  })
 }
 
 //播放上一首
@@ -549,7 +497,7 @@ const movingWindowDown = () => {
   topSearchBarBC.value = '#2b2b2b'
 }
 
-//黑椒唱片磁头位置和盘片旋转
+//黑胶唱片磁头位置和盘片旋转
 const headerPosition = (val) => {
   if (val){
     headerRotate.value = 'rotate(-20deg)'
@@ -560,62 +508,18 @@ const headerPosition = (val) => {
   }
 }
 
-//获取歌词
-const getLyric = (id) => {
-  axios.get(`${api.GET_LYRIC}?id=${id}`).then(res => {
-    let lyric = (res.data.lrc.lyric).toString().split('\n')
-    for (let i in lyric){
-      let lyricList = lyric[i].split(']')
-      lyric[i] = {time: lyricTimeFormat(lyricList[0]+']'),content:lyricList[1],tlyric:null}
-    }
-    let tempTLyric = []
-    if (res.data.tlyric && res.data.tlyric.lyric.length>=1){
-      let tlyric = (res.data.tlyric.lyric).toString().split('\n')
-      let tlyricReg = /^\[[0-9]{2}:[0-9]{2}\.[0-9]{2,3}$/
-      for (let i = 0;i<tlyric.length;i++){
-        let tlyricList = tlyric[i].split(']')
-        //去空
-        if (tlyricReg.test(tlyricList[0])){
-          tempTLyric.push({time: lyricTimeFormat(tlyricList[0]+']'),content:tlyricList[1]})
-        }
-      }
-      let tlyricSum = 0
-      for (let a = 0;a < lyric.length-1;a++){
-        if (lyric[a].time === tempTLyric[tlyricSum].time) {
-          lyric[a].tlyric = "\n"+tempTLyric[tlyricSum].content
-          tlyricSum === tempTLyric.length-1?tlyricSum = tempTLyric.length-1:tlyricSum++
-        }
-      }
-    }
-    lyric.splice(lyric.length-1,1)
-    song.lyric = lyric
-    song.transUser = res.data.transUser
-  })
-}
-
-//歌词时间格式化
-const lyricTimeFormat = (time) => {
-  let temp = time.slice(1,time.length-1)
-  let tList = temp.split(':')
-  let min = tList[0]
-  let sec = tList[1]
-  return min*60+sec*1
-}
-
 //点击歌词跳转到指定位置
 const toSpecificLyric = (time,index) => {
-  lyricSum.value = index+1
-  audioRef.value.currentTime = time
+  lyricIndex.value = index+1
+  songStore.shareAudio.currentTime = time
   playOrPause(false)
 }
 
 //清除当前所有歌曲信息
 const clearSongInfo = () => {
-  audioRef.value.pause()
-  for (let i in song){
-    song[i] = null
-  }
-  lyricSum.value = 0
+  songStore.shareAudio.pause()
+  songStore.clearCurSong()
+  lyricIndex.value = 0
   commentsOffset = 0
 }
 
@@ -652,23 +556,23 @@ const checkLogoutAgain = async () => {
 
 //鼠标在进度条上按下事件
 const mouseDown = (e) => {
-  if (audioRef.value.src){
+  if (songStore.shareAudio.src){
     onBarMark = true
-    audioRef.value.currentTime = e.offsetX/600*audioRef.value.duration
-    durationBarWidth.value = (audioRef.value.currentTime/audioRef.value.duration)*600
+    songStore.shareAudio.currentTime = e.offsetX/600*songStore.shareAudio.duration
+    durationBarWidth.value = (songStore.shareAudio.currentTime/songStore.shareAudio.duration)*600
   }
 }
 
 //鼠标在进度条上松开事件
 const mouseUp = (e) => {
-  if (audioRef.value.src) {
-    audioRef.value.currentTime = e.offsetX/600*audioRef.value.duration
+  if (songStore.shareAudio.src) {
+    songStore.shareAudio.currentTime = e.offsetX/600*songStore.shareAudio.duration
     playOrPause(false)
     onBarMark = false
     //鼠标从进度条松开时跳转歌词位置
-    for(let i in song.lyric){
-      if (song.lyric[i].time > audioRef.value.currentTime){
-        toSpecificLyric(audioRef.value.currentTime,i-1)
+    for(let i in songStore.getCurSong().value.lyric){
+      if (songStore.getCurSong().value.lyric[i].time > songStore.shareAudio.currentTime){
+        toSpecificLyric(songStore.shareAudio.currentTime,i-1)
         break
       }
     }
@@ -687,14 +591,14 @@ const volumeMouseMove = (e) => {
   if (volumeMouseClick){
     let temp = mousePositionInVolumeBar-e.clientY
     volumeValue.value = (tempVolumeValue+temp)>80?80:tempVolumeValue+temp
-    audioRef.value.volume = parseFloat((volumeValue.value/80).toFixed(2))
+    songStore.shareAudio.volume = parseFloat((volumeValue.value/80).toFixed(2))
   }
 }
 
 //鼠标在音量条上按下
 const volumeMouseDown = (e) => {
   volumeValue.value = e.target.clientHeight - e.offsetY
-  audioRef.value.volume = volumeValue.value/80
+  songStore.shareAudio.volume = volumeValue.value/80
   tempVolumeValue = volumeValue.value
   mousePositionInVolumeBar = e.clientY
   volumeMouseClick = true
@@ -712,12 +616,12 @@ const volumeMouseOut = () => {
 
 //是否静音
 const isMuted = () => {
-  if (audioRef.value.muted){
-    audioRef.value.muted = false
+  if (songStore.shareAudio.muted){
+    songStore.shareAudio.muted = false
     volumeValue.value = tempVolumeBeforeMuted
   }else{
     tempVolumeBeforeMuted = volumeValue.value
-    audioRef.value.muted = true
+    songStore.shareAudio.muted = true
     volumeValue.value = 0
   }
 }
@@ -737,13 +641,13 @@ const volumeBarVisibleAfterFunc = () => {
 const getComments = (id) => {
   axios.get(`${api.GET_SONG_COMMENT}?id=${id}&limit=30&offset=${commentsOffset}`).then( res => {
     if (res.data.code === 200){
-      song.total = res.data.total
-      song.hotComments = res.data.hotComments
+      songStore.getCurSong().value.total = res.data.total
+      songStore.getCurSong().value.hotComments = res.data.hotComments
       if (commentsOffset === 0){
-        song.comments = res.data.comments
+        songStore.getCurSong().value.comments = res.data.comments
       }else{
         for (let i in res.data.comments){
-          song.comments.push(res.data.comments[i])
+          songStore.getCurSong().value.comments.push(res.data.comments[i])
         }
       }
       refreshCommentTimer = setTimeout(() => {
@@ -758,13 +662,13 @@ const getComments = (id) => {
 const infiniteScroll = (e) => {
   if (commentsRef.value.clientHeight - e.scrollTop < 800 && cancel){
     cancel = false
-    getComments(song.id)
+    getComments(songStore.getCurSong().value.id)
   }
 }
 
 //点赞或取消点赞评论
 const  isThumbUpComment = (cid,val) => {
-  axios.get(`${api.LIKE_COMMENT}?id=${song.id}&cid=${cid}&t=${val}&type=0`).then(res => {
+  axios.get(`${api.LIKE_COMMENT}?id=${songStore.getCurSong().id}&cid=${cid}&t=${val}&type=0`).then(res => {
     if (res.data.code !== 200){
       ElMessage({
         message:'操作失败，请稍后再试',
@@ -787,7 +691,7 @@ const openCommentArea = (cid,targetUser) => {
       })
       return
     }
-    axios.get(`${api.COMMENT_SONG}?t=2&type=0&id=${song.id}&commentId=${cid}&content=${value}`).then(res => {
+    axios.get(`${api.COMMENT_SONG}?t=2&type=0&id=${songStore.getCurSong().value.id}&commentId=${cid}&content=${value}`).then(res => {
       if (res.data.code !== 200){
         ElMessage({
           message:'发送失败，请稍后再试',
@@ -808,7 +712,7 @@ const openCommentAreaToSong = () => {
     confirmButtonText: '发送',
     cancelButtonText: '取消',
   }).then(({value}) => {
-    axios.get(`${api.COMMENT_SONG}?t=2&type=0&id=${song.id}&content=${value}`).then(res => {
+    axios.get(`${api.COMMENT_SONG}?t=2&type=0&id=${songStore.getCurSong().value.id}&content=${value}`).then(res => {
       if (res.data.code !== 200){
         ElMessage({
           message:'发送失败，请稍后再试',
@@ -879,24 +783,33 @@ watch(() => inputVal.value,(newVal) => {
 })
 
 //获取到歌词后和当前播放进度对比，动态改变当前歌词位置
-watch(() => song.lyric,(next) => {
-  if (next){
-    lyricSum.value = 0
+watch(songStore.getCurSong().value.lyric,(next) => {
+  if (next != null){
+    lyricIndex.value = 0
     let a = 0
-    for(let i of song.lyric){
-      if (i.time > audioRef.value.currentTime){
-        lyricSum.value = a
+    for(let i of songStore.getCurSong().value.lyric){
+      if (i.time > songStore.shareAudio.currentTime){
+        lyricIndex.value = a
         break
       }
       ++a
     }
   }
+},{
+  deep: true
+})
+
+//动态获取当前歌曲信息
+watch(() => songStore.songHasLoaded, (n) => {
+  playSong()
+},{
+  deep: true
 })
 
 //获取评论
 watch(() => songMovingWindowTop.value,(next) => {
   if (next === 70){
-    getComments(song.id)
+    getComments(songStore.getCurSong().value.id)
   }
 })
 
@@ -912,30 +825,30 @@ onMounted(() => {
   })
 
   // 加载歌曲时缓冲
-  audioRef.value.onprogress = () => {
+  songStore.shareAudio.onprogress = () => {
   }
   //产生打断事件后缓冲
-  audioRef.value.onseeked  = () => {
+  songStore.shareAudio.onseeked  = () => {
   }
   //音频时长变化;得到时长数据
-  audioRef.value.ondurationchange = () =>{
+  songStore.shareAudio.ondurationchange = () =>{
 
   }
   //播放时间变化
-  audioRef.value.ontimeupdate = () => {
-    songTimeChange.value = audioRef.value.currentTime
+  songStore.shareAudio.ontimeupdate = () => {
+    songTimeChange.value = songStore.shareAudio.currentTime
     //进度条和进度点变化
     if (!onBarMark){
-      durationBarWidth.value = (audioRef.value.currentTime/audioRef.value.duration)*600
+      durationBarWidth.value = (songStore.shareAudio.currentTime/songStore.shareAudio.duration)*600
     }
     //歌词滚动
     try {
-      if (song.lyric && audioRef.value.currentTime - song.lyric[lyricSum.value].time <= 1 && audioRef.value.currentTime - song.lyric[lyricSum.value].time >= -0.2){
-        if (song.lyric[lyricSum.value].content && lyricContent){
+      if (songStore.getCurSong().value.lyric && songStore.shareAudio.currentTime - songStore.getCurSong().value.lyric[lyricIndex.value].time <= 1 && songStore.shareAudio.currentTime - songStore.getCurSong().value.lyric[lyricIndex.value].time >= -0.2){
+        if (songStore.getCurSong().value.lyric[lyricIndex.value].content && lyricContent){
           let list = lyricContent.value.children
-          lyricContentWrap.value.setScrollTop(list[lyricSum.value].offsetTop-list[lyricSum.value].clientHeight/2-80)
+          lyricContentWrap.value.setScrollTop(list[lyricIndex.value].offsetTop-list[lyricIndex.value].clientHeight/2-80)
         }
-        lyricSum.value = lyricSum.value <= song.lyric.length-1?++lyricSum.value:song.lyric.length-1
+        lyricIndex.value = lyricIndex.value <= songStore.getCurSong().value.lyric.length-1?++lyricIndex.value:songStore.getCurSong().value.lyric.length-1
       }
     }catch(err){
       console.log(err)
@@ -943,11 +856,11 @@ onMounted(() => {
   }
 
   // 当前数据可以触发
-  audioRef.value.oncanplay = () => {
+  songStore.shareAudio.oncanplay = () => {
   }
   // 音频播放完毕
-  audioRef.value.onended = () => {
-    fmIsEnded.value = song.id
+  songStore.shareAudio.onended = () => {
+    fmIsEnded.value = songStore.getCurSong().value.id
     if (!preparedSongList.value){
       playOrPause(true)
       return
@@ -956,7 +869,7 @@ onMounted(() => {
     playSong(preparedSongList.value[++presentSongIndexInPreparedList].id)
   }
   // 错误
-  audioRef.value.onerror = () => {
+  songStore.shareAudio.onerror = () => {
   }
 })
 

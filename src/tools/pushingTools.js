@@ -89,8 +89,6 @@ const toSongListDetail = (id) => {
             }
         })
     }else if(id === -1){
-        if (!Cookies.get('MUSIC_U'))
-            return
         router.push('/dailyRecommendation')
     }
 }

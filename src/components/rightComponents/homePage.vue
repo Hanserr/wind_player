@@ -13,7 +13,7 @@
 
       <div class="homePage-bottom">
         <div class="recommendListDiv" v-for="i in recommendSongsList" :key="i">
-          <img :src="i.picUrl || i.coverImgUrl || cover" class="recommendListDivCover" @click="this.$pushingTools.toSongListDetail(i.id)">
+          <img :src="i.picUrl || i.coverImgUrl || cover" class="recommendListDivCover" @click="pushingTools.toSongListDetail(i.id)" alt="">
           {{i.name}}
         </div>
       </div>
@@ -23,12 +23,13 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import axios from "axios";
-import {ElCarousel, ElMessage} from "element-plus";
+import {ElCarousel} from "element-plus";
 import {router} from "@/router/routes";
 import api from "@/tools/apiCollection";
 import {useUserStore} from "@/store/userStore";
+import pushingTools from "@/tools/pushingTools";
 
 let bannerList = ref({'':''}) //banner列表
 let beforeBanner = require('../../assets/pics/beforeBanner.webp') //banner未加载完成时的替代图
@@ -75,8 +76,13 @@ const getDailyRecommendSongLists = () => {
   }
 }
 
+watch(userStore.getLoginStatus,(n) => {
+  if (n) {
+    getDailyRecommendSongLists()
+  }
+})
+
 onMounted(() => {
-  getDailyRecommendSongLists()
   getBanner()
 })
 </script>

@@ -8,7 +8,7 @@
     <span style="margin-left: 60px">热度</span>
   </div>
   <div class="albumPageBottomContent">
-    <div v-for="(i,index) in albumSongs" :key="i"  class="albumPageBottomContent-bottom" @dblclick="play(i.id)">
+    <div v-for="(i,index) in albumSongs" :key="i"  class="albumPageBottomContent-bottom" @dblclick="songStore.updateCurSong(i.id)">
       <span class="albumSongIndex">{{(index+1).toString().length<2?"0"+(index+1):index+1}}</span>
       <div class="albumSongTitle"><span>{{i.name}}</span></div>
       <div class="albumSongAr"><span v-for="ar in i.ar" :key="ar" @click="this.$pushingTools.toArPage(ar.id)">{{ar.name}}&nbsp;&nbsp;</span></div>
@@ -28,11 +28,11 @@ import {ElMessage} from "element-plus";
 import {useRoute} from "vue-router";
 import {onMounted, ref} from "vue";
 import api from "@/tools/apiCollection";
+import {useSongStore} from "@/store/songStore";
 
 const route = useRoute()
+const songStore = useSongStore();
 let albumSongs = ref() //专辑歌曲内容
-// eslint-disable-next-line no-undef
-let emits = defineEmits(['playMusic'])
 
 //获取专辑歌曲列表
 const getAlbumInfo = (id) => {
@@ -46,11 +46,6 @@ const getAlbumInfo = (id) => {
       })
     }
   })
-}
-
-//播放音乐
-const play = (id) => {
-  emits('playMusic',id)
 }
 
 onMounted(() => {

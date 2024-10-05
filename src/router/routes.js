@@ -30,7 +30,7 @@ const routes = [
                 name: 'songListDetailPage',
                 component: () => import('../components/rightComponents/songListDetailPage'),
                 meta:{
-                    keepAlive:true
+                    keepAlive:false
                 }
             },
             {

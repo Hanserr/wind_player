@@ -62,9 +62,10 @@ import axios from "axios"
 import SvgIcon from "@/components/SvgIcon";
 import Cookies from "js-cookie";
 import api from "@/tools/apiCollection";
+import {useSongStore} from "@/store/songStore";
 
 const route = useRoute()
-// eslint-disable-next-line no-undef
+const songStore = useSongStore()
 const emits = defineEmits(['songID','tracks'])
 let listDetail = ref()
 let preparedSongList = ref() //待播放歌曲列表
@@ -90,7 +91,7 @@ const getSongListDetail = (id) => {
 
 //播放歌曲
 const playSong = (id,index) => {
-  emits('songID',id)
+  songStore.updateCurSong(id)
   emits('tracks',[preparedSongList,index])
 }
 

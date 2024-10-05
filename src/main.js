@@ -40,6 +40,7 @@ app.config.globalProperties.$durationFormat = (val) => {
     sec = sec < 10?'0'+sec:sec
     return `${min}:${sec}`
 }
+
 //评论时间转换
 app.config.globalProperties.$commentTimeFormat = (val) => {
     if (val === null){

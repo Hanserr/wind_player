@@ -164,10 +164,10 @@ const playSong = (id) => {
   getLyric(id)
   controlBottomPosition.value.left = 315
   controlBottomPosition.value.top = 275
-  if (props.inPlay){
-    emits('audioState',false)
-    return
-  }
+  // if (props.inPlay){
+  //   emits('audioState',false)
+  //   return
+  // }
   emits("songID",id)
 }
 //暂停歌曲

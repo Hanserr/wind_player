@@ -16,17 +16,11 @@ export const useUserStore = defineStore('User', () => {
         follows: 0, //关注人数
         follower: 0 //关注我的人数
     })
-    let hasLogin = ref(false);
-    const cookie = ref()
+    const hasLogin = ref(false);
 
     const getUserInfo = () => {
         return userInfo.value
     }
-
-    const getCookie = () => {
-        return cookie.value
-    }
-
     const getLoginStatus = () => {
         return hasLogin.value
     }
@@ -58,16 +52,9 @@ export const useUserStore = defineStore('User', () => {
         }
     }
 
-    const saveCookie = (cookie) => {
-    }
-
     return {
-        userInfo,
-        cookie,
         getUserInfo,
-        getCookie,
         getLoginStatus,
-        saveCookie,
         updateUserInfo,
     }
 })

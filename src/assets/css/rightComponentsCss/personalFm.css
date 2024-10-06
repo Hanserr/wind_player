@@ -13,8 +13,10 @@ body{
     overflow: hidden;
 }
 .personalFm-right{
+    overflow: hidden;
     width: 430px;
     height: 450px;
+    position: relative;
     display: inline-block;
 }
 .personalFm-left div{
@@ -57,21 +59,20 @@ body{
     cursor: pointer;
 }
 .personalFm-header{
-    text-align: center;
     position: relative;
-    top: -60px;
+    top: 30px;
+    text-align: center;
     width: 380px;
-    height: 35px;
-    margin: 0 auto;
+    height: auto;
     font-size: 15px;
     color: #7A797C;
+    margin: 0 auto;
 }
 #personalFmSongName{
     font-size: 30px;
-    line-height: 40px;
+    line-height: 30px;
     text-align: center;
     position: relative;
-    top: -8px;
     color: #D4D4D4;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -81,9 +82,9 @@ body{
 .personalFm-ar{
     text-align: center;
     position: relative;
-    top: -35px;
+    top: -15px;
     width: 380px;
-    height: 20px;
+    height: auto;
     margin: 0 auto;
     font-size: 15px;
     color: #7A797C;
@@ -94,18 +95,30 @@ body{
     line-height: 15px;
     display: inline;
 }
+/**/
+.personalFm-lyric-scrollbar {
+    display: block;
+    top: 0;
+}
 .personalFm-lyric{
+    display: block;
+    position: relative;
     color: #606266;
     text-align: center;
-    height: 300px;
+    width: 430px;
+    height: 320px;
+    margin-top: 30px;
+    overflow: hidden;
 }
 .personalFm-lyricContent{
-    width: 380px;
+    width: 430px;
     padding: 0;
+    position: relative;
 }
 .personalFm-lyricContent li{
-    width: 430px;
+    width: 100%;
     list-style: none;
     margin-top: 20px;
     white-space:pre-wrap;
+    position: relative;
 }

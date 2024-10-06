@@ -4,7 +4,7 @@
      element-loading-background="rgba(0, 0, 0, 0.8)"
      element-loading-text="加载中···">
   <div class="similarArtistDetail" v-for="ar in similarSingers" :key="ar">
-    <img :src="ar.img1v1Url" alt="" @click="this.$pushingTools.toArPage(ar.id)">
+    <img :src="ar.img1v1Url" alt="" @click="pushingTools.toArPage(ar.id)">
     <span>{{ar.name}}</span>
   </div>
 </div>
@@ -15,6 +15,7 @@ import axios from "axios";
 import {onMounted, ref} from "vue";
 import {useRoute} from "vue-router";
 import api from "@/tools/apiCollection";
+import pushingTools from "@/tools/pushingTools";
 
 const route = useRoute()
 let similarSingers = ref()

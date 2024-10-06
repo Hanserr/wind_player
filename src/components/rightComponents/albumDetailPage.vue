@@ -13,7 +13,7 @@
         <span class="albumArAndTi">歌手:</span>
         <span class="albumCreator" v-for="i in albumInfo.artists" :key="i">{{i.name}}&nbsp;</span>
         <br>
-        <span class="albumArAndTi">时间:{{this.$dateFormat(albumInfo.publishTime)}}</span>
+        <span class="albumArAndTi">时间:{{format.dateFormat(albumInfo.publishTime)}}</span>
       </div>
     </div>
     <div class="albumDetailPage-bottom">
@@ -31,11 +31,13 @@ import axios from "axios";
 import {useRoute} from "vue-router"
 import {ElMessage} from "element-plus";
 import api from "@/tools/apiCollection";
+import {useSongStore} from "@/store/songStore";
+import format from "@/tools/format";
 
+const songStore = useSongStore();
 const route = useRoute()
 let albumInfo = ref() //专辑信息
-// eslint-disable-next-line no-undef
-let emits = defineEmits(['songID','tracks'])
+let emits = defineEmits(['tracks'])
 let preparedSongList = ref()
 let tempScrollTop = ref()
 let loading = ref(false)
@@ -60,12 +62,12 @@ const getAlbumInfo = (id) => {
 
 //播放音乐
 const playMusic = (id) => {
-  emits('songID',id)
+
 }
 
 //播放当前歌单全部歌曲
 const playAll = () => {
-  emits('songID',preparedSongList.value[0].id)
+  songStore.updateCurSong(preparedSongList.value[0].id)
   emits('tracks',[preparedSongList.value,0])
 }
 

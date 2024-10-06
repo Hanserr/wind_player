@@ -33,8 +33,10 @@ import axios from "axios";
 import {onMounted, onUnmounted, reactive, ref, watch} from "vue";
 import {useRoute} from "vue-router"
 import api from "@/tools/apiCollection";
+import {useSongStore} from "@/store/songStore";
 
 const route = useRoute()
+const songStore = useSongStore()
 let resultList = reactive({})
 let loading = ref(false)
 let resultListHeight = ref(100)
@@ -42,16 +44,15 @@ let offset = ref(0)
 let mark = ref(true)
 let markTimer = null
 let resultTimeCounter = 0
-// eslint-disable-next-line no-undef
-const emits = defineEmits(["closeResultList","songID"])
+const emits = defineEmits(["closeResultList"])
 
 //点击歌单区域关闭搜索建议
 const closeList = () => {
   emits('closeResultList',false)
 }
 //把歌曲id传给父元素
-const playSong = (detail) => {
-  emits('songID',detail)
+const playSong = (id) => {
+  songStore.updateCurSong(id)
 }
 
 //获取搜索结果

@@ -9,7 +9,7 @@
         <span class="albumCommentUserNickname">{{i.user.nickname}}:</span>
         <span class="albumCommentUserComment">{{i.content}}</span>
       </div>
-      <span class="albumCommentUserTime">{{this.$commentTimeFormat(i.time)}}</span>
+      <span class="albumCommentUserTime">{{format.commentTimeFormat(i.time)}}</span>
       <svg-icon name="thumbUp" class="albumThumbupComment" v-if="i.liked" @click="i.liked = false;--i.likedCount;isThumbUpComment(i.commentId,1)"></svg-icon>
       <svg-icon name="unThumbUp" class="albumThumbupComment" v-if="!i.liked" @click="i.liked = true;++i.likedCount;isThumbUpComment(i.commentId,0)"></svg-icon>
       <div class="albumCommentsDivider"></div>
@@ -26,6 +26,7 @@ import {useRoute} from "vue-router";
 import {ElMessage} from "element-plus";
 import SvgIcon from "@/components/SvgIcon";
 import api from "@/tools/apiCollection";
+import format from "@/tools/format";
 
 const route = useRoute()
 let presentPageNo = 1 //当前评论页数

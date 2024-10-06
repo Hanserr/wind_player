@@ -11,9 +11,9 @@
     <div v-for="(i,index) in albumSongs" :key="i"  class="albumPageBottomContent-bottom" @dblclick="songStore.updateCurSong(i.id)">
       <span class="albumSongIndex">{{(index+1).toString().length<2?"0"+(index+1):index+1}}</span>
       <div class="albumSongTitle"><span>{{i.name}}</span></div>
-      <div class="albumSongAr"><span v-for="ar in i.ar" :key="ar" @click="this.$pushingTools.toArPage(ar.id)">{{ar.name}}&nbsp;&nbsp;</span></div>
+      <div class="albumSongAr"><span v-for="ar in i.ar" :key="ar" @click="pushingTools.toArPage(ar.id)">{{ar.name}}&nbsp;&nbsp;</span></div>
       <div class="albumSongName"><span>{{i.al.name}}</span></div>
-      <div class="albumSongDt"><span>{{this.$durationFormat(i.dt)}}</span></div>
+      <div class="albumSongDt"><span>{{format.durationFormat(i.dt)}}</span></div>
       <div class="albumSongPop">
         <div class="albumSongPop-content" :style="{width:i.pop+'%'}"></div>
       </div>
@@ -29,6 +29,8 @@ import {useRoute} from "vue-router";
 import {onMounted, ref} from "vue";
 import api from "@/tools/apiCollection";
 import {useSongStore} from "@/store/songStore";
+import format from "@/tools/format";
+import pushingTools from "@/tools/pushingTools";
 
 const route = useRoute()
 const songStore = useSongStore();

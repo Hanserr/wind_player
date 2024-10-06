@@ -14,7 +14,7 @@
               <span class="eventContent-nickname">{{i.user.nickname}}</span>
               <span>发布动态</span>
               <br>
-              <span>{{this.$commentTimeFormat(i.eventTime)}}</span>
+              <span>{{format.commentTimeFormat(i.eventTime)}}</span>
             </div>
 
             <div class="eventContent-right-middle">
@@ -25,7 +25,7 @@
                 <br>
                 <span v-for="i in JSON.parse(i.json).song.artists" :key="i">{{i.name}}</span>
               </div>
-              <div class="eventContent-right-middle-share" v-if="i.info.commentThread.resourceInfo.eventType === 19" @click="this.$pushingTools.toAlbumDetail(JSON.parse(i.json).album.id)">
+              <div class="eventContent-right-middle-share" v-if="i.info.commentThread.resourceInfo.eventType === 19" @click="pushingTools.toAlbumDetail(JSON.parse(i.json).album.id)">
                 <img :src="JSON.parse(i.json).album.picUrl" alt="">
                 <span>{{JSON.parse(i.json).album.name}}</span>
                 <br>
@@ -79,7 +79,11 @@ import {onMounted, onUnmounted, ref} from "vue";
 import {ElMessage} from "element-plus";
 import SvgIcon from "@/components/SvgIcon";
 import api from "@/tools/apiCollection";
+import {useSongStore} from "@/store/songStore";
+import format from "@/tools/format";
+import pushingTools from "@/tools/pushingTools";
 
+const songStore = useSongStore();
 let lastTime = -1
 let eventsList = ref() //动态列表
 let loading = ref(false)
@@ -88,10 +92,7 @@ let presentlyCompletePicList = ref(['']) //当前大图列表
 let picCarouselRef = ref(null) //轮播图ref
 let eventPageRef = ref(null)
 let eventGettingMark = true
-// eslint-disable-next-line no-unused-vars
 let eventTimer = null //获取动态的冷却时间
-// eslint-disable-next-line no-undef
-const emits = defineEmits(['songID'])
 
 //获取动态数据
 const getEvents = () => {
@@ -160,7 +161,7 @@ const thumbup = (tid,t) => {
 
 //播放
 const toPlay = (id) => {
-  emits('songID',id)
+  songStore.updateCurSong(id)
 }
 
 onMounted(() => {

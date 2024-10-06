@@ -14,7 +14,7 @@
       </div>
 
       <div class="createdSongList" v-show="!createdSongListIsFold">
-        <p v-for="item in createdSongList" :key="item" class="createdSongList-p" @click="this.$pushingTools.toSongListDetail(item.id)">&nbsp;&nbsp;{{item.name}}</p>
+        <p v-for="item in createdSongList" :key="item" class="createdSongList-p" @click="pushingTools.toSongListDetail(item.id)">&nbsp;&nbsp;{{item.name}}</p>
       </div>
 
       <div class="navigationBar-p-headline-wrap" @click="collectedSongIsFold = !collectedSongIsFold">
@@ -24,7 +24,7 @@
       </div>
 
       <div class="collectedSongList" v-show="!collectedSongIsFold">
-        <p v-for="item in collectionSongList" :key="item" class="createdSongList-p" @click="this.$pushingTools.toSongListDetail(item.id)">&nbsp;&nbsp;{{item.name}}</p>
+        <p v-for="item in collectionSongList" :key="item" class="createdSongList-p" @click="pushingTools.toSongListDetail(item.id)">&nbsp;&nbsp;{{item.name}}</p>
       </div>
     </el-scrollbar>
   </div>
@@ -37,6 +37,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import {router} from "@/router/routes";
 import api from "@/tools/apiCollection";
+import pushingTools from "@/tools/pushingTools";
 
 // eslint-disable-next-line no-undef
 let createdSongListIsFold = ref(true) //创建的歌单列表是否折叠

@@ -10,15 +10,15 @@
     </div>
     <span id="ARPageMainArName">{{artist.name}}</span>
     <button>收藏</button>
-    <button @click="this.$pushingTools.toCreation(route.params.arID)" v-show="hasAccount">个人主页</button>
+    <button @click="pushingTools.toCreation(route.params.arID)" v-show="hasAccount">个人主页</button>
     <span>单曲数:{{artist.musicSize}}</span>
     <br>
     <span>专辑数:{{artist.albumSize}}</span>
   </div>
   <div class="ARPageMain-bottom">
-    <span class="ARPageMain-bottom-title" @click="this.$pushingTools.toArPage(route.params.arID)">专辑</span>
-    <span class="ARPageMain-bottom-title" @click="this.$pushingTools.toArDescPage(artist.briefDesc,route.params.arID)">歌手详情</span>
-    <span class="ARPageMain-bottom-title" @click="this.$pushingTools.toSimilarArPage(route.params.arID)">相似歌手</span>
+    <span class="ARPageMain-bottom-title" @click="pushingTools.toArPage(route.params.arID)">专辑</span>
+    <span class="ARPageMain-bottom-title" @click="pushingTools.toArDescPage(artist.briefDesc,route.params.arID)">歌手详情</span>
+    <span class="ARPageMain-bottom-title" @click="pushingTools.toSimilarArPage(route.params.arID)">相似歌手</span>
     <router-view @playMusic="playMusic"></router-view>
   </div>
   </el-scrollbar>
@@ -32,12 +32,14 @@ import {useRoute} from "vue-router";
 import {router} from "@/router/routes";
 import {ElMessage} from "element-plus";
 import api from "@/tools/apiCollection";
+import {useSongStore} from "@/store/songStore";
+import pushingTools from "@/tools/pushingTools";
 
+const songStore = useSongStore();
 const route = useRoute()
 let artist = ref() //歌手信息
 let loading = ref(false)
 let mark = ref(false) //当前页面数据是否加载完成
-let emits = defineEmits(['songID'])
 let hasAccount = ref(false)
 
 //获取歌手信息
@@ -71,7 +73,7 @@ const getArInfo = (id) => {
 
 //播放歌曲
 const playMusic = (id) => {
-  emits('songID',id)
+  songStore.updateCurSong(id)
 }
 
 onMounted(() => {

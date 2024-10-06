@@ -46,8 +46,8 @@
       </div>
     </div>
     <div class="userInfoPageMain-bottom">
-      <span style="margin-left: 30px" class="userInfoPageMain-bottom-title" @click="this.$pushingTools.toCreation(id)">创建的歌单</span>
-      <span style="margin-left: 40px" class="userInfoPageMain-bottom-title" @click="this.$pushingTools.toCollected(id)">收藏的歌单</span>
+      <span style="margin-left: 30px" class="userInfoPageMain-bottom-title" @click="pushingTools.toCreation(id)">创建的歌单</span>
+      <span style="margin-left: 40px" class="userInfoPageMain-bottom-title" @click="pushingTools.toCollected(id)">收藏的歌单</span>
       <router-view></router-view>
     </div>
   </el-scrollbar>
@@ -62,6 +62,7 @@ import SvgIcon from "@/components/SvgIcon";
 import {region} from "@/tools/region";
 import {useRoute} from "vue-router";
 import api from "@/tools/apiCollection";
+import pushingTools from "@/tools/pushingTools";
 
 const route = useRoute()
 let profile = ref() //用户信息

@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import api from "@/tools/apiCollection";
 import axios from "axios";
 import Notification from "@/tools/notification";
@@ -18,14 +18,10 @@ export const useUserStore = defineStore('User', () => {
     })
     const hasLogin = ref(false);
 
-    const getUserInfo = () => {
-        return userInfo.value
-    }
-    const getLoginStatus = () => {
-        return hasLogin.value
-    }
+    const getUserInfo = () => computed(() => {return userInfo.value})
+    const getLoginStatus = () => computed(() => {return hasLogin.value})
 
-    //每次登陆或打开网页时判断是否已登陆
+    //每次登陆或进入网页时判断是否已登陆
     const updateUserInfo = async () => {
         let fetchUserStatus = await axios.get(`${api.GET_LOGIN_STATUS}?timestamp=${Date.now()}`)
         if (fetchUserStatus.data.data.code === 200){

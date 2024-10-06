@@ -29,14 +29,15 @@ import {ElCarousel} from "element-plus";
 import {router} from "@/router/routes";
 import api from "@/tools/apiCollection";
 import {useUserStore} from "@/store/userStore";
+import {useSongStore} from "@/store/songStore";
 import pushingTools from "@/tools/pushingTools";
 
 let bannerList = ref({'':''}) //banner列表
 let beforeBanner = require('../../assets/pics/beforeBanner.webp') //banner未加载完成时的替代图
 let recommendSongsList = ref([]) //日推歌单
 let cover = require("../../assets/pics/cover.webp") //日推封面
-const emits = defineEmits(['songID'])
 const userStore = useUserStore()
+const songStore = useSongStore()
 
 //获取首页轮播图
 const getBanner = () => {
@@ -50,7 +51,7 @@ const getBanner = () => {
 //获取轮播图歌曲 已知targetType对应 1:单曲  10:专辑  1000:歌单  3000:活动页面
 const getBannerSong = (item) => {
   if (item.targetType === 1){
-    emits("songID",item.targetId)
+    songStore.updateCurSong(item.targetId)
   }else if(item.targetType === 10){
     router.push(`/albumDetail/songlistPage/${item.targetId}`)
   }else if (item.targetType === 1000){
@@ -62,7 +63,7 @@ const getBannerSong = (item) => {
 
 //获取日推歌单
 const getDailyRecommendSongLists = () => {
-  if (userStore.getLoginStatus()) {
+  if (userStore.getLoginStatus().value) {
     //每日个性化定制歌单
     recommendSongsList.value.push({name:"每日歌曲推荐",id:-1})
     //其他推荐歌单
@@ -76,7 +77,7 @@ const getDailyRecommendSongLists = () => {
   }
 }
 
-watch(userStore.getLoginStatus,(n) => {
+watch(() => userStore.getLoginStatus().value,(n) => {
   if (n) {
     getDailyRecommendSongLists()
   }

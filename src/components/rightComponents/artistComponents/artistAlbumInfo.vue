@@ -13,7 +13,7 @@
       <li v-for="(i,index) in topList" :key="i" @dblclick="playSong(i.id)">
         <span>{{index+1 < 10?"0"+(index+1):index+1}}</span>
         <span>{{i.name}}</span>
-        <span>{{this.$durationFormat(i.dt)}}</span>
+        <span>{{format.durationFormat(i.dt)}}</span>
       </li>
       <li v-show="topListRemainList.length !== 0" @click="showEntireData()">
         <span style="cursor: pointer">显示全部{{topListLength}}首→</span>
@@ -30,7 +30,7 @@
         <li v-for="(alSong,index) in al.songs" :key="alSong" @dblclick="playSong(alSong.id)">
           <span>{{index+1 < 10?"0"+(index+1):index+1}}</span>
           <span>{{alSong.name}}</span>
-          <span>{{this.$durationFormat(alSong.dt)}}</span>
+          <span>{{format.durationFormat(alSong.dt)}}</span>
         </li>
       </ul>
   </div>
@@ -44,13 +44,15 @@ import {useRoute} from "vue-router";
 import axios from "axios";
 import {ElMessage} from "element-plus";
 import api from "@/tools/apiCollection";
+import {useSongStore} from "@/store/songStore";
+import format from "@/tools/format";
 
+const songStore = useSongStore();
 const route = useRoute()
 let uid = 0
 let albums = ref([])
 let topList = ref([])
 let topListRemainList = ref([])
-let emits = defineEmits(['playMusic'])
 let artistAlbumLoading = ref(false)
 
 let topListLength = computed(() => {
@@ -85,7 +87,7 @@ const getTopSongs = (id) => {
 }
 
 //获取专辑捏歌曲
-const getSongsByAlbum = (id) => {
+const getSongsByAlbum = () => {
   for (let s of albums.value){
     axios.get(`${api.GET_ALBUM}?id=${s.id}`).then(res => {
       if (res.data.code === 200){
@@ -101,7 +103,7 @@ const getSongsByAlbum = (id) => {
 
 //播放歌曲
 const playSong = (id) => {
-  emits('playMusic',id)
+  songStore.updateCurSong(id)
 }
 
 //显示全部歌曲数据

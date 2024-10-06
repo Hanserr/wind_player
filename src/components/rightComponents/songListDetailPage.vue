@@ -10,14 +10,14 @@
       <div class="songListDetailPage-top-right">
         <p id="songList">歌单</p>
         <p id="listName">{{listDetail.playlist.name}}</p>
-        <img id="avatar" :src="listDetail.playlist.creator.avatarUrl" @click="this.$PushingTools.toCreator(listDetail.playlist.creator.userId)">
+        <img id="avatar" :src="listDetail.playlist.creator.avatarUrl" @click="pushingTools.toCreator(listDetail.playlist.creator.userId)">
         <div id="creatorWrap">
-          <p id="creatorName" @click="this.$PushingTools.toCreator(listDetail.playlist.creator.userId)">{{listDetail.playlist.creator.nickname}}</p>
-          <p id="creationTime">{{this.$dateFormat(listDetail.playlist.createTime)}}创建</p>
+          <p id="creatorName" @click="pushingTools.toCreator(listDetail.playlist.creator.userId)">{{listDetail.playlist.creator.nickname}}</p>
+          <p id="creationTime">{{format.dateFormat(listDetail.playlist.createTime)}}创建</p>
         </div>
         <button id="play" @click="playAll">播放全部</button>
         <button id="collect" @click="collectSongList" :disabled="!canCollect" :style="{backgroundColor:canCollect?'transparent':'#383838'}">{{hadCollected?'已收藏':'收藏'}}</button>
-        <svg-icon name="alterSongList" style="position: absolute;top: 105px;left: 240px;cursor:pointer;" @click="this.$pushingTools.toAlterSongList(route.params.songListId)" v-show="!canCollect"></svg-icon>
+        <svg-icon name="alterSongList" style="position: absolute;top: 105px;left: 240px;cursor:pointer;" @click="pushingTools.toAlterSongList(route.params.songListId)" v-show="!canCollect"></svg-icon>
         <p id="playCount">歌曲:{{listDetail.playlist.tracks.length}}</p>
         <p id="songCount">播放:{{listDetail.playlist.playCount.toString().length>=9?
             `${Math.floor(listDetail.playlist.playCount/100000000)}亿`: listDetail.playlist.playCount.toString().length>=5?
@@ -41,13 +41,13 @@
               <div class="detailAr">
                 <span v-for="(n,index) in song.ar"
                       :key="index"
-                      @click="this.$pushingTools.toArPage(n.id)"
+                      @click="pushingTools.toArPage(n.id)"
                       :style="{cursor:n.id!==0?'pointer':'default',color:n.id!==0?'#d5d5d5':'#757575'}">
                   {{n.name}}{{index !== song.ar.length - 1?'&nbsp;/&nbsp;':''}}
                 </span>
               </div>
-              <span @click="this.$pushingTools.toAlbumDetail(song.al.id)" class="songDetailAl">{{song.al.name}}</span>
-              <span class="songDetailDt">{{this.$durationFormat(song.dt)}}</span>
+              <span @click="pushingTools.toAlbumDetail(song.al.id)" class="songDetailAl">{{song.al.name}}</span>
+              <span class="songDetailDt">{{format.durationFormat(song.dt)}}</span>
           </div>
         </el-scrollbar>
       </div>
@@ -63,10 +63,11 @@ import SvgIcon from "@/components/SvgIcon";
 import Cookies from "js-cookie";
 import api from "@/tools/apiCollection";
 import {useSongStore} from "@/store/songStore";
+import format from "@/tools/format";
+import pushingTools from "@/tools/pushingTools";
 
 const route = useRoute()
 const songStore = useSongStore()
-const emits = defineEmits(['songID','tracks'])
 let listDetail = ref()
 let preparedSongList = ref() //待播放歌曲列表
 let canCollect = ref(true) //是否可以收藏
@@ -90,15 +91,15 @@ const getSongListDetail = (id) => {
 }
 
 //播放歌曲
-const playSong = (id,index) => {
+const playSong = (id) => {
   songStore.updateCurSong(id)
-  emits('tracks',[preparedSongList,index])
+  songStore.updateSongList(preparedSongList.value)
 }
 
 //播放当前歌单全部歌曲
 const playAll = () => {
-  emits('songID',listDetail.value.playlist.tracks[0].id)
-  emits('tracks',[preparedSongList,0])
+  songStore.updateCurSong(listDetail.value.playlist.trackIds[0].id)
+  songStore.updateSongList(preparedSongList.value)
 }
 
 //收藏歌单

@@ -7,7 +7,7 @@ import format from "@/tools/format"
 
 export const useSongStore = defineStore('Song', () => {
     //待播放歌曲列表
-    const songList = ref({})
+    const songList = ref([])
     //当前播放的歌曲信息
     const curSong = ref({
         id:null,
@@ -31,21 +31,29 @@ export const useSongStore = defineStore('Song', () => {
 
     const getSongList = () => computed(() => {return songList.value})
     const getCurSong = () => computed(() => {return curSong.value})
-    // const getAudio = () => computed(() => {return shareAudio.value})
 
-    //创建audio组件
+    //接收audio DOM
     function initAudio(ref) {
         shareAudio.value = ref
     }
 
     //更新歌曲列表
-    const updateSongList = () => {
+    const updateSongList = (data) => {
+        songList.value = []
+        for(let i of data) {
+            songList.value.push(i)
+        }
+    }
 
+    //清空歌曲列表
+    const cleatSongList = () => {
+        songList.value = []
     }
 
     //更新当前歌曲信息
     function updateCurSong(id){
         //清空当前歌曲信息
+        shareAudio.value.pause()
         songHasLoaded.value = false
         clearCurSong()
         curSong.value.id = id
@@ -109,6 +117,7 @@ export const useSongStore = defineStore('Song', () => {
             getSongFailed()
         })
         songHasLoaded.value = true
+        shareAudio.value.play()
     }
 
     //清空当前歌曲信息
@@ -138,6 +147,7 @@ export const useSongStore = defineStore('Song', () => {
         songHasLoaded,
         shareAudio,
         getSongList,
+        cleatSongList,
         getCurSong,
         updateSongList,
         updateCurSong,

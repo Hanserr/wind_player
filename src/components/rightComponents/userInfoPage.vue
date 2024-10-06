@@ -48,7 +48,12 @@
     <div class="userInfoPageMain-bottom">
       <span style="margin-left: 30px" class="userInfoPageMain-bottom-title" @click="pushingTools.toCreation(id)">创建的歌单</span>
       <span style="margin-left: 40px" class="userInfoPageMain-bottom-title" @click="pushingTools.toCollected(id)">收藏的歌单</span>
-      <router-view></router-view>
+      <router-view v-slot="{Component}">
+        <keep-alive>
+          <component :is="Component" :key="$route.name" v-if="$route.meta.keepAlive" ></component>
+        </keep-alive>
+        <component :is="Component" :key="$route.name" v-if="!$route.meta.keepAlive" ></component>
+      </router-view>
     </div>
   </el-scrollbar>
 </div>

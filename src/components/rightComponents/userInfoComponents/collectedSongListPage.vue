@@ -27,7 +27,7 @@ let id = 0
 
 //获取用户歌单列表
 const getPlayList = () => {
-  id = route.params.uid === "0"?userStore.getUserInfo().userId:route.params.uid
+  id = route.params.uid === "0"?userStore.getUserInfo().value.userId:route.params.uid
   axios.get(`${api.GET_USER_PLAYLIST}?uid=${id}`).then(res => {
     if (res.data.code === 200) {
       classifySongList(res.data.playlist)
@@ -45,7 +45,7 @@ const classifySongList = (list) => {
   let temp = []
   createdSongList.value = {}
   for(let i of list){
-    if (i.creator.userId.toString() !== id){
+    if (i.creator.userId.toString() != id){
       temp.push(i)
     }
     createdSongList.value = temp
@@ -65,6 +65,7 @@ const toSongListPage = (id) => {
 watch(() => route.params.uid,() => {
   getPlayList()
 })
+
 onMounted(() => {
   getPlayList()
 })

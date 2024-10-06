@@ -9,7 +9,7 @@
     <p>专辑</p>
   </div>
   <el-scrollbar max-height="400px" @click="closeList()" @scroll="infiniteScroll">
-    <div class="searchResultPage-resultList" v-for="(song,index) in resultList.songs" :key="index" @dblclick="playSong(song)">
+    <div class="searchResultPage-resultList" v-for="(song,index) in resultList.songs" :key="index" @dblclick="songStore.updateCurSong(song.id)">
 
       <div class="searchResultPage-resultList-name">
         <p>{{(index+1).toString().length === 1?"0"+(index+1):index+1}}&nbsp;&nbsp;&nbsp;&nbsp;{{song.name}}</p>
@@ -50,10 +50,6 @@ const emits = defineEmits(["closeResultList"])
 const closeList = () => {
   emits('closeResultList',false)
 }
-//把歌曲id传给父元素
-const playSong = (id) => {
-  songStore.updateCurSong(id)
-}
 
 //获取搜索结果
 const getResult = (val) => {
@@ -87,15 +83,13 @@ const infiniteScroll = (e) => {
 }
 
 //监听用户搜索数据的变化
-watch(
-    () => route.params.inp,(next) => {
+watch(() => route.params.inp,(next) => {
       if (next){
         getResult(next)
       }
     })
 
-watch(
-    () => mark.value, (next) => {
+watch(() => mark.value, (next) => {
       if (!next){
         markTimer = setTimeout(() => {
           mark.value = true
@@ -111,6 +105,7 @@ onMounted(() => {
     getResult(route.params.id)
   }
 })
+
 onUnmounted(() => {
   clearTimeout(markTimer)
 })

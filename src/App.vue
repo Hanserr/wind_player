@@ -29,7 +29,7 @@
               <svg-icon name="song" style="width: 19px"></svg-icon>
               <p>单曲</p>
             </div>
-            <p v-for="item in songSuggestionList.songs" :key="item" class="scrollbar-demo-item" @click="playSong(item.id);resultListIsVisible = false">
+            <p v-for="item in songSuggestionList.songs" :key="item" class="scrollbar-demo-item" @click="songStore.updateCurSong(item.id);resultListIsVisible = false">
               {{item.name+"-"}}
               <span v-for="(i,index) in item.artists" :key="index">{{i.name+" "}}</span>
             </p>
@@ -770,7 +770,7 @@ const playingChange = () => {
   }
   //歌词滚动
   try {
-    if (songStore.getCurSong().value.lyric && songStore.shareAudio.currentTime - songStore.getCurSong().value.lyric[lyricIndex.value].time <= 1 && songStore.shareAudio.currentTime - songStore.getCurSong().value.lyric[lyricIndex.value].time >= -0.2){
+    if (songStore.getCurSong().value.lyric && songStore.shareAudio.currentTime - songStore.getCurSong().value.lyric[lyricIndex.value]?.time <= 1 && songStore.shareAudio.currentTime - songStore.getCurSong().value.lyric[lyricIndex.value]?.time >= -0.2){
       if (songStore.getCurSong().value.lyric[lyricIndex.value].content && lyricContent){
         let list = lyricContent.value.children
         lyricContentWrap.value.setScrollTop(list[lyricIndex.value].offsetTop-list[lyricIndex.value].clientHeight/2-80)

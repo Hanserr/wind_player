@@ -105,7 +105,6 @@
       <div class="searchResult">
         <router-view
             @closeResultList="closeResultList"
-            @tracks="pushPreparedSongList"
             :inPlay="songStore.getCurSong().value.src"
             :fmIsEnded="fmIsEnded"
             v-slot="{Component}">
@@ -184,9 +183,12 @@
           <div id="cutOff"></div>
           <div id="preparedSLBottom">
             <el-scrollbar height="359px">
-              <div class="preparedSongContent" v-for="i in songStore.getSongList().value" :key="i" @dblclick="songStore.updateCurSong(i.al.id)">
+              <div class="preparedSongContent"
+                   v-for="(i, index) in songStore.getSongList().value"
+                   :key="i"
+                   @dblclick="songStore.updateCurSong(i.al.id)">
                 <div>
-                  <span>{{i.name}}</span>
+                  <span :style="{color:index == songStore.getCurIndexInList().value?'#EC4141':'#ffffff'}">{{i.name}}</span>
                 </div>
                 <div>
                   <span v-for="ar in i.ar" :key="ar">{{ar.name}}</span>
@@ -340,8 +342,6 @@ let panRotateState = ref('paused') //盘片是否旋转
 let lyricIndex = ref(0) //当前歌词下标
 let lyricContent = ref(null) //歌词外层包裹
 let lyricContentWrap = ref(null) //el-scrollBar
-let preparedSongList = ref() //待播放歌曲列表
-let presentSongIndexInPreparedList = 0 //当前播放的歌曲在待播列表中的位置
 let onBarMark = false //鼠标是否在进度条上点击
 let volumeValue = ref(80) //音量
 let tempVolumeValue = 0 //临时音量
@@ -356,7 +356,6 @@ let commentsRef = ref(null)//歌曲详情页ref
 let refreshCommentTimer = null //评论刷新定时器
 let cancel = true //评论懒加载间隔时间段
 let elInfiniteScroll = ref(null) //懒加载滚动条
-// let songTimeChange = ref() //歌曲播放时间的变化，供FM页面使用
 let fmIsEnded = ref(false) //当前fm是否已播放完毕
 let checkSign = ref(false) //签到文本
 
@@ -419,25 +418,29 @@ const playSong = () => {
 
 //播放上一首
 const previousSong = () => {
-  if (route.path==='personalFm' || !preparedSongList.value){
+  if (route.path==='personalFm' || !songStore.getSongList().value){
     return
   }
-  if (presentSongIndexInPreparedList === 0){
-    playSong(preparedSongList.value[preparedSongList.value.length-1].id)
-  }else {
-    playSong(preparedSongList.value[--presentSongIndexInPreparedList].id)
+  playSong()
+  if (songStore.getCurIndexInList().value == 0){
+    songStore.updateCurSong(songStore.getSongList().value[songStore.getSongList().value.length-1].id)
+  } else {
+    songStore.updateIndexInList(songStore.getCurIndexInList().value - 1)
+    songStore.updateCurSong(songStore.getSongList().value[songStore.getCurIndexInList().value].id)
   }
 }
 
 //播放下一首
 const nextSong = () => {
-  if (route.path==='personalFm' || !preparedSongList.value){
+  if (route.path==='personalFm' || !songStore.getSongList().value){
     return
   }
-  if (presentSongIndexInPreparedList >= preparedSongList.value.length-1){
-    playSong(preparedSongList.value[0].id)
-  }else {
-    playSong(preparedSongList.value[++presentSongIndexInPreparedList].id)
+  playSong()
+  if (songStore.getCurIndexInList().value >= songStore.getSongList().value.length-1){
+    songStore.updateCurSong(songStore.getSongList().value[0].id)
+  } else {
+    songStore.updateIndexInList(songStore.getCurIndexInList().value + 1)
+    songStore.updateCurSong(songStore.getSongList().value[songStore.getCurIndexInList().value].id)
   }
 }
 
@@ -464,12 +467,6 @@ const getSearch = (val) => {
       }
     })
   }
-}
-
-//获取待播放列表
-const pushPreparedSongList = (e) => {
-  preparedSongList.value = e[0].value
-  presentSongIndexInPreparedList = e[1]
 }
 
 //歌曲弹窗上移
@@ -845,12 +842,14 @@ onMounted(() => {
   // 音频播放完毕
   songStore.shareAudio.onended = () => {
     fmIsEnded.value = songStore.getCurSong().value.id
-    if (!preparedSongList.value){
-      playOrPause(true)
+    if (!songStore.getSongList().value){
       return
     }
     playOrPause(true)
-    playSong(preparedSongList.value[++presentSongIndexInPreparedList].id)
+    if(songStore.getSongList().value && (songStore.getCurIndexInList().value < songStore.getSongList().value.length - 1)) {
+      songStore.updateIndexInList(songStore.getCurIndexInList().value + 1)
+      songStore.updateCurSong(songStore.getSongList().value[songStore.getCurIndexInList().value].id)
+    }
   }
 })
 

@@ -8,6 +8,8 @@ import format from "@/tools/format"
 export const useSongStore = defineStore('Song', () => {
     //待播放歌曲列表
     const songList = ref([])
+    //当前播放的歌曲在列表中的位置
+    const curIndexInList = ref()
     //当前播放的歌曲信息
     const curSong = ref({
         id:null,
@@ -31,6 +33,7 @@ export const useSongStore = defineStore('Song', () => {
 
     const getSongList = () => computed(() => {return songList.value})
     const getCurSong = () => computed(() => {return curSong.value})
+    const getCurIndexInList = () => computed(() => {return curIndexInList.value})
 
     //接收audio DOM
     function initAudio(ref) {
@@ -43,6 +46,11 @@ export const useSongStore = defineStore('Song', () => {
         for(let i of data) {
             songList.value.push(i)
         }
+    }
+
+    //更新待播放列表中歌曲位置
+    const updateIndexInList = (index) => {
+        curIndexInList.value = index
     }
 
     //清空歌曲列表
@@ -149,8 +157,10 @@ export const useSongStore = defineStore('Song', () => {
         getSongList,
         cleatSongList,
         getCurSong,
+        getCurIndexInList,
         updateSongList,
         updateCurSong,
+        updateIndexInList,
         clearCurSong,
         initAudio,
     }

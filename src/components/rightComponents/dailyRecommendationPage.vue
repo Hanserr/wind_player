@@ -23,7 +23,7 @@
           <span style="margin-left: 100px">热度</span>
         </div>
         <div class="dailyRecommendationPageBottomContent">
-          <div v-for="(i,index) in dailyList" :key="i"  class="dailyRecommendationPageBottomContent-bottom" @dblclick="playMusic(i.id)">
+          <div v-for="(i,index) in dailyList" :key="i"  class="dailyRecommendationPageBottomContent-bottom" @dblclick="playMusic(i.id, index)">
             <span class="dailyRecommendationSongIndex">{{(index+1).toString().length<2?"0"+(index+1):index+1}}</span>
             <div class="dailyRecommendationSongTitle"><span>{{i.name}}</span></div>
             <div class="dailyRecommendationSongAr"><span v-for="ar in i.ar" :key="ar" @click="pushingTools.toArPage(ar.id)">{{ar.name}}</span></div>
@@ -50,7 +50,6 @@ import format from "@/tools/format";
 import pushingTools from "@/tools/pushingTools";
 
 const songStore = useSongStore();
-let emits = defineEmits(['tracks'])
 let dailyList = ref() //日推歌单
 let loading = ref(false)
 
@@ -72,14 +71,17 @@ const getDailyRecommendSongs = () => {
 }
 
 //播放音乐
-const playMusic = (id) => {
+const playMusic = (id, index) => {
   songStore.updateCurSong(id)
+  songStore.updateSongList(dailyList.value)
+  songStore.updateIndexInList(index)
 }
 
 //播放当前歌单全部歌曲
 const playAll = () => {
   songStore.updateCurSong(dailyList.value[0].id)
-  emits('tracks',[dailyList,0])
+  songStore.updateSongList(dailyList.value)
+  songStore.updateIndexInList(0)
 }
 
 onMounted(() => {

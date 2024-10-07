@@ -42,6 +42,13 @@ const GET_SONG_FAILED = () => {
     })
 }
 
+const GET_ARTIST_FAILED = () => {
+    ElMessage({
+        message:"获取歌手信息失败",
+        type:"error"
+    })
+}
+
 export default {
     GET_USER_FAILED,
     SECRET_WRONG,
@@ -49,4 +56,5 @@ export default {
     CHECK_INPUT_STYLE,
     WRONG,
     GET_SONG_FAILED,
+    GET_ARTIST_FAILED,
 }

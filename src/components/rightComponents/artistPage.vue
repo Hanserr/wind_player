@@ -6,11 +6,10 @@
   <el-scrollbar v-if="mark">
   <div class="ARPageMain-Top">
     <div class="ARPageMain-Top-imgWrap">
-      <img :src="artist.cover" alt="">
+      <img :src="artist.picUrl" alt="">
     </div>
     <span id="ARPageMainArName">{{artist.name}}</span>
     <button>收藏</button>
-    <button @click="pushingTools.toCreation(route.params.arID)" v-show="hasAccount">个人主页</button>
     <span>单曲数:{{artist.musicSize}}</span>
     <br>
     <span>专辑数:{{artist.albumSize}}</span>
@@ -30,17 +29,16 @@ import {onMounted, ref} from "vue";
 import axios from "axios";
 import {useRoute} from "vue-router";
 import {router} from "@/router/routes";
-import {ElMessage} from "element-plus";
 import api from "@/tools/apiCollection";
 import {useSongStore} from "@/store/songStore";
 import pushingTools from "@/tools/pushingTools";
+import notification from "@/tools/notification";
 
 const songStore = useSongStore();
 const route = useRoute()
 let artist = ref() //歌手信息
 let loading = ref(false)
 let mark = ref(false) //当前页面数据是否加载完成
-let hasAccount = ref(false)
 
 //获取歌手信息
 const getArInfo = (id) => {
@@ -52,20 +50,13 @@ const getArInfo = (id) => {
   mark.value = false
   axios.get(`${api.GET_ARTIST_DETAIL}?id=${id}`).then(res => {
     if (res.data.code === 200){
-      artist.value = res.data.data.artist
-      hasAccount.value = !!res.data.data.user
+      artist.value = res.data.artist
       mark.value = true
     }else {
-      ElMessage({
-        message:"获取歌手信息失败",
-        type:"error"
-      })
+      notification.GET_ARTIST_FAILED()
     }
-  }).catch(() => {
-    ElMessage({
-      message:"获取歌手信息失败",
-      type:"error"
-    })
+  }).catch((err) => {
+    notification.GET_ARTIST_FAILED()
   }).finally(() => {
     loading.value = false
   })

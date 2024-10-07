@@ -31,6 +31,8 @@ const api = {
     GET_PLAYLIST_DETAIL:"/playlist/detail",
     //收藏歌单
     COLLECT_PLAYLIST:"/playlist/subscribe",
+    //收藏专辑
+    SUB_ALBUM:"/album/sub",
     //获取手机验证码
     GET_CAPTCHA:"/captcha/sent",
     //验证手机验证码
@@ -61,8 +63,8 @@ const api = {
     UPDATE_USER_INFO:"/user/update",
     //修改歌单信息
     UPDATE_PLAYLIST_INFO:"/playlist/update",
-    //获取歌手详情
-    GET_ARTIST_DETAIL:"/artist/detail",
+    //获取歌手部分信息
+    GET_ARTIST_DETAIL:"/artists",
     //获取专辑
     GET_ALBUM:"/album",
     //获取用户歌单

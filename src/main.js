@@ -9,7 +9,6 @@ import './assets/css/HarmonyFont.css'
 import SvgIcon from "@/components/SvgIcon";
 import {createPinia} from "pinia";
 
-const pinia = createPinia()
 const app = createApp(App)
 
 //默认携带cookie
@@ -21,5 +20,5 @@ app.component('SvgIcon',SvgIcon)
 app.use(ElementPlus)
     .use(VueAxios,axios)
     .use(router)
-    .use(pinia)
+    .use(createPinia())
     .mount('#app')

@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import {onMounted, ref, watch} from "vue";
+import {onActivated, onMounted, ref, watch} from "vue";
 import axios from "axios";
 import {ElCarousel} from "element-plus";
 import {router} from "@/router/routes";
@@ -80,6 +80,13 @@ const getDailyRecommendSongLists = () => {
 
 watch(() => userStore.getLoginStatus().value,(n) => {
   if (n) {
+    getDailyRecommendSongLists()
+  }
+})
+
+// 进入页面时检查歌单数量
+onActivated(() => {
+  if (recommendSongsList.value.length == 0) {
     getDailyRecommendSongLists()
   }
 })

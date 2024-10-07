@@ -1,5 +1,4 @@
 import {router} from "@/router/routes";
-import Cookies from "js-cookie";
 
 //跳转至歌手专辑页
 const toArPage = (id) => {

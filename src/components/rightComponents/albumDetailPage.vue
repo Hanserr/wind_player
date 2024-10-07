@@ -8,8 +8,6 @@
         <span id="albumName">{{albumInfo.name}}</span>
         <br>
         <button id="playAll" @click="playAll">播放全部</button>
-
-        <button id="collectAlbum">收藏</button>
         <br>
         <span class="albumArAndTi">歌手:</span>
         <span class="albumCreator" v-for="i in albumInfo.artists" :key="i">{{i.name}}&nbsp;</span>
@@ -38,7 +36,6 @@ import format from "@/tools/format";
 const songStore = useSongStore();
 const route = useRoute()
 let albumInfo = ref() //专辑信息
-let emits = defineEmits(['tracks'])
 let preparedSongList = ref()
 let tempScrollTop = ref()
 let loading = ref(false)

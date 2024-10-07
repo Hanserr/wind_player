@@ -90,10 +90,11 @@ const getSongListDetail = (id) => {
   })
 }
 
-//播放歌曲
-const playSong = (id) => {
+//播放歌曲 param:id歌曲id index：歌曲在歌单中的位置
+const playSong = (id, index) => {
   songStore.updateCurSong(id)
   songStore.updateSongList(preparedSongList.value)
+  songStore.updateIndexInList(index)
 }
 
 //播放当前歌单全部歌曲

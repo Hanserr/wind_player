@@ -21,20 +21,21 @@ body{
     background-color: #333333;
 }
 .navigationBar-p-headline{
-    font-size: 10px;
+    font-size: 13px;
     color: #797979;
     margin-left: 3px;
 }
 .navigationBar-p-headline-wrap{
     width: 165px;
     height: 35px;
+    position: relative;
 }
 .navigationBar-p-headline-wrap:hover{
     cursor: pointer;
 }
 .navigationBar-p-headline-wrap-svg{
-    position: relative;
-    top: -38px;
+    position: absolute;
+    top: 7px;
     left: 75px;
 }
 .navigationBar-p-headline-wrap p{

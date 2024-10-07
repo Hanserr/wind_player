@@ -10,10 +10,6 @@
       <!--      顶部搜索栏-->
       <div class="playerPageTop" :style="{backgroundColor:playerPageTopBC}">
         <svg-icon name="logoIcon" style="width: 50px;height: 50px;margin-left: 10px;margin-top: 10px;cursor:pointer;" @click="toHome"></svg-icon>
-        <div class="playerPageTop-control">
-          <div @click="$router.go(-1)">&lt;</div>
-          <div @click="$router.go(1)">></div>
-        </div>
         <!--        搜索框-->
         <div class="topBar-search">
           <input class="topBar-searchInput" v-model="inputVal" @focus="searchInpFocus(inputVal)" :style="{backgroundColor: topSearchBarBC}">
@@ -65,7 +61,7 @@
         <!--        用户登录-->
         <div class="userProfile">
           <div class="topBar-profile">
-            <el-avatar class="topBar-profile-avatar" :size="35" :src="user?user.avatarUrl:''" @click="userStore.getLoginStatus()?pushingTools.toCreation(0):0"></el-avatar>
+            <el-avatar class="topBar-profile-avatar" :size="35" :src="user?user.avatarUrl:''" @click="userStore.getLoginStatus().value?pushingTools.toCreation(0):0"></el-avatar>
           </div>
           <a @click = "popVisible = true" id="topBar-login" v-if="!userStore.getLoginStatus().value">登录</a>
           <p v-if="userStore.getLoginStatus().value" id="topBar-nickname" @click="displayUserInfo = !displayUserInfo">{{userStore.getUserInfo().value.nickname}}</p>
@@ -523,7 +519,7 @@ const clearSongInfo = () => {
 }
 
 //确认是否登出
-const checkLogoutAgain = async () => {
+const checkLogoutAgain = () => {
   ElMessageBox.confirm(
       '确定注销登录吗?',
       {
@@ -535,11 +531,8 @@ const checkLogoutAgain = async () => {
       }).then(() => {
     axios.get(api.LOGOUT).then(res => {
       if (res.data.code === 200){
-        Cookies.remove('MUSIC_U')
-        Cookies.remove('_remember_me')
-        Cookies.remove('_csrf')
-        Cookies.remove('UID')
-        user.value = undefined
+        userStore.clearUserInfo()
+        user.value = userStore.getUserInfo().value
         displayUserInfo.value = false
         location.reload()
       }

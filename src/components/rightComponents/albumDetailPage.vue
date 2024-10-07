@@ -8,6 +8,7 @@
         <span id="albumName">{{albumInfo.name}}</span>
         <br>
         <button id="playAll" @click="playAll">播放全部</button>
+
         <button id="collectAlbum">收藏</button>
         <br>
         <span class="albumArAndTi">歌手:</span>
@@ -20,7 +21,7 @@
       <span class="albumDetailPage-bottom-title" style="margin-left: 0" @click="$router.push(`/albumDetail/songlistPage/${route.params.id}`)">歌曲列表</span>
       <span class="albumDetailPage-bottom-title" @click="$router.push(`/albumDetail/commentPage/${route.params.id}`)" v-if="albumInfo">评论({{albumInfo.info.commentCount}})</span>
       <span class="albumDetailPage-bottom-title" @click="$router.push(`/albumDetail/infoPage/${route.params.id}`)">专辑详情</span>
-      <router-view @playMusic="playMusic" :tempScrollTop="tempScrollTop"></router-view>
+      <router-view :tempScrollTop="tempScrollTop"></router-view>
     </div>
     </el-scrollbar>
   </div>
@@ -60,15 +61,10 @@ const getAlbumInfo = (id) => {
   })
 }
 
-//播放音乐
-const playMusic = (id) => {
-
-}
-
 //播放当前歌单全部歌曲
 const playAll = () => {
   songStore.updateCurSong(preparedSongList.value[0].id)
-  emits('tracks',[preparedSongList.value,0])
+  songStore.updateSongList(preparedSongList.value)
 }
 
 //当前滚动距离

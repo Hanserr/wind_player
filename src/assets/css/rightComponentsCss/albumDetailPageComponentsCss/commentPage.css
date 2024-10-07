@@ -15,6 +15,9 @@ body{
     margin-top: 10px;
     background-color: #383838;
     outline: none;
+    color: #D5D5D5;
+    text-indent: 1em;
+    padding: 5px;
 }
 #sendAlbumComment{
     width: 100px;

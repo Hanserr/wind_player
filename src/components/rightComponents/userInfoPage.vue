@@ -124,7 +124,7 @@ const formatRegion = (province = null,r) => {
 
 //获取用户信息
 const getInfo = () => {
-  if (id.value !== "0"){
+  if (id.value != "0"){
     showButton.value = false
     getUserEvent(id.value)
   }else {

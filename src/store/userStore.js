@@ -48,9 +48,24 @@ export const useUserStore = defineStore('User', () => {
         }
     }
 
+    //清除用户数据
+    const clearUserInfo = () => {
+        userInfo.value.userId = ''
+        userInfo.value.nickname = ''
+        userInfo.value.avatarUrl =  ''
+        userInfo.value.city =  ''
+        userInfo.value.birthday =  ''
+        userInfo.value.signature = ''
+        userInfo.value.eventCount = 0
+        userInfo.value.follows = 0
+        userInfo.value.follower = 0
+        hasLogin.value = false
+    }
+
     return {
         getUserInfo,
         getLoginStatus,
         updateUserInfo,
+        clearUserInfo,
     }
 })

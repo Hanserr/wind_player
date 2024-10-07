@@ -34,10 +34,10 @@ body{
     border-bottom: 1px solid #5e5e5e;
 }
 .userInfoRight-top button{
-    width: 150px;
-    height: 30px;
+    width: 130px;
+    height: 40px;
     background-color: #f5f5f5;
-    border-radius: 15px;
+    border-radius: 10px;
     border: none;
     float: right;
     cursor: pointer;
@@ -91,9 +91,17 @@ body{
     font-size: 13px;
     color: #6e6e6e;
 }
-.userInfoRight-bottom span:nth-child(6),.userInfoRight-bottom span:nth-child(8){
+.userInfoRight-bottom {
+    height: 86px;
+    text-align: left;
+    position: relative;
+}
+.userInfoRight-bottom > span{
     color: #d5d5d5;
     font-size: 12px;
+    line-height: 20px;
+    position: absolute;
+    left: 0;
 }
 .userInfoPageMain-bottom-title{
     color: #d5d5d5;

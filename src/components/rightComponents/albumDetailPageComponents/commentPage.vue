@@ -1,6 +1,6 @@
 <template>
 <div class="album-comment-page" ref="commentsRef" >
-  <textarea maxlength="140" v-model="comment"></textarea>
+  <textarea maxlength="300" v-model="comment" placeholder="最多输入300字"></textarea>
   <button id="sendAlbumComment" @click="sendComment(comment)">发送</button>
   <div class="albumCommentContent" v-if="commentsList">
     <div class="albumCommentContent-son" v-for="i in commentsList" :key="i">

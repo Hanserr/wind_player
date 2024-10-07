@@ -176,8 +176,8 @@
         <!--      待播放歌曲列表-->
         <div id="preparedSongList" :style="{right:preparedSongListRight+'px'}">
           <div id="preparedSLTop">
-            <span>当前播放</span>
-            <span>共{{songStore.getSongList().value.length !== 0?songStore.getSongList().value.length:"--"}}首音乐</span>
+            <span>待播放</span>
+            <span>共{{songStore.getSongList().value.length !== 0?songStore.getSongList().value.length:"0"}}首音乐</span>
             <span @click="songStore.cleatSongList()">清空列表</span>
           </div>
           <div id="cutOff"></div>

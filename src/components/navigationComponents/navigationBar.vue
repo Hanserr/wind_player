@@ -14,7 +14,13 @@
       </div>
 
       <div class="createdSongList" v-show="!createdSongListIsFold">
-        <p v-for="item in createdSongList" :key="item" class="createdSongList-p" @click="pushingTools.toSongListDetail(item.id)">&nbsp;&nbsp;{{item.name}}</p>
+        <div class="createdSongList-wrapper"
+             v-for="item in createdSongList"
+             :key="item"
+             @click="pushingTools.toSongListDetail(item.id)">
+          <svg-icon name="songList"></svg-icon>
+          <span class="createdSongList-p" >{{item.name}}</span>
+        </div>
       </div>
 
       <div class="navigationBar-p-headline-wrap" @click="collectedSongIsFold = !collectedSongIsFold">
@@ -24,7 +30,13 @@
       </div>
 
       <div class="collectedSongList" v-show="!collectedSongIsFold">
-        <p v-for="item in collectionSongList" :key="item" class="createdSongList-p" @click="pushingTools.toSongListDetail(item.id)">&nbsp;&nbsp;{{item.name}}</p>
+        <div class="createdSongList-wrapper"
+             v-for="item in collectionSongList"
+             :key="item"
+             @click="pushingTools.toSongListDetail(item.id)">
+          <svg-icon name="songList"></svg-icon>
+          <span class="createdSongList-p" >{{item.name}}</span>
+        </div>
       </div>
     </el-scrollbar>
   </div>
@@ -39,7 +51,6 @@ import {router} from "@/router/routes";
 import api from "@/tools/apiCollection";
 import pushingTools from "@/tools/pushingTools";
 
-// eslint-disable-next-line no-undef
 let createdSongListIsFold = ref(true) //创建的歌单列表是否折叠
 let collectedSongIsFold = ref(true) //收藏的歌单是否折叠
 let createdSongList = ref() //创建的歌单列表

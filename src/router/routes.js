@@ -64,7 +64,7 @@ const routes = [
                 }
             ],
             meta: {
-                keepAlive: true
+                keepAlive: false
             },
         },
         {

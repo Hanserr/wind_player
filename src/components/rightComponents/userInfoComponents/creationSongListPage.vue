@@ -62,8 +62,10 @@ const toSongListPage = (id) => {
   })
 }
 
-watch(() => route.params.uid,() => {
-  getPlayList()
+watch(() => route.params.uid,(n) => {
+  if(n !== undefined) {
+    getPlayList()
+  }
 })
 
 onMounted(() => {

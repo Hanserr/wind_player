@@ -2,7 +2,8 @@ body{
     padding: 0;
     margin: 0;
     overflow: hidden;
-    font-family: Harmony, serif;
+    font-family: Inter, 'Helvetica Neue', Helvetica, 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
 }
 #main{
     width: 100vw;
@@ -486,7 +487,7 @@ body{
 }
 #preparedSLTop span:nth-child(3){
     font-size: 15px;
-    color: #6d75a2;
+    color: #D3D3D3;
     position: absolute;
     right: 20px;
     top: 60px;

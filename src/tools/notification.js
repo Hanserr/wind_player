@@ -49,6 +49,20 @@ const GET_ARTIST_FAILED = () => {
     })
 }
 
+const SET_NEW_USER_INFO_SUCCESS = () => {
+    ElMessage({
+        message:"修改成功!",
+        type:"success"
+    })
+}
+
+const SET_NEW_USER_INFO_FAILED = () => {
+    ElMessage({
+        message:"修改失败!",
+        type:"success"
+    })
+}
+
 export default {
     GET_USER_FAILED,
     SECRET_WRONG,
@@ -57,4 +71,7 @@ export default {
     WRONG,
     GET_SONG_FAILED,
     GET_ARTIST_FAILED,
+    SET_NEW_USER_INFO_SUCCESS,
+    SET_NEW_USER_INFO_FAILED,
+
 }

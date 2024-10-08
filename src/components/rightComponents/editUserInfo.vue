@@ -48,14 +48,16 @@
 </template>
 
 <script setup>
-import Cookies from "js-cookie";
 import {region} from "@/tools/region";
 import {onMounted, reactive, ref, watch} from "vue";
 import axios from "axios";
 import {ElMessage} from "element-plus";
 import { Plus } from '@element-plus/icons-vue';
 import api from "@/tools/apiCollection";
+import {useUserStore} from "@/store/userStore";
+import notification from "@/tools/notification";
 
+const userStore = useUserStore();
 let user = reactive({
   avatarUrl:null,
   nickname:null,
@@ -74,18 +76,15 @@ let showUploadingProgress = ref(false) //展示头像上传进度条
 
 //获取用户信息
 const getUserInfo = () => {
-  if (Cookies.get("UID")){
-    axios.get(`${api.GET_USER_DETAIL}?uid=${Cookies.get("UID")}`).then(res => {
-      if (res.data.code === 200){
-        user.nickname = res.data.profile.nickname
-        user.avatarUrl = res.data.profile.avatarUrl
-        user.birthday = res.data.profile.birthday
-        user.gender = res.data.profile.gender
-        user.intro = res.data.profile.signature
-        user.region = res.data.profile.city
-        user.province = res.data.profile.province
-      }
-    })
+  let id = userStore.getUserInfo().value.userId
+    if (id){
+      user.nickname = userStore.getUserInfo().value.nickname
+      user.avatarUrl = userStore.getUserInfo().value.avatarUrl
+      user.birthday = userStore.getUserInfo().value.birthday
+      user.gender = userStore.getUserInfo().value.gender
+      user.intro = userStore.getUserInfo().value.signature
+      user.region = userStore.getUserInfo().value.city
+      user.province = userStore.getUserInfo().value.province
   }
 }
 
@@ -124,15 +123,10 @@ const alterUserProfile = () => {
   }
   axios.get(`${api.UPDATE_USER_INFO}?gender=${user.gender}&signature=${user.intro}&city=${user.region}&nickname=${user.nickname}&birthday=${new Date(user.birthday).getTime()}&province=${user.province}`).then(res => {
    if (res.data.code === 200){
-     ElMessage({
-       message:"修改成功!",
-       type:"success"
-     })
+     notification.SET_NEW_USER_INFO_SUCCESS()
+     userStore.updateUserInfo()
    }else{
-     ElMessage({
-       message:"修改失败!",
-       type:"error"
-     })
+     notification.SET_NEW_USER_INFO_FAILED()
    }
   }).finally(() => {
     loading.value = false

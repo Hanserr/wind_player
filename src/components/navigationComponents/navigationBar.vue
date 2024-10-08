@@ -43,40 +43,27 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from "vue";
+import {nextTick, onMounted, ref, watch} from "vue";
 import SvgIcon from "@/components/SvgIcon";
 import axios from "axios";
-import Cookies from "js-cookie";
 import {router} from "@/router/routes";
 import api from "@/tools/apiCollection";
 import pushingTools from "@/tools/pushingTools";
+import {useUserStore} from "@/store/userStore";
 
+const userStore = useUserStore();
 let createdSongListIsFold = ref(true) //创建的歌单列表是否折叠
 let collectedSongIsFold = ref(true) //收藏的歌单是否折叠
 let createdSongList = ref() //创建的歌单列表
 let collectionSongList = ref() //收藏的歌单列表
 
 //获取歌单列表
-const getSongList = (id) => {
-  axios.get(`${api.GET_USER_PLAYLIST}?uid=${id}`).then(res => {
+const getSongList = () => {
+  axios.get(`${api.GET_USER_PLAYLIST}?uid=${userStore.getUserInfo().value.userId}`).then(res => {
     if (res.data.code === 200){
       classifySongList(res.data.playlist)
     }
   })
-}
-
-//获取歌单列表前判断
-const getUserSongList = () => {
-  if (Cookies.get('UID')){
-    getSongList(Cookies.get('UID'))
-  }else{
-    axios.get(api.GET_LOGIN_STATUS).then(res => {
-      if (res.data.data.code === 200 && res.data.data.account){
-        Cookies.set('UID', res.data.data.account.id)
-        getSongList(res.data.data.account.id)
-      }
-    })
-  }
 }
 
 //歌单分类
@@ -96,9 +83,13 @@ const classifySongList = (list) => {
   }
 }
 
-onMounted(() => {
-  getUserSongList()
+watch(() => userStore.getUserInfo().value.userId, () => {
+  getSongList()
+},{
+  immediate: true,
+  deep: true,
 })
+
 </script>
 
 <style scoped>

@@ -14,7 +14,9 @@ export const useUserStore = defineStore('User', () => {
         signature:'', //签名
         eventCount: 0, //动态数
         follows: 0, //关注人数
-        follower: 0 //关注我的人数
+        follower: 0, //关注我的人数
+        gender:0, //性别
+        province: "", //省市
     })
     const hasLogin = ref(false);
 
@@ -36,6 +38,8 @@ export const useUserStore = defineStore('User', () => {
                     userInfo.value.eventCount = res.data.profile.eventCount
                     userInfo.value.follows = res.data.profile.follows
                     userInfo.value.follower = res.data.profile.followeds
+                    userInfo.value.gender = res.data.profile.gender
+                    userInfo.value.province = res.data.profile.province
                     hasLogin.value = true
                 }else{
                    Notification.GET_USER_FAILED()

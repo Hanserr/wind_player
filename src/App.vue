@@ -18,7 +18,7 @@
           </el-icon>
         </div>
         <!--        建议列表-->
-        <div class="topBar-list" v-show="inputVal.length !== 0 || resultListIsVisible">
+        <div class="topBar-list" v-show="inputVal.length != 0 || resultListIsVisible">
           <el-scrollbar max-height="400px" class="topBar-list-main">
             <!--      歌曲-->
             <div class="topBar-list-main-title" v-show="songSuggestionList.artists !== undefined">
@@ -78,7 +78,6 @@
               <span v-if="userStore.getUserInfo()" class="topBar-profile-popWindow-numberArea-p1">{{userStore.getUserInfo().value.follower}}</span>
               <span class="topBar-profile-popWindow-numberArea-p2">粉丝</span>
             </div>
-            <button @click="dailySignin" :disabled="checkSign">{{checkSign?"已签到":"签到"}}</button>
             <div class="topBar-profile-popWindow-bottomDiv">
               我的会员
               <svg-icon name="arrowsRight" class="topBar-profile-popWindow-svg"></svg-icon>
@@ -310,7 +309,6 @@ import LoginModule from "./components/topComponents/loginModule";
 import {router} from "@/router/routes";
 import {ElMessage, ElMessageBox} from "element-plus";
 import NavigationBar from "@/components/navigationComponents/navigationBar";
-import Cookies from "js-cookie";
 import {useRoute} from "vue-router";
 import {useUserStore} from "@/store/userStore";
 import {useSongStore} from "@/store/songStore";
@@ -357,7 +355,6 @@ let refreshCommentTimer = null //评论刷新定时器
 let cancel = true //评论懒加载间隔时间段
 let elInfiniteScroll = ref(null) //懒加载滚动条
 let fmIsEnded = ref(false) //当前fm是否已播放完毕
-let checkSign = ref(false) //签到文本
 
 //路由守卫
 router.beforeEach((to) => {
@@ -716,25 +713,6 @@ const openCommentAreaToSong = () => {
   })
 }
 
-//每日签到
-const dailySignin = () => {
-  if (Cookies.get("signed")){
-    ElMessage({
-      message:"今天已经签到过了哟",
-      type:'success'
-    })
-    return
-  }
-  checkSign.value = true
-  axios.get(api.DAILY_SIGNIN).then(res => {
-    if (res.data.code === 200){
-      Cookies.set('signed','1',{
-        expires:new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 -1)
-      })
-    }
-  })
-}
-
 //跳转到歌单详情页
 const toSongListPage = (id) => {
   router.push({
@@ -827,7 +805,6 @@ onMounted(() => {
   if (!userStore.getLoginStatus().value){
     userStore.updateUserInfo()
   }
-  checkSign.value = !!Cookies.get('signed')
   addEventListener('mouseup',() => {
     if (onBarMark){
       onBarMark = false

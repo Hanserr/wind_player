@@ -18,7 +18,7 @@
           </el-icon>
         </div>
         <!--        建议列表-->
-        <div class="topBar-list" v-show="resultListIsVisible">
+        <div class="topBar-list" v-show="inputVal.length !== 0 || resultListIsVisible">
           <el-scrollbar max-height="400px" class="topBar-list-main">
             <!--      歌曲-->
             <div class="topBar-list-main-title" v-show="songSuggestionList.artists !== undefined">
@@ -302,7 +302,7 @@
 </template>
 
 <script setup>
-import {onMounted, onUnmounted, reactive, ref, watch} from "vue";
+import {onMounted, onUnmounted, reactive, ref, unref, watch} from "vue";
 import {Search} from "@element-plus/icons-vue";
 import axios from "axios";
 import SvgIcon from "@/components/SvgIcon";

@@ -5,7 +5,6 @@ import VueAxios from 'vue-axios'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import {router} from './router/routes.js'
-import './assets/css/HarmonyFont.css'
 import SvgIcon from "@/components/SvgIcon";
 import {createPinia} from "pinia";
 

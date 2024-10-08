@@ -16,7 +16,7 @@
           <p id="creationTime">{{format.dateFormat(listDetail.playlist.createTime)}}创建</p>
         </div>
         <button id="play" @click="playAll">播放全部</button>
-        <button id="collect" @click="collectSongList" :disabled="!canCollect" :style="{backgroundColor:canCollect?'transparent':'#383838'}">{{hadCollected?'已收藏':'收藏'}}</button>
+        <button id="collect" @click="collectSongList" :disabled="!canCollect" :style="{backgroundColor:!canCollect?'transparent':'#383838',cursor:!canCollect?'default':'pointer'}">{{hadCollected?'已收藏':'收藏'}}</button>
         <svg-icon name="alterSongList" style="position: absolute;top: 105px;left: 240px;cursor:pointer;" @click="pushingTools.toAlterSongList(route.params.songListId)" v-show="!canCollect"></svg-icon>
         <p id="playCount">歌曲:{{listDetail.playlist.tracks.length}}</p>
         <p id="songCount">播放:{{listDetail.playlist.playCount.toString().length>=9?
@@ -60,12 +60,13 @@ import {onMounted, ref, watch} from "vue";
 import {useRoute} from "vue-router"
 import axios from "axios"
 import SvgIcon from "@/components/SvgIcon";
-import Cookies from "js-cookie";
 import api from "@/tools/apiCollection";
 import {useSongStore} from "@/store/songStore";
 import format from "@/tools/format";
 import pushingTools from "@/tools/pushingTools";
+import {useUserStore} from "@/store/userStore";
 
+const userStore = useUserStore();
 const route = useRoute()
 const songStore = useSongStore()
 let listDetail = ref()
@@ -82,7 +83,7 @@ const getSongListDetail = (id) => {
     if (res.data.code === 200) {
       listDetail.value = res.data
       preparedSongList.value = res.data.playlist.tracks
-      canCollect.value = res.data.playlist.userId !== parseInt(Cookies.get('UID'))
+      canCollect.value = res.data.playlist.creator.userId !== userStore.getUserInfo().value.userId
       hadCollected.value = res.data.playlist.subscribed
   }
 }).finally(() => {

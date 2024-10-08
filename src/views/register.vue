@@ -15,7 +15,6 @@
 import {onUnmounted, reactive, ref} from "vue";
 import axios from "axios";
 import {ElMessage} from "element-plus";
-import Cookies from "js-cookie";
 import {router} from "@/router/routes";
 
 let uInfo = reactive({
@@ -66,29 +65,26 @@ const sendCaptcha = () => {
   buttonIsDisable.value = true
   axios.post(`/captcha/sent?phone=${uInfo.phone}`).then(res => {
     if(res.data.code === 200){
-          Cookies.set("captchaExpireTime"," ",{
-            expires:new Date(new Date()*1+1000*60)
-          })
-          ElMessage({
-            message:"验证码已发送，请注意查收",
-            type:"success"
-          })
-          //设置验证码倒计时
-          captchaTimer = setInterval(() => {
-            captchaTime.value--
-          if (captchaTime.value === 0){
-            buttonIsDisable.value = false
-            captchaTime.value = 60
-            clearInterval(captchaTimer)
-          }
-        },1000)
-        }else if (res.data.code === 400){
+        ElMessage({
+          message:"验证码已发送，请注意查收",
+          type:"success"
+        })
+        //设置验证码倒计时
+        captchaTimer = setInterval(() => {
+          captchaTime.value--
+        if (captchaTime.value === 0){
           buttonIsDisable.value = false
-          ElMessage({
-            message:res.data.message,
-            type:"warning"
-          })
+          captchaTime.value = 60
+          clearInterval(captchaTimer)
         }
+      },1000)
+      }else if (res.data.code === 400){
+        buttonIsDisable.value = false
+        ElMessage({
+          message:res.data.message,
+          type:"warning"
+        })
+      }
   })
 }
 //注册

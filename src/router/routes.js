@@ -150,7 +150,7 @@ const routes = [
             component: () => import('../components/rightComponents/personalFm'),
             meta: {
                 keepAlive: true
-            },
+            }
         },
         {
             path: '/event',
@@ -158,7 +158,15 @@ const routes = [
             component: () => import('../components/rightComponents/eventPage'),
             meta: {
                 keepAlive: false
-            },
+            }
+        },
+        {
+            path: '/subscribed',
+            name: 'subscribedPage',
+            component: () => import('../components/rightComponents/subscribed'),
+            meta: {
+                keepAlive: false
+            }
         },
         {
             path: '/artist',

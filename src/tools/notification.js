@@ -73,5 +73,4 @@ export default {
     GET_ARTIST_FAILED,
     SET_NEW_USER_INFO_SUCCESS,
     SET_NEW_USER_INFO_FAILED,
-
 }

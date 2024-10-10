@@ -456,6 +456,7 @@ const formatTime = (time) => {
 const getSearch = (val) => {
   if (val){
     resultListIsVisible.value = false
+    inputVal.value = ""
     movingWindowDown()
     router.push({
       name:'searchResultPage',

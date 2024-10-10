@@ -77,5 +77,8 @@ const api = {
     GET_SIMILAR_ARTIST:"/simi/artist",
     //新版评论接口
     GET_COMMENT_NEW:"/comment/new",
+    //收藏的歌手
+    SUBSCRIBED_ARTIST: "/artist/sublist",
 }
+
 export default api

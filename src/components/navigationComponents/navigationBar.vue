@@ -5,7 +5,7 @@
       <p class="navigationBar-p">&nbsp;&nbsp;视频</p>
       <p class="navigationBar-p" @click="router.push('/event')">&nbsp;&nbsp;关注</p>
       <p class="navigationBar-p" @click="router.push('/personalFm')">&nbsp;&nbsp;私人FM</p>
-      <p class="navigationBar-p">&nbsp;&nbsp;我的收藏</p>
+      <p class="navigationBar-p" @click="router.push('/subscribed')">&nbsp;&nbsp;我的收藏</p>
 
       <div class="navigationBar-p-headline-wrap" @click="createdSongListIsFold = !createdSongListIsFold">
         <p class="navigationBar-p-headline">&nbsp;&nbsp;创建的歌单</p>
@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import {nextTick, onMounted, ref, watch} from "vue";
+import {ref, watch} from "vue";
 import SvgIcon from "@/components/SvgIcon";
 import axios from "axios";
 import {router} from "@/router/routes";

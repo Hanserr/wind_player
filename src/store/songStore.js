@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {computed, reactive, ref} from "vue";
+import {computed, ref} from "vue";
 import axios from "axios";
 import api from "@/tools/apiCollection";
 import notification from "@/tools/notification";
@@ -9,7 +9,7 @@ export const useSongStore = defineStore('Song', () => {
     //待播放歌曲列表
     const songList = ref([])
     //当前播放的歌曲在列表中的位置
-    const curIndexInList = ref()
+    const curIndexInList = ref(0)
     //当前播放的歌曲信息
     const curSong = ref({
         id:null,
@@ -54,7 +54,7 @@ export const useSongStore = defineStore('Song', () => {
     }
 
     //清空歌曲列表
-    const cleatSongList = () => {
+    const clearSongList = () => {
         songList.value = []
     }
 
@@ -65,31 +65,29 @@ export const useSongStore = defineStore('Song', () => {
         songHasLoaded.value = false
         clearCurSong()
         curSong.value.id = id
-        //获取新歌曲详情
-        axios.get(`${api.GET_SONG_DETAIL}?ids=${id}`).then(res => {
-            if (res.data.code === 200) {
-                curSong.value.cover = res.data.songs[0].al.picUrl
-                curSong.value.artist = res.data.songs[0].ar
-                curSong.value.name = res.data.songs[0].name
-                curSong.value.album = res.data.songs[0].al
+        Promise.all([
+            //获取新歌曲详情
+            axios.get(`${api.GET_SONG_DETAIL}?ids=${id}`),
+            //获取播放地址
+            axios.get(`${api.GET_SONG_URL}?id=${id}`),
+            //获取并整合歌词
+            axios.get(`${api.GET_LYRIC}?id=${id}`)
+        ]).then(([detail, songUrl, res]) => {
+            if (detail.data.code === 200) {
+                curSong.value.cover = detail.data.songs[0].al.picUrl
+                curSong.value.artist = detail.data.songs[0].ar
+                curSong.value.name = detail.data.songs[0].name
+                curSong.value.album = detail.data.songs[0].al
             } else {
                 getSongFailed()
+                return
             }
-        }).catch(() => {
-            getSongFailed()
-        })
-        //获取播放地址
-        axios.get(`${api.GET_SONG_URL}?id=${id}`).then(res => {
-            if (res.data.code === 200){
-                curSong.value.src = res.data.data[0].url
+            if (songUrl.data.code === 200) {
+                curSong.value.src = songUrl.data.data[0].url
             } else {
                 getSongFailed()
+                return
             }
-        }).catch(() => {
-            getSongFailed()
-        })
-        //获取并整合歌词
-        axios.get(`${api.GET_LYRIC}?id=${id}`).then(res => {
             if (res.data.code === 200){
                 let lyric = (res.data.lrc.lyric).toString().split('\n')
                 for (let i in lyric){
@@ -121,8 +119,10 @@ export const useSongStore = defineStore('Song', () => {
             } else {
                 getSongFailed()
             }
-        }).catch(() => {
-            getSongFailed()
+        }).catch(([err1, err2, err3]) => {
+            console.log(err1)
+            console.log(err2)
+            console.log(err3)
         })
         songHasLoaded.value = true
         shareAudio.value.play()
@@ -155,7 +155,7 @@ export const useSongStore = defineStore('Song', () => {
         songHasLoaded,
         shareAudio,
         getSongList,
-        cleatSongList,
+        clearSongList,
         getCurSong,
         getCurIndexInList,
         updateSongList,

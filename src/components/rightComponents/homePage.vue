@@ -86,7 +86,7 @@ watch(() => userStore.getLoginStatus().value,(n) => {
 
 // 进入页面时检查歌单数量
 onActivated(() => {
-  if (recommendSongsList.value.length == 0) {
+  if (recommendSongsList.value.length == 0 && userStore.getLoginStatus().value) {
     getDailyRecommendSongLists()
   }
 })

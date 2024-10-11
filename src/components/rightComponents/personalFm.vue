@@ -84,7 +84,6 @@ import api from "@/tools/apiCollection";
 import {useSongStore} from "@/store/songStore";
 
 const songStore = useSongStore();
-const props = defineProps(['fmIsEnded'])
 
 //center
 let cover1 = ref({
@@ -168,10 +167,6 @@ const likeSong = () => {
   axios.get(`${api.LIKE_SONG}?id=${songList.value[0].id}`)
 }
 
-// watch(() => props.fmIsEnded, () => {
-//   playNext()
-// })
-
 onMounted(() => {
   getFm()
   //歌词滚动
@@ -182,7 +177,6 @@ onMounted(() => {
           await nextTick()
           let list = personalFmLyricContent.value.children
           personalFmLyricContentWrap.value.setScrollTop(list[lyricIndex.value].offsetTop-list[lyricIndex.value].clientHeight/2-80)
-          console.log(list[lyricIndex.value].offsetTop)
         }
         lyricIndex.value = lyricIndex.value <= songStore.getCurSong().value.lyric.length-1?++lyricIndex.value:songStore.getCurSong().value.lyric.length-1
       }

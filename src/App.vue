@@ -12,7 +12,7 @@
         <svg-icon name="logoIcon" style="width: 50px;height: 50px;margin-left: 10px;margin-top: 10px;cursor:pointer;" @click="toHome"></svg-icon>
         <!--        搜索框-->
         <div class="topBar-search">
-          <input class="topBar-searchInput" v-model="inputVal" @focus="searchInpFocus(inputVal)" :style="{backgroundColor: topSearchBarBC}">
+          <input class="topBar-searchInput" v-model="inputVal" @focus="searchInpFocus(inputVal)" :style="{backgroundColor: topSearchBarBC}" :disabled="!userStore.getLoginStatus()">
           <el-icon color="#8896B3FF" class="topBar-search-el-icon" :style="{width: '30px',height: '27px',position:'absolute',backgroundColor:topSearchBarBC}" @click="getSearch(inputVal)">
             <Search/>
           </el-icon>
@@ -105,7 +105,6 @@
         <router-view
             @closeResultList="closeResultList"
             :inPlay="songStore.getCurSong().value.src"
-            :fmIsEnded="fmIsEnded"
             v-slot="{Component}">
           <keep-alive>
             <component :is="Component" :key="$route.name" v-if="$route.meta.keepAlive" ></component>
@@ -204,7 +203,7 @@
       <!--        歌曲详情页-->
       <div class="songMovingWindow" :style="{top:songMovingWindowTop+'px'}" v-if="songStore">
         <!--        发条评论吧-->
-        <div id="sendAMessage" @click="openCommentAreaToSong">
+        <div id="sendAMessage" @click="openCommentAreaToSong()">
           <svg-icon name="sendComment"></svg-icon>
           <span>写条评论吧</span>
         </div>
@@ -301,7 +300,7 @@
 </template>
 
 <script setup>
-import {onMounted, onUnmounted, reactive, ref, unref, watch} from "vue";
+import {onMounted, onUnmounted, reactive, ref, watch} from "vue";
 import {Search} from "@element-plus/icons-vue";
 import axios from "axios";
 import SvgIcon from "@/components/SvgIcon";
@@ -354,7 +353,6 @@ let commentsRef = ref(null)//歌曲详情页ref
 let refreshCommentTimer = null //评论刷新定时器
 let cancel = true //评论懒加载间隔时间段
 let elInfiniteScroll = ref(null) //懒加载滚动条
-let fmIsEnded = ref(false) //当前fm是否已播放完毕
 
 //路由守卫
 router.beforeEach((to) => {
@@ -801,10 +799,10 @@ watch(() => songMovingWindowTop.value,(next) => {
   }
 })
 
-onMounted(() => {
-  songStore.initAudio(audioRef.value)
+onMounted(async () => {
+  await songStore.initAudio(audioRef.value)
   if (!userStore.getLoginStatus().value){
-    userStore.updateUserInfo()
+    await userStore.updateUserInfo()
   }
   addEventListener('mouseup',() => {
     if (onBarMark){
@@ -819,7 +817,6 @@ onMounted(() => {
 
   // 音频播放完毕
   songStore.shareAudio.onended = () => {
-    fmIsEnded.value = songStore.getCurSong().value.id
     if (!songStore.getSongList().value){
       return
     }

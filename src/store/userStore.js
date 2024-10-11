@@ -26,7 +26,7 @@ export const useUserStore = defineStore('User', () => {
     //每次登陆或进入网页时判断是否已登陆
     const updateUserInfo = async () => {
         let fetchUserStatus = await axios.get(`${api.GET_LOGIN_STATUS}?timestamp=${Date.now()}`)
-        if (fetchUserStatus.data.data.code === 200){
+        if (fetchUserStatus.data.data.code === 200 && fetchUserStatus.data.data.profile != null){
             axios.get(`${api.GET_USER_DETAIL}?uid=${fetchUserStatus.data.data.profile.userId}`).then(res => {
                 if (res.data.code === 200){
                     userInfo.value.userId = res.data.profile.userId
@@ -47,8 +47,6 @@ export const useUserStore = defineStore('User', () => {
             }).catch(() => {
                 Notification.GET_USER_FAILED()
             })
-        }else{
-            Notification.GET_USER_FAILED()
         }
     }
 

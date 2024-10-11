@@ -83,8 +83,10 @@ const classifySongList = (list) => {
   }
 }
 
-watch(() => userStore.getUserInfo().value.userId, () => {
-  getSongList()
+watch(() => userStore.getUserInfo().value.userId, (n) => {
+  if(n) {
+    getSongList()
+  }
 },{
   immediate: true,
   deep: true,

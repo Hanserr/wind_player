@@ -79,6 +79,8 @@ const api = {
     GET_COMMENT_NEW:"/comment/new",
     //收藏的歌手
     SUBSCRIBED_ARTIST: "/artist/sublist",
+    //收藏的专辑
+    SUBSCRIBED_ALBUM: "/album/sublist",
 }
 
 export default api

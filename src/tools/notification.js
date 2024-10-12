@@ -63,6 +63,13 @@ const SET_NEW_USER_INFO_FAILED = () => {
     })
 }
 
+const GET_SUBSCRIBED_FAILED = () => {
+    ElMessage({
+        message:"获取收藏列表失败",
+        type: "error"
+    })
+}
+
 export default {
     GET_USER_FAILED,
     SECRET_WRONG,
@@ -73,4 +80,5 @@ export default {
     GET_ARTIST_FAILED,
     SET_NEW_USER_INFO_SUCCESS,
     SET_NEW_USER_INFO_FAILED,
+    GET_SUBSCRIBED_FAILED,
 }

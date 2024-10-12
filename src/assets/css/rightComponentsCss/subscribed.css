@@ -6,8 +6,7 @@ body{
     width: 920px;
     height: 450px;
 }
-
-.subscribed-el-wrapper {
+.subscribed-el-artist-wrapper,.subscribed-el-album-wrapper {
     width: 100%;
     height: auto;
 }
@@ -15,9 +14,11 @@ body{
     font-size: 22px;
     color: #d5d5d5;
     text-indent: 1em;
+    line-height: 22px;
 }
 .sub-artist-box {
     display: inline-block;
+    position: relative;
     width: 200px;
     height: 150px;
     overflow: hidden;
@@ -26,18 +27,77 @@ body{
     font-size: 16px;
     color: #d5d5d5;
     background-color: #3a3a3a;
-    border-radius: 20px;
-    padding: 20px;
+    border-radius: 5px;
     box-sizing: border-box;
     cursor: pointer;
-    transition: 0.2s linear;
+    transition: 100ms linear;
 }
 .sub-artist-box:hover {
-    background-color: #4c4c4c;
-    color: #bd5757;
+    color: #f1f1f1;
+}
+.sub-artist-box:hover > img {
+    width: 90px;
+    height: 90px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px 0 #7a7a7a;
+}
+.sub-artist-box:hover > span {
+    font-weight: bold;
 }
 .sub-artist-box > img {
     width: 80px;
     height: 80px;
     border-radius: 40px;
+    margin-top: 20px;
+    transition: 0.1s linear;
+}
+.sub-album-box {
+    width: 150px;
+    height: 180px;
+    background-color: #434343;
+    overflow: hidden;
+    text-align: center;
+    color: #2c2c2c;
+    border-radius: 5px;
+    display: inline-block;
+    margin: 20px 14px;
+    padding-bottom: 10px;
+}
+.sub-album-box:hover img {
+    left: 10px;
+}
+.sub-album-box img{
+    width: 90px;
+    height: 90px;
+    border-radius: 5px;
+    position: absolute;
+    z-index: 99;
+    left: 20px;
+    top: 15px;
+    transition: 0.1s linear;
+}
+.album-disc {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background-color: #1e1e1e;
+    position: absolute;
+    top: 17px;
+    left: 45px;
+    border: 1px solid #333333;
+    transition: 0.1s linear;
+}
+.disc-wrapper {
+    width: 130px;
+    height: 120px;
+    margin-left: 10px;
+    position: relative;
+}
+.sub-artist-ar {
+    font-size: 13px;
+    color: #efefef;
+}
+.sub-album-title {
+    font-size: 14px;
+    color: #ececec;
 }

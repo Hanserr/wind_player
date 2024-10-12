@@ -57,11 +57,14 @@ body{
     position: absolute;
     left: 550px;
 }
+#top50Songs li:hover{
+    background-color: #373737;
+}
 #top50SongsBanner,.hotAlbumsBanner{
     float: left;
     width: 150px;
     height: 150px;
-    background: linear-gradient(to right bottom, #9be5da, #a183c4);
+    background: linear-gradient(to right bottom, #405277, #64898e);
     border-radius: 10px;
     text-align: center;
     overflow: hidden;
@@ -75,7 +78,7 @@ body{
 }
 #top50SongsBanner p{
     font-size: 30px;
-    color: rgb(79, 79, 79);
+    color: #bbbdea;
     margin: 0;
     line-height: 150px;
 }

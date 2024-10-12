@@ -16,7 +16,7 @@
         <span>{{format.durationFormat(i.dt)}}</span>
       </li>
       <li v-show="topListRemainList.length !== 0" @click="showEntireData()">
-        <span style="cursor: pointer">显示全部{{topListLength}}首→</span>
+        <span style="cursor: pointer">显示全部{{topListLength}}首🎉</span>
       </li>
     </ul>
   </div>

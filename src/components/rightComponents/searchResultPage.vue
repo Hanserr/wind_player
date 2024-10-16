@@ -16,7 +16,7 @@
       </div>
 
       <div class="searchResultPage-resultList-artist">
-        <p v-for="(ar,index) in song.ar" :key="index" style="margin-left: 5px">{{ar.name}}</p>
+        <p v-for="(ar,index) in song.ar" :key="index" style="margin-left: 5px" @click="pushingTools.toArPage(ar.id)">{{ar.name}}</p>
       </div>
 
       <div class="searchResultPage-resultList-album">
@@ -34,6 +34,7 @@ import {onMounted, onUnmounted, reactive, ref, watch} from "vue";
 import {useRoute} from "vue-router"
 import api from "@/tools/apiCollection";
 import {useSongStore} from "@/store/songStore";
+import pushingTools from "@/tools/pushingTools";
 
 const route = useRoute()
 const songStore = useSongStore()

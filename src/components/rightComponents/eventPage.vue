@@ -50,13 +50,18 @@
               <svg-icon name="sendCommentToSomeone" class="eventContent-right-bottom-comment"></svg-icon>
               <span>{{i.info.commentCount}}</span>
             </div>
-
           </div>
           <div class="eventContent-divider"></div>
         </div>
 
         <div class="completePicArea" v-show="showPicArea" @dblclick="showPicArea = false">
-          <el-carousel height="450px" arrow="hover" trigger="click" :autoplay="false" ref="picCarouselRef">
+          <el-carousel
+              height="450px"
+              arrow="hover"
+              trigger="click"
+              :autoplay="false" ref="picCarouselRef"
+              motion-blur
+          >
             <el-carousel-item v-for="pic in presentlyCompletePicList" :key="pic">
               <div class="carousel-wrapper">
                 <img :src="pic.originUrl"

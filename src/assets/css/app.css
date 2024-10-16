@@ -179,13 +179,14 @@ body{
 }
 .topBar-profile-popWindow{
     width: 240px;
-    height: 300px;
+    height: auto;
     background-color: #363636;
     position: absolute;
     top: 60px;
     left: -50px;
     z-index: 103;
     border-radius: 5px;
+    padding-bottom: 30px;
 }
 .topBar-profile-popWindow button{
     display: block;

@@ -1,6 +1,8 @@
 # wind_player
+## 一个基于第三方网易云API开发的音乐平台
 
 ## Node Version
+
 ```
 v16.14.0
 ```
@@ -24,6 +26,3 @@ npm run build
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

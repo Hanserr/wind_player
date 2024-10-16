@@ -78,14 +78,14 @@
               <span v-if="userStore.getUserInfo()" class="topBar-profile-popWindow-numberArea-p1">{{userStore.getUserInfo().value.follower}}</span>
               <span class="topBar-profile-popWindow-numberArea-p2">粉丝</span>
             </div>
-            <div class="topBar-profile-popWindow-bottomDiv">
-              我的会员
-              <svg-icon name="arrowsRight" class="topBar-profile-popWindow-svg"></svg-icon>
-            </div>
-            <div class="topBar-profile-popWindow-bottomDiv">
-              等级
-              <svg-icon name="arrowsRight" class="topBar-profile-popWindow-svg"></svg-icon>
-            </div>
+<!--            <div class="topBar-profile-popWindow-bottomDiv">-->
+<!--              我的会员-->
+<!--              <svg-icon name="arrowsRight" class="topBar-profile-popWindow-svg"></svg-icon>-->
+<!--            </div>-->
+<!--            <div class="topBar-profile-popWindow-bottomDiv">-->
+<!--              等级-->
+<!--              <svg-icon name="arrowsRight" class="topBar-profile-popWindow-svg"></svg-icon>-->
+<!--            </div>-->
             <div class="topBar-profile-popWindow-bottomDiv" @click="router.push('/settings')">
               设置
               <svg-icon name="arrowsRight" class="topBar-profile-popWindow-svg"></svg-icon>
@@ -176,7 +176,7 @@
           <div id="preparedSLTop">
             <span>待播放</span>
             <span>共{{songStore.getSongList().value.length !== 0?songStore.getSongList().value.length:"0"}}首音乐</span>
-            <span @click="songStore.cleatSongList()">清空列表</span>
+            <span @click="songStore.clearSongList()">清空列表</span>
           </div>
           <div id="cutOff"></div>
           <div id="preparedSLBottom">

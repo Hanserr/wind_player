@@ -4,18 +4,18 @@
      v-loading="loading"
      element-loading-background="rgba(0, 0, 0, 0.8)">
 
-  <div class="editionPageLeft">
-    <el-upload
-        action=""
-        class="avatar-uploader"
-        :show-file-list="false"
-        :http-request="alterAvatar">
-      <img v-if="user.avatarUrl" :src="user.avatarUrl" class="avatar"/>
-      <el-icon v-else class="avatar-uploader-icon"><Plus/></el-icon>
-      <div class="avatar-cover" v-show="showUploadingProgress"></div>
-      <el-progress type="circle" :percentage="uploadingProgress" v-show="showUploadingProgress"/>
-    </el-upload>
-  </div>
+<!--  <div class="editionPageLeft">-->
+<!--    <el-upload-->
+<!--        action=""-->
+<!--        class="avatar-uploader"-->
+<!--        :show-file-list="false"-->
+<!--        :http-request="alterAvatar">-->
+<!--      <img v-if="user.avatarUrl" :src="user.avatarUrl" class="avatar"/>-->
+<!--      <el-icon v-else class="avatar-uploader-icon"><Plus/></el-icon>-->
+<!--      <div class="avatar-cover" v-show="showUploadingProgress"></div>-->
+<!--      <el-progress type="circle" :percentage="uploadingProgress" v-show="showUploadingProgress"/>-->
+<!--    </el-upload>-->
+<!--  </div>-->
 
   <div class="editionPageRight">
     <p>编辑个人信息</p>
@@ -107,6 +107,7 @@ const alterUserProfile = () => {
       message:"昵称不能为空",
       type:"warning"
     })
+    loading.value = false
     return
   }
   for (let i of region){
@@ -134,54 +135,54 @@ const alterUserProfile = () => {
 }
 
 // 修改头像
-const alterAvatar = async (f) => {
-  const isJPG = f.file.type === 'image/jpeg';
-  const isPNG = f.file.type === 'image/png'
-  const isLt2M = f.file.size / 1024 / 1024 < 2;
-  if (!(isJPG || isPNG)) {
-    ElMessage({
-      message:'只能上传JPG/PNG图像！',
-      type:'warning'
-    })
-    return
-  }
-  if (!isLt2M) {
-    ElMessage({
-      message:'图片大小请限制在2MB内',
-      type:'warning'
-    })
-    return
-  }
-  showUploadingProgress.value = true
-  let formData = new FormData()
-  formData.append('imgFile', f.file)
-  let size = await getImgSize(f.file)
-  size = size.height>size.width?size.width:size.height
-  axios({
-    method: 'post',
-    url: `/avatar/upload?imgSize=${size}&timestamp=${Date.now()}`,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: formData,
-    onUploadProgress:(progressEvent) => {
-      if (progressEvent.lengthComputable){
-        uploadingProgress.value = Math.ceil((progressEvent.loaded / progressEvent.total) * 100)
-      }
-    }
-  }).then(res => {
-    if (res.data.code === 200){
-      user.avatarUrl = res.data.data.url
-      showUploadingProgress.value = false
-      uploadingProgress.value = 0
-    }else{
-      ElMessage({
-        message:'上传失败',
-        type:'error'
-      })
-    }
-  })
-}
+// const alterAvatar = async (f) => {
+//   const isJPG = f.file.type === 'image/jpeg';
+//   const isPNG = f.file.type === 'image/png'
+//   const isLt2M = f.file.size / 1024 / 1024 < 2;
+//   if (!(isJPG || isPNG)) {
+//     ElMessage({
+//       message:'只能上传JPG/PNG图像！',
+//       type:'warning'
+//     })
+//     return
+//   }
+//   if (!isLt2M) {
+//     ElMessage({
+//       message:'图片大小请限制在2MB内',
+//       type:'warning'
+//     })
+//     return
+//   }
+//   showUploadingProgress.value = true
+//   let formData = new FormData()
+//   formData.append('imgFile', f.file)
+//   let size = await getImgSize(f.file)
+//   size = size.height>size.width?size.width:size.height
+//   axios({
+//     method: 'post',
+//     url: `/avatar/upload?imgSize=${size}&timestamp=${Date.now()}`,
+//     headers: {
+//       'Content-Type': 'multipart/form-data',
+//     },
+//     data: formData,
+//     onUploadProgress:(progressEvent) => {
+//       if (progressEvent.lengthComputable){
+//         uploadingProgress.value = Math.ceil((progressEvent.loaded / progressEvent.total) * 100)
+//       }
+//     }
+//   }).then(res => {
+//     if (res.data.code === 200){
+//       user.avatarUrl = res.data.data.url
+//       showUploadingProgress.value = false
+//       uploadingProgress.value = 0
+//     }else{
+//       ElMessage({
+//         message:'上传失败',
+//         type:'error'
+//       })
+//     }
+//   })
+// }
 
 //获取图像尺寸
 const getImgSize = (file) => {

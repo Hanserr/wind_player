@@ -169,14 +169,6 @@ const routes = [
         }
     },
     {
-        path: '/dataAna',
-        name: 'dataAnaPage',
-        component: () => import('../components/rightComponents/dataAnalyze'),
-        meta: {
-            keepAlive: false
-        }
-    },
-    {
         path: '/artist',
         name: 'artistPage',
         component: () => import('../components/rightComponents/artistPage'),

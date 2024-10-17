@@ -3,23 +3,23 @@
      v-loading="loading"
      element-loading-background="rgba(0, 0, 0, 0.8)"
      element-loading-text="加载中···">
-  <el-scrollbar v-if="mark">
-  <div class="ARPageMain-Top">
-    <div class="ARPageMain-Top-imgWrap">
-      <img :src="artist.picUrl" alt="">
+  <el-scrollbar v-if="mark" max-height="450px">
+    <div class="ARPageMain-Top">
+      <div class="ARPageMain-Top-imgWrap">
+        <img :src="artist.picUrl" alt="">
+      </div>
+      <span id="ARPageMainArName">{{artist.name}}</span>
+      <button>收藏</button>
+      <span>单曲数:{{artist.musicSize}}</span>
+      <br>
+      <span>专辑数:{{artist.albumSize}}</span>
     </div>
-    <span id="ARPageMainArName">{{artist.name}}</span>
-    <button>收藏</button>
-    <span>单曲数:{{artist.musicSize}}</span>
-    <br>
-    <span>专辑数:{{artist.albumSize}}</span>
-  </div>
-  <div class="ARPageMain-bottom">
-    <span class="ARPageMain-bottom-title" @click="pushingTools.toArPage(route.params.arID)">专辑</span>
-    <span class="ARPageMain-bottom-title" @click="pushingTools.toArDescPage(artist.briefDesc,route.params.arID)">歌手详情</span>
-    <span class="ARPageMain-bottom-title" @click="pushingTools.toSimilarArPage(route.params.arID)">相似歌手</span>
-    <router-view @playMusic="playMusic"></router-view>
-  </div>
+    <div class="ARPageMain-bottom">
+      <span class="ARPageMain-bottom-title" @click="pushingTools.toArPage(route.params.arID)">专辑</span>
+      <span class="ARPageMain-bottom-title" @click="pushingTools.toArDescPage(artist.briefDesc,route.params.arID)">歌手详情</span>
+      <span class="ARPageMain-bottom-title" @click="pushingTools.toSimilarArPage(route.params.arID)">相似歌手</span>
+      <router-view @playMusic="playMusic"></router-view>
+    </div>
   </el-scrollbar>
 </div>
 </template>

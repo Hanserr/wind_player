@@ -59,7 +59,7 @@ const SET_NEW_USER_INFO_SUCCESS = () => {
 const SET_NEW_USER_INFO_FAILED = () => {
     ElMessage({
         message:"修改失败!",
-        type:"success"
+        type:"error"
     })
 }
 

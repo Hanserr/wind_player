@@ -137,13 +137,13 @@ const routes = [
         },
     },
     {
-            path: '/dailyRecommendation',
-            name: 'dailyRecommendationPage',
-            component: () => import('../components/rightComponents/dailyRecommendationPage'),
-            meta: {
-                keepAlive: false
-            },
+        path: '/dailyRecommendation',
+        name: 'dailyRecommendationPage',
+        component: () => import('../components/rightComponents/dailyRecommendationPage'),
+        meta: {
+            keepAlive: false
         },
+    },
     {
         path: '/personalFm',
         name: 'personalFmPage',

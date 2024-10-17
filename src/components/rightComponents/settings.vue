@@ -10,7 +10,6 @@
         <button @click="getVerCode" :disabled=buttonIsDisable>{{buttonIsDisable?updatePhoneTime+'秒':'获取验证码'}}</button>
         <br>
         <button id="updatePhoneButton" @click="next">{{button1Title}}</button>
-        <p>修改密码</p>
       </div>
     </el-tab-pane>
     <el-tab-pane label="工具">

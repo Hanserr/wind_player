@@ -35,7 +35,7 @@ export const useSongStore = defineStore('Song', () => {
     const getCurSong = () => computed(() => {return curSong.value})
     const getCurIndexInList = () => computed(() => {return curIndexInList.value})
 
-    //接收audio DOM
+    //接收audio实例
     function initAudio(ref) {
         shareAudio.value = ref
     }

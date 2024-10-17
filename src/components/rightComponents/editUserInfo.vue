@@ -71,8 +71,8 @@ let tempProvince = ref() //临时存放省市数据
 let tempRegion = ref() //市级城市临时数据
 let tempUserRegion = ref() //临时存放用户地区数据
 let loading = ref(false) //加载遮罩
-let uploadingProgress = ref(0) //头像上传进度条
-let showUploadingProgress = ref(false) //展示头像上传进度条
+// let uploadingProgress = ref(0) //头像上传进度条
+// let showUploadingProgress = ref(false) //展示头像上传进度条
 
 //获取用户信息
 const getUserInfo = () => {
@@ -127,7 +127,10 @@ const alterUserProfile = () => {
      notification.SET_NEW_USER_INFO_SUCCESS()
      userStore.updateUserInfo()
    }else{
-     notification.SET_NEW_USER_INFO_FAILED()
+     ElMessage({
+       message:res.data.message,
+       type:"warning"
+     })
    }
   }).finally(() => {
     loading.value = false

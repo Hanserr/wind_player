@@ -4,7 +4,7 @@
     <div class="playerPage">
 
       <!--      左侧导航栏-->
-      <div class="playerPageLeft">
+      <div class="playerPageLeft" :style="{backgroundColor:middleColor}">
         <navigation-bar></navigation-bar>
       </div>
       <!--      顶部搜索栏-->
@@ -78,14 +78,6 @@
               <span v-if="userStore.getUserInfo()" class="topBar-profile-popWindow-numberArea-p1">{{userStore.getUserInfo().value.follower}}</span>
               <span class="topBar-profile-popWindow-numberArea-p2">粉丝</span>
             </div>
-<!--            <div class="topBar-profile-popWindow-bottomDiv">-->
-<!--              我的会员-->
-<!--              <svg-icon name="arrowsRight" class="topBar-profile-popWindow-svg"></svg-icon>-->
-<!--            </div>-->
-<!--            <div class="topBar-profile-popWindow-bottomDiv">-->
-<!--              等级-->
-<!--              <svg-icon name="arrowsRight" class="topBar-profile-popWindow-svg"></svg-icon>-->
-<!--            </div>-->
             <div class="topBar-profile-popWindow-bottomDiv" @click="router.push('/settings')">
               设置
               <svg-icon name="arrowsRight" class="topBar-profile-popWindow-svg"></svg-icon>
@@ -98,10 +90,11 @@
           <!--    登录模块-->
           <login-module :visible="popVisible" @changeVisible="closePop"></login-module>
         </div>
+        <svg-icon name="theme" class="theme-icon" @click="router.push('/theme')"></svg-icon>
       </div>
 
       <!--      中间结果栏-->
-      <div class="searchResult">
+      <div class="searchResult" :style="{backgroundColor:middleColor}">
         <router-view
             @closeResultList="closeResultList"
             :inPlay="songStore.getCurSong().value.src"
@@ -114,7 +107,7 @@
       </div>
 
       <!--      底部播放栏-->
-      <div class="playerBar">
+      <div class="playerBar" :style="{backgroundColor:themeStore.pageTheme.topAndBottomColor || '#212124'}">
 
         <!--        左侧歌曲封面及歌手-->
         <div class="playerBar-left" v-if="songStore">
@@ -201,7 +194,7 @@
       </div>
 
       <!--        歌曲详情页-->
-      <div class="songMovingWindow" :style="{top:songMovingWindowTop+'px'}" v-if="songStore">
+      <div class="songMovingWindow" :style="{top:songMovingWindowTop+'px', backgroundColor:middleColor}" v-if="songStore">
         <!--        发条评论吧-->
         <div id="sendAMessage" @click="openCommentAreaToSong()">
           <svg-icon name="sendComment"></svg-icon>
@@ -311,12 +304,14 @@ import NavigationBar from "@/components/navigationComponents/navigationBar";
 import {useRoute} from "vue-router";
 import {useUserStore} from "@/store/userStore";
 import {useSongStore} from "@/store/songStore";
+import {useThemeStore} from "@/store/themeStore";
 import format from "@/tools/format";
 import api from "./tools/apiCollection";
 import pushingTools from "@/tools/pushingTools";
 
 const userStore = useUserStore();
 const songStore = useSongStore();
+const themeStore = useThemeStore();
 const route = useRoute()
 const audioRef = ref() //播放器DOM
 let inputVal = ref('') //顶部搜索框变量
@@ -332,8 +327,9 @@ let durationBarWidth = ref(0) //进度条宽度
 let coverVisible = ref(false) //歌曲遮罩
 let songMovingWindowTop = ref(520) //520歌曲详情弹窗上距
 let playBarLeft = ref(-60) //底部歌曲小页面上下移动距离
-let playerPageTopBC = ref() //顶部搜索栏背景色
-let topSearchBarBC = ref('#2b2b2b') //顶部搜索框背景色
+let playerPageTopBC = ref(themeStore.pageTheme.topAndBottomColor)//顶部搜索栏背景色
+let middleColor = ref(themeStore.pageTheme.middleColor) //中间组件颜色
+let topSearchBarBC = ref(themeStore.pageTheme.middleColor) //顶部搜索框背景色
 let headerRotate = ref('rotate(0deg)') //磁头角度
 let panRotateState = ref('paused') //盘片是否旋转
 let lyricIndex = ref(0) //当前歌词下标
@@ -473,16 +469,16 @@ const movingWindowUp = () => {
   }
   songMovingWindowTop.value = 70
   playBarLeft.value = 20
-  playerPageTopBC.value = '#2c2c2c'
-  topSearchBarBC.value = '#393B3A'
+  playerPageTopBC.value = themeStore.pageTheme.middleColor
+  topSearchBarBC.value = themeStore.pageTheme.topAndBottomColor
 }
 
 //歌曲弹窗下移
 const movingWindowDown = () => {
   songMovingWindowTop.value = 520
   playBarLeft.value = -60
-  playerPageTopBC.value = '#212121'
-  topSearchBarBC.value = '#2b2b2b'
+  playerPageTopBC.value = themeStore.pageTheme.topAndBottomColor
+  topSearchBarBC.value = themeStore.pageTheme.middleColor
 }
 
 //黑胶唱片磁头位置和盘片旋转
@@ -799,6 +795,14 @@ watch(() => songMovingWindowTop.value,(next) => {
   }
 })
 
+//更新主题
+watch(() => themeStore.pageTheme.topAndBottomColor, () => {
+  //无法更新中间颜色
+  playerPageTopBC.value = themeStore.pageTheme.topAndBottomColor
+  middleColor.value = themeStore.pageTheme.middleColor
+  topSearchBarBC.value = themeStore.pageTheme.middleColor
+})
+
 onMounted(async () => {
   await songStore.initAudio(audioRef.value)
   if (!userStore.getLoginStatus().value){
@@ -827,10 +831,6 @@ onMounted(async () => {
     }
   }
 })
-// {
-//   code:200,
-//   data:
-// }
 
 onUnmounted(() => {
   clearInterval(suggestionTimer)

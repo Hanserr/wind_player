@@ -193,6 +193,14 @@ const routes = [
       }
     },
     {
+      path: '/theme',
+        name: 'themePage',
+        component: () => import('../components/rightComponents/theme'),
+        meta: {
+          keepAlive: false
+        }
+    },
+    {
         path: '/404',
         name: '404',
         component: () => import('../views/NotFound'),

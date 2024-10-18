@@ -77,6 +77,28 @@ const LESS_COLOR = () => {
     })
 }
 
+const GET_THEME_FAILED = () => {
+    ElMessage({
+        message:"获取主题列表失败",
+        type:"error"
+    })
+}
+
+const UPLOAD_THEME_FAILED = () => {
+    ElMessage({
+        message:"添加主题失败",
+        type:"error"
+    })
+}
+
+const DELETE_THEME_FAILED = () => {
+    ElMessage({
+        message:"删除主题失败",
+        type:"error"
+    })
+}
+
+
 export default {
     GET_USER_FAILED,
     SECRET_WRONG,
@@ -89,4 +111,7 @@ export default {
     SET_NEW_USER_INFO_FAILED,
     GET_SUBSCRIBED_FAILED,
     LESS_COLOR,
+    GET_THEME_FAILED,
+    UPLOAD_THEME_FAILED,
+    DELETE_THEME_FAILED,
 }

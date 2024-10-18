@@ -3,6 +3,7 @@ import {computed, ref} from "vue";
 import api from "@/tools/apiCollection";
 import axios from "axios";
 import Notification from "@/tools/notification";
+import apiCollection from "@/tools/apiCollection";
 
 export const useUserStore = defineStore('User', () => {
     const userInfo = ref({
@@ -48,6 +49,9 @@ export const useUserStore = defineStore('User', () => {
                 Notification.GET_USER_FAILED()
             })
         }
+        await axios.get(`${apiCollection.PUSH_USER_INFO_TO_SERVER}?uid=${fetchUserStatus.data.data.profile.userId}`).then(res => {
+            console.log(res.data)
+        })
     }
 
     //清除用户数据

@@ -12,7 +12,6 @@ const app = createApp(App)
 
 //默认携带cookie
 axios.defaults.withCredentials=true
-axios.defaults.baseURL="http://localhost:3000"
 
 app.component('SvgIcon',SvgIcon)
 

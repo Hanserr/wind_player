@@ -70,6 +70,13 @@ const GET_SUBSCRIBED_FAILED = () => {
     })
 }
 
+const LESS_COLOR = () => {
+    ElMessage({
+        message:"请同时设置两个配色",
+        type:"warning"
+    })
+}
+
 export default {
     GET_USER_FAILED,
     SECRET_WRONG,
@@ -81,4 +88,5 @@ export default {
     SET_NEW_USER_INFO_SUCCESS,
     SET_NEW_USER_INFO_FAILED,
     GET_SUBSCRIBED_FAILED,
+    LESS_COLOR,
 }

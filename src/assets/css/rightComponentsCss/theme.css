@@ -31,3 +31,31 @@ body {
     font-weight: bold;
     font-size: 20px;
 }
+.demonstrate {
+    width: 200px;
+    height: 200px;
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid grey;
+}
+.demonstrate div:nth-child(1) {
+    width: 100%;
+    height: 30px;
+    position: absolute;
+    top: 0;
+    border-bottom: 1px solid grey;
+}
+.demonstrate div:nth-child(2) {
+    width: 100%;
+    height: 138px;
+    position: absolute;
+    top: 31px;
+}
+.demonstrate div:nth-child(3) {
+    width: 100%;
+    height: 30px;
+    position: absolute;
+    bottom: 0;
+    border-top: 1px solid grey;
+}

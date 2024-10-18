@@ -12,14 +12,11 @@
         <button id="updatePhoneButton" @click="next">{{button1Title}}</button>
       </div>
     </el-tab-pane>
-    <el-tab-pane label="工具">
-      <span style="color: #6d75a2">暂未上线工具哦，请耐心等候</span>
-    </el-tab-pane>
     <el-tab-pane label="关于风吟音乐">
       <span id="appInfo">
-        风吟音乐是基于<a href="https://github.com/Binaryify/NeteaseCloudMusicApi" target="_blank">网易云音乐API</a>开发的一款Web端音乐播放器
+        风吟音乐是基于<a href="https://github.com/Binaryify/NeteaseCloudMusicApi" target="_blank">第三方网易云音乐API</a>开发的一款Web端音乐播放器
         <br>
-        目前还在继续完善项目中
+        项目仅作为学习演示
         <br>
         <a href="https://github.com/Hanserr" target="_blank">我的Github</a>
       </span>

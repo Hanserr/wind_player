@@ -649,7 +649,7 @@ const infiniteScroll = (e) => {
 
 //点赞或取消点赞评论
 const  isThumbUpComment = (cid,val) => {
-  axios.get(`${api.LIKE_COMMENT}?id=${songStore.getCurSong().id}&cid=${cid}&t=${val}&type=0`).then(res => {
+  axios.get(`${api.LIKE_COMMENT}?id=${songStore.getCurSong().value.id}&cid=${cid}&t=${val}&type=0`).then(res => {
     if (res.data.code !== 200){
       ElMessage({
         message:'操作失败，请稍后再试',
@@ -689,21 +689,28 @@ const openCommentArea = (cid,targetUser) => {
 
 //发送评论
 const openCommentAreaToSong = () => {
+  console.log("test")
   ElMessageBox.prompt('', `评论`, {
     confirmButtonText: '发送',
     cancelButtonText: '取消',
   }).then(({value}) => {
-    axios.get(`${api.COMMENT_SONG}?t=2&type=0&id=${songStore.getCurSong().value.id}&content=${value}`).then(res => {
+    axios.get(`${api.COMMENT_SONG}?t=1&type=0&id=${songStore.getCurSong().value.id}&content=${value}`).then(res => {
       if (res.data.code !== 200){
         ElMessage({
           message:'发送失败，请稍后再试',
           type:'error'
         })
+      } else {
+        ElMessage({
+          type: 'success',
+          message: `发送成功`,
+        })
       }
-    })
-    ElMessage({
-      type: 'success',
-      message: `发送成功`,
+    }).catch(() => {
+      ElMessage({
+        message:'发送失败，请稍后再试',
+        type:'error'
+      })
     })
   })
 }

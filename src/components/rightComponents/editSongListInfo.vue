@@ -13,18 +13,18 @@
     <button @click="alterSongListInfo" id="preserveBtn">保存</button>
     <button @click="$router.go(-1)" id="cancelBtn">取消</button>
   </div>
-  <div class="rightContent">
-    <el-upload
-        action=""
-        class="songListCover-uploader"
-        :show-file-list="false"
-        :http-request="alterSongListCover">
-      <img v-if="songList.cover" :src="songList.cover" class="cover"/>
-      <el-icon v-else class="songListCover-uploader-icon"><Plus/></el-icon>
-      <div class="songListCover-cover" v-show="showUploadingProgress"></div>
-      <el-progress type="circle" :percentage="uploadingProgress" v-show="showUploadingProgress"/>
-    </el-upload>
-  </div>
+<!--  <div class="rightContent">-->
+<!--    <el-upload-->
+<!--        action=""-->
+<!--        class="songListCover-uploader"-->
+<!--        :show-file-list="false"-->
+<!--        :http-request="alterSongListCover">-->
+<!--      <img v-if="songList.cover" :src="songList.cover" class="cover"/>-->
+<!--      <el-icon v-else class="songListCover-uploader-icon"><Plus/></el-icon>-->
+<!--      <div class="songListCover-cover" v-show="showUploadingProgress"></div>-->
+<!--      <el-progress type="circle" :percentage="uploadingProgress" v-show="showUploadingProgress"/>-->
+<!--    </el-upload>-->
+<!--  </div>-->
 </div>
 </template>
 
@@ -78,72 +78,72 @@ const alterSongListInfo = () => {
 }
 
 // 修改歌单封面
-const alterSongListCover = async (f) => {
-  const isJPG = f.file.type === 'image/jpeg';
-  const isPNG = f.file.type === 'image/png'
-  const isLt2M = f.file.size / 1024 / 1024 < 2;
-  if (!(isJPG || isPNG)) {
-    ElMessage({
-      message:'只能上传JPG/PNG图像！',
-      type:'warning'
-    })
-    return
-  }
-  if (!isLt2M) {
-    ElMessage({
-      message:'图片大小请限制在2MB内',
-      type:'warning'
-    })
-    return
-  }
-  showUploadingProgress.value = true
-  let formData = new FormData()
-  formData.append('imgFile', f.file)
-  let size = await getImgSize(f.file)
-  size = size.height>size.width?size.width:size.height
-  axios({
-    method: 'post',
-    url: `/playlist/cover/update?id=${songList.id}&imgSize=${size}&timestamp=${Date.now()}`,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: formData,
-    onUploadProgress:(progressEvent) => {
-      if (progressEvent.lengthComputable){
-        uploadingProgress.value = Math.ceil((progressEvent.loaded / progressEvent.total) * 100)
-      }
-    }
-  }).then(res => {
-    if (res.data.code === 200){
-      songList.cover = res.data.data.url
-      showUploadingProgress.value = false
-      uploadingProgress.value = 0
-    }else{
-      ElMessage({
-        message:'上传失败',
-        type:'error'
-      })
-    }
-  })
-}
+// const alterSongListCover = async (f) => {
+//   const isJPG = f.file.type === 'image/jpeg';
+//   const isPNG = f.file.type === 'image/png'
+//   const isLt2M = f.file.size / 1024 / 1024 < 2;
+//   if (!(isJPG || isPNG)) {
+//     ElMessage({
+//       message:'只能上传JPG/PNG图像！',
+//       type:'warning'
+//     })
+//     return
+//   }
+//   if (!isLt2M) {
+//     ElMessage({
+//       message:'图片大小请限制在2MB内',
+//       type:'warning'
+//     })
+//     return
+//   }
+//   showUploadingProgress.value = true
+//   let formData = new FormData()
+//   formData.append('imgFile', f.file)
+//   let size = await getImgSize(f.file)
+//   size = size.height>size.width?size.width:size.height
+//   axios({
+//     method: 'post',
+//     url: `/playlist/cover/update?id=${songList.id}&imgSize=${size}&timestamp=${Date.now()}`,
+//     headers: {
+//       'Content-Type': 'multipart/form-data',
+//     },
+//     data: formData,
+//     onUploadProgress:(progressEvent) => {
+//       if (progressEvent.lengthComputable){
+//         uploadingProgress.value = Math.ceil((progressEvent.loaded / progressEvent.total) * 100)
+//       }
+//     }
+//   }).then(res => {
+//     if (res.data.code === 200){
+//       songList.cover = res.data.data.url
+//       showUploadingProgress.value = false
+//       uploadingProgress.value = 0
+//     }else{
+//       ElMessage({
+//         message:'上传失败',
+//         type:'error'
+//       })
+//     }
+//   })
+// }
 
 //获取图像尺寸
-const getImgSize = (file) => {
-  return new Promise((resolve) => {
-    let reader = new FileReader()
-    reader.readAsDataURL(file)
-    reader.onload = (e) => {
-      let image = new Image()
-      image.src = e.target.result
-      image.onload = () => {
-        resolve({
-          width: image.width,
-          height: image.height,
-        })
-      }
-    }
-  })
-}
+// const getImgSize = (file) => {
+//   return new Promise((resolve) => {
+//     let reader = new FileReader()
+//     reader.readAsDataURL(file)
+//     reader.onload = (e) => {
+//       let image = new Image()
+//       image.src = e.target.result
+//       image.onload = () => {
+//         resolve({
+//           width: image.width,
+//           height: image.height,
+//         })
+//       }
+//     }
+//   })
+// }
 
 onMounted(() => {
   songList.id = route.params.editSongListInfoId

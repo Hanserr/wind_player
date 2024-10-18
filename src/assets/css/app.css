@@ -781,6 +781,7 @@ body{
     position: absolute;
     top: 400px;
     right: 110px;
+    z-index: 99;
 }
 #sendAMessage .svg-icon{
     width: 20px;

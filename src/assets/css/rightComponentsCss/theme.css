@@ -38,6 +38,7 @@ body {
     position: relative;
     overflow: hidden;
     border: 1px solid grey;
+    margin-top: 10px;
 }
 .demonstrate div:nth-child(1) {
     width: 100%;

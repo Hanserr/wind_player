@@ -30,6 +30,8 @@ const submitColor = () => {
   if(TABC.value && MIDC.value){
     // 发送添加主题的请求
     dialogColorVisible.value = false
+    themeStore.pageTheme.middleColor = MIDC.value
+    themeStore.pageTheme.topAndBottomColor = TABC.value
   } else {
     Notification.LESS_COLOR()
   }
@@ -63,7 +65,7 @@ const submitColor = () => {
         </div>
         <br>
         <el-button @click="dialogColorVisible = false">关闭</el-button>
-        <el-button type="primary" @click="submitColor()">确定</el-button>
+        <el-button type="primary" @click="submitColor()">应用并添加到共享主题</el-button>
       </el-dialog>
       <div class="reset-theme" @click="themeStore.resetTheme()">
         <span>重置主题</span>

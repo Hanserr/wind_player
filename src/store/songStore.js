@@ -148,7 +148,7 @@ export const useSongStore = defineStore('Song', () => {
     //获取歌曲信息失败
     function getSongFailed() {
         clearCurSong()
-        notification.GET_SONG_FAILED()
+        notification.ERROR_INFO("获取歌曲信息失败")
     }
 
     return {

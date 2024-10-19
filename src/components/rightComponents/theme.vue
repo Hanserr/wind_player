@@ -29,13 +29,13 @@ const submitColor = () => {
       if(res.data.code === 200) {
         getTheme()
       } else {
-        notification.UPLOAD_THEME_FAILED()
+        notification.ERROR_INFO("添加主题失败")
       }
     }).catch(() => {
-      notification.UPLOAD_THEME_FAILED()
+      notification.ERROR_INFO("添加主题失败")
     })
   } else {
-    Notification.LESS_COLOR()
+    Notification.WARNING_INFO("请同时设置两个配色")
   }
 }
 
@@ -59,10 +59,10 @@ const getTheme = () => {
       data.value.other = otherTheme
       data.value.os = osTheme
     } else {
-      notification.GET_THEME_FAILED()
+      notification.ERROR_INFO("获取主题列表失败")
     }
   }).catch(() => {
-    notification.GET_THEME_FAILED()
+    notification.ERROR_INFO("获取主题列表失败")
   })
 }
 
@@ -106,10 +106,10 @@ const deleteTheme = (uid, tid) => {
       }
       getTheme()
     } else {
-      notification.DELETE_THEME_FAILED()
+      notification.ERROR_INFO("删除主题失败")
     }
   }).catch(() => {
-    notification.DELETE_THEME_FAILED()
+    notification.ERROR_INFO("删除主题失败")
   })
 }
 

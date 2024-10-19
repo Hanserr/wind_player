@@ -124,7 +124,7 @@ const alterUserProfile = () => {
   }
   axios.get(`${api.UPDATE_USER_INFO}?gender=${user.gender}&signature=${user.intro}&city=${user.region}&nickname=${user.nickname}&birthday=${new Date(user.birthday).getTime()}&province=${user.province}`).then(res => {
    if (res.data.code === 200){
-     notification.SET_NEW_USER_INFO_SUCCESS()
+     notification.SUCCESS_INFO("修改成功!")
      userStore.updateUserInfo()
    }else{
      ElMessage({

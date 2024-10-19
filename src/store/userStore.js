@@ -46,10 +46,10 @@ export const useUserStore = defineStore('User', () => {
                     userInfo.value.province = res.data.profile.province
                     hasLogin.value = true
                 }else{
-                   Notification.GET_USER_FAILED()
+                   Notification.ERROR_INFO("获取用户状态失败，请稍后再试")
                 }
             }).catch(() => {
-                Notification.GET_USER_FAILED()
+                Notification.ERROR_INFO("获取用户状态失败，请稍后再试")
             })
         }
         let user_to_theme_data = await axios.get(`${apiCollection.PUSH_USER_INFO_TO_SERVER}?uid=${fetchUserStatus.data.data.profile.userId}`)

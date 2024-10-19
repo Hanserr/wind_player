@@ -53,10 +53,10 @@ const getArInfo = (id) => {
       artist.value = res.data.artist
       mark.value = true
     }else {
-      notification.GET_ARTIST_FAILED()
+      notification.ERROR_INFO("获取歌手信息失败")
     }
   }).catch((err) => {
-    notification.GET_ARTIST_FAILED()
+    notification.ERROR_INFO("获取歌手信息失败")
   }).finally(() => {
     loading.value = false
   })

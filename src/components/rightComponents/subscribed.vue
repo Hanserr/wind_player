@@ -16,10 +16,10 @@ onMounted(() => {
       artist.value = res1.data.data
       album.value = res2.data.data
     } else {
-      notification.GET_SUBSCRIBED_FAILED()
+      notification.ERROR_INFO("获取收藏列表失败")
     }
   }).catch(() => {
-    notification.GET_SUBSCRIBED_FAILED()
+    notification.ERROR_INFO("获取收藏列表失败")
   })
 })
 </script>

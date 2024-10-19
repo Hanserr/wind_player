@@ -78,7 +78,7 @@ watch(() => props.visible,(nextVisible) => {
 const phoneLogin = (phone,pwd) => {
   let phoneReg = /^[1][3,4,5,7,8][0-9]{9}$/
   if (!phoneReg.test(phone) || pwd === ''){
-    Notification.CHECK_INPUT_STYLE()
+    Notification.NORMAL_INFO("请检查输入内容的格式")
     return
   }
   load.value = true
@@ -88,10 +88,10 @@ const phoneLogin = (phone,pwd) => {
       invisible()
       location.reload()
     } else {
-      Notification.SECRET_WRONG()
+      Notification.ERROR_INFO("手机号或密码错误")
     }
   }).catch((err)=>{
-    Notification.LOGIN_FAILED()
+    Notification.ERROR_INFO("登陆失败，请稍后重试")
   }).finally(() => {
     load.value = false
   })

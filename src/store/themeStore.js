@@ -3,10 +3,10 @@ import {ref} from "vue";
 
 export const useThemeStore = defineStore('theme',() => {
     const pageTheme = ref({
-        uid: null,
+        uid: -1,
         topAndBottomColor:'#212121',
         middleColor: '#2b2b2b',
-        tid: null
+        tid: -1
     })
     const updateTheme = (uid, TABColor, MColor, tid) => {
         pageTheme.value.uid = uid
@@ -16,10 +16,10 @@ export const useThemeStore = defineStore('theme',() => {
     }
 
     const resetTheme = () => {
-        pageTheme.value.uid = null
+        pageTheme.value.uid = -1
         pageTheme.value.topAndBottomColor = '#212121'
         pageTheme.value.middleColor = '#2b2b2b'
-        pageTheme.value.tid = null
+        pageTheme.value.tid = -1
     }
     return {
         pageTheme,

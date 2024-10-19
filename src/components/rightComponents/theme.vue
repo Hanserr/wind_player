@@ -82,7 +82,7 @@ const mouseupEvent = () => {
 const alterUserTheme = (i) => {
   axios.post(`${apiCollection.ALTER_CUR_SET}?uid=${userStore.getUserInfo().value.userId}&tid=${i.tid}`).then(res => {
     if(res.data.code === 200) {
-      themeStore.updateTheme(userStore.getUserInfo().value.userId, i.t_upDownBack, i.t_mainBack, i.id)
+      themeStore.updateTheme(userStore.getUserInfo().value.userId, i.t_upDownBack, i.t_mainBack, i.tid)
     } else {
       notification.ERROR_INFO("修改主题失败，稍后重试～")
     }
@@ -95,6 +95,15 @@ const alterUserTheme = (i) => {
 const deleteTheme = (uid, tid) => {
   axios.get(`${apiCollection.DELETE_CUSTOM_COLOR}?tid=${tid}&uid=${uid}`).then(res => {
     if(res.data.code === 200) {
+      if(tid == themeStore.pageTheme.tid) {
+        let i = {
+          uid: null,
+          t_upDownBack:'#212121',
+          t_mainBack: '#2b2b2b',
+          tid: -1
+        }
+        alterUserTheme(i)
+      }
       getTheme()
     } else {
       notification.DELETE_THEME_FAILED()
@@ -134,14 +143,14 @@ onUnmounted(() => {
     <p class="theme-title">个性化你的播放器（双击应用主题）*暂未适配所有页面，仅作演示</p>
     <el-scrollbar height="385px">
 
-      <p class="theme-title">系统主题</p>
+      <p class="theme-title" v-show="data?.os?.length > 0">系统主题</p>
       <div class="theme-wrapper"
            v-for="i in data.os"
            @dblclick="alterUserTheme(i)"
            :style="{background:`linear-gradient(${i.t_upDownBack},${i.t_mainBack})`}">
       </div>
 
-      <p class="theme-title">我创建的主题（长按删除主题）</p>
+      <p class="theme-title" v-show="data?.my?.length > 0">我创建的主题（长按删除主题）</p>
         <div class="theme-wrapper"
              v-for="i in data.my"
              :key="i"
@@ -151,7 +160,7 @@ onUnmounted(() => {
              :style="{background:`linear-gradient(${i.t_upDownBack},${i.t_mainBack})`}">
         </div>
 
-      <p class="theme-title">其他主题</p>
+      <p class="theme-title" v-show="data?.other?.length > 0">其他主题</p>
       <div class="theme-wrapper"
            v-for="i in data.other"
            @dblclick="alterUserTheme(i)"

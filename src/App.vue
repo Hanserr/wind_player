@@ -13,7 +13,7 @@
         <!--        搜索框-->
         <div class="topBar-search">
           <input class="topBar-searchInput" v-model="inputVal" @focus="searchInpFocus(inputVal)" :style="{backgroundColor: topSearchBarBC}" :disabled="!userStore.getLoginStatus()">
-          <el-icon color="#8896B3FF" class="topBar-search-el-icon" :style="{width: '30px',height: '27px',position:'absolute',backgroundColor:topSearchBarBC}" @click="getSearch(inputVal)">
+          <el-icon color="#8896B3FF" class="topBar-search-el-icon" :style="{width: '27px',height: '25px',position:'absolute',top:'2px',backgroundColor:'transparent'}" @click="getSearch(inputVal)">
             <Search/>
           </el-icon>
         </div>
@@ -804,7 +804,7 @@ watch(() => songMovingWindowTop.value,(next) => {
 
 //更新主题
 watch(() => themeStore.pageTheme.topAndBottomColor, () => {
-  //无法更新中间颜色
+  console.log(themeStore.pageTheme)
   playerPageTopBC.value = themeStore.pageTheme.topAndBottomColor
   middleColor.value = themeStore.pageTheme.middleColor
   topSearchBarBC.value = themeStore.pageTheme.middleColor

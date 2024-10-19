@@ -63,12 +63,12 @@ body{
 .topBar-searchInput{
     width: 220px;
     height: 25px;
-    border: none;
     border-radius: 15px;
     outline: none;
     transition: 0.2s linear;
     color: #c0c0c0;
     text-indent: 1em;
+    border: 1px solid grey;
 }
 .topBar-search{
     width: 227px;

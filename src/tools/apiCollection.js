@@ -85,10 +85,12 @@ const api = {
     //------------------------------网易云API--------------------------------
 
     //---------------------------后端数据处理API------------------------------
-    //用户首次登陆后将uid存入数据库 uid !
+    //用户首次登陆后将uid存入数据库 uid
     PUSH_USER_INFO_TO_SERVER: "http://localhost:8080/usertotheme/check",
-    //获取配色方案 !
+    //获取配色方案
     GET_COLOR_SET: "http://localhost:8080/usertheme/getall",
+    //根据获取配色方案
+    GET_COLOR_SET_BY_TID: "http://localhost:8080/usertheme/get",
     //上传用户自定义的配色方案
     UPLOAD_CUSTOM_COLOR: "http://localhost:8080/usertheme/insert",
     //删除当前用户配置颜色方案 tid uid

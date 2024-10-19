@@ -4,6 +4,8 @@ import api from "@/tools/apiCollection";
 import axios from "axios";
 import Notification from "@/tools/notification";
 import apiCollection from "@/tools/apiCollection";
+import {useThemeStore} from "@/store/themeStore";
+
 
 export const useUserStore = defineStore('User', () => {
     const userInfo = ref({
@@ -19,6 +21,7 @@ export const useUserStore = defineStore('User', () => {
         gender:0, //性别
         province: "", //省市
     })
+    const themeStore = useThemeStore();
     const hasLogin = ref(false);
 
     const getUserInfo = () => computed(() => {return userInfo.value})
@@ -49,9 +52,14 @@ export const useUserStore = defineStore('User', () => {
                 Notification.GET_USER_FAILED()
             })
         }
-        await axios.get(`${apiCollection.PUSH_USER_INFO_TO_SERVER}?uid=${fetchUserStatus.data.data.profile.userId}`).then(res => {
-            console.log(res.data)
-        })
+        let user_to_theme_data = await axios.get(`${apiCollection.PUSH_USER_INFO_TO_SERVER}?uid=${fetchUserStatus.data.data.profile.userId}`)
+        if (user_to_theme_data.data){
+            axios.get(`${apiCollection.GET_COLOR_SET_BY_TID}?tid=${user_to_theme_data.data.data.tid}`).then(res => {
+                if(res.data.code === 200 && res.data.data != null){
+                    themeStore.updateTheme(res.data.data.creator, res.data.data.t_upDownBack, res.data.data.t_mainBack, res.data.data.tid)
+                }
+            })
+        }
     }
 
     //清除用户数据

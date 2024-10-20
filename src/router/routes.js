@@ -10,6 +10,14 @@ const routes = [
         }
     },
     {
+        path: '/register',
+        name: 'registerPage',
+        component: () => import('../views/register'),
+        meta: {
+            keepAlive: false
+        }
+    },
+    {
         path: '/searchResultPage',
         name: 'searchResultPage',
         component: () => import('../components/rightComponents/searchResultPage'),
@@ -183,14 +191,6 @@ const routes = [
         meta: {
         keepAlive: false
         }
-    },
-    {
-      path: '/register',
-      name: 'registerPage',
-      component: () => import('../views/register'),
-      meta: {
-          keepAlive: false
-      }
     },
     {
       path: '/theme',

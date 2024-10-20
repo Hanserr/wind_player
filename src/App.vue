@@ -95,10 +95,7 @@
 
       <!--      中间结果栏-->
       <div class="searchResult" :style="{backgroundColor:middleColor}">
-        <router-view
-            @closeResultList="closeResultList"
-            :inPlay="songStore.getCurSong().value.src"
-            v-slot="{Component}">
+        <router-view v-slot="{Component}">
           <keep-alive>
             <component :is="Component" :key="$route.name" v-if="$route.meta.keepAlive" ></component>
           </keep-alive>
@@ -319,7 +316,7 @@ let songSuggestionList = reactive({}) //建议歌单列表
 let suggestionTimer = null //建议歌单列表的定时器
 let popVisible = ref(false) //登录弹窗是否可见
 let user = userStore.getUserInfo()//用户信息
-let displayUserInfo = ref(false) //展示用户部分信息（vip时间，注销···）弹窗
+let displayUserInfo = ref(false) //展示用户部分信息弹窗
 let resultListIsVisible = ref(false) //建议歌单是否可见
 let isPlay = ref(false) //是否播放中
 let playerTimer = null //播放器载入新歌曲地址后的定时器
@@ -359,11 +356,6 @@ router.beforeEach((to) => {
 //关闭登录弹窗
 const closePop = (e) => {
   popVisible.value = e
-}
-
-//关闭搜索推荐弹窗
-const closeResultList = (e) => {
-  resultListIsVisible.value = e
 }
 
 //输入框聚焦事件

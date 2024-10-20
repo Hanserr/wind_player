@@ -37,12 +37,6 @@ body {
     border-radius: 5px;
     font-size: 13px;
 }
-.theme-title {
-    text-indent: 10px;
-    color: #d5d5d5;
-    font-weight: bold;
-    font-size: 20px;
-}
 .demonstrate {
     width: 200px;
     height: 200px;
@@ -71,4 +65,18 @@ body {
     position: absolute;
     bottom: 0;
     border-top: 1px solid grey;
+}
+.theme-title {
+    color: #d5d5d5;
+    font-size: 20px;
+    text-indent: 10px;
+}
+.el-collapse-item__header{
+    background-color: transparent;
+    color: #d5d5d5;
+    border-color: #8d8d8d;
+}
+.el-collapse,.el-collapse-item__wrap {
+    border: none;
+    background-color: transparent !important;
 }

@@ -45,12 +45,6 @@ let offset = ref(0)
 let mark = ref(true)
 let markTimer = null
 let resultTimeCounter = 0
-const emits = defineEmits(["closeResultList"])
-
-//点击歌单区域关闭搜索建议
-const closeList = () => {
-  emits('closeResultList',false)
-}
 
 //获取搜索结果
 const getResult = (val) => {
@@ -100,7 +94,6 @@ watch(() => mark.value, (next) => {
 })
 
 onMounted(() => {
-  closeList()
   //由于生命周期的原因第一次跳转时需要在onMounted内获取值
   if (route.params.id){
     getResult(route.params.id)

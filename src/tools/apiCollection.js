@@ -6,6 +6,8 @@ const api = {
     GET_SONG_DETAIL:"http://localhost:3000/song/detail",
     //获取歌曲Url
     GET_SONG_URL:"http://localhost:3000/song/url",
+    //d登陆
+    LOGIN: "http://localhost:3000/login/cellphone",
     //获取歌词
     GET_LYRIC:"http://localhost:3000/lyric",
     //注销
@@ -18,12 +20,6 @@ const api = {
     COMMENT_SONG:"http://localhost:3000/comment",
     //每日签到
     DAILY_SIGNIN:"http://localhost:3000/daily_signin",
-    //获取登陆二维码Unikey
-    GET_LOGIN_QR_UNIKEY:"http://localhost:3000/login/qr/key",
-    //获取登陆二维码base64编码
-    GET_LOGIN_QR_BASE64:"http://localhost:3000/login/qr/create",
-    //轮询登录二维码状态
-    POLLING_LOGIN_QR_STATUS:"http://localhost:3000/login/qr/check",
     //获取账户信息
     GET_ACCOUNT_INFO:"http://localhost:3000/user/account",
     //获取用户详情
@@ -98,7 +94,9 @@ const api = {
     //修改当前的配色方案
     ALTER_CUR_SET: "http://localhost:8080/usertotheme/settheme",
     //导出主题excel
-    EXPORT_THEME_EXCEL: "http://localhost:8080/export"
+    EXPORT_THEME_EXCEL: "http://localhost:8080/export",
+    //分页获取主题
+    GET_THEME_BY_PAGE_NO: "http://localhost:8080/usertheme/getpage",
     //---------------------------后端数据处理API------------------------------
 }
 export default api

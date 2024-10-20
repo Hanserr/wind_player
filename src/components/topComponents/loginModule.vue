@@ -33,7 +33,8 @@
         <el-button @click="invisible">取消</el-button>
         <el-button type="primary" @click="phoneLogin(form.phone, form.pwd)">登录</el-button>
       </span>
-      <a id="registerButton" href="/register" target="_blank">→注册</a>
+<!--      <a id="registerButton" href="/register" target="_blank">→注册</a>-->
+<!--       <button @click></button>-->
      </template>
    </el-dialog>
  </div>
@@ -47,6 +48,7 @@ import {reactive, ref, watch} from "vue";
 import axios from "axios";
 import {useUserStore} from "@/store/userStore";
 import Notification from "@/tools/notification";
+import apiCollection from "@/tools/apiCollection";
 
 let pwdIsVisible = ref(false)
 let dialogWidth = 300
@@ -82,7 +84,7 @@ const phoneLogin = (phone,pwd) => {
     return
   }
   load.value = true
-  axios.post(`/login/cellphone?phone=${phone}&password=${pwd}`).then(res=>{
+  axios.get(`${apiCollection.LOGIN}?phone=${phone}&password=${pwd}`).then(res=>{
     if (res.data.code === 200) {
       userStore.updateUserInfo()
       invisible()

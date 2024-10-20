@@ -97,6 +97,8 @@ const api = {
     DELETE_CUSTOM_COLOR: "http://localhost:8080/usertheme/delete",
     //修改当前的配色方案
     ALTER_CUR_SET: "http://localhost:8080/usertotheme/settheme",
+    //导出主题excel
+    EXPORT_THEME_EXCEL: "http://localhost:8080/export"
     //---------------------------后端数据处理API------------------------------
 }
 export default api

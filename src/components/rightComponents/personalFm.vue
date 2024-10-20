@@ -169,21 +169,22 @@ const likeSong = () => {
 
 onMounted(() => {
   getFm()
+
   //歌词滚动
-  songStore.shareAudio.ontimeupdate = async () => {
-    try {
-      if (songStore.getCurSong().value.lyric && songStore.shareAudio.currentTime - songStore.getCurSong().value.lyric[lyricIndex.value].time <= 1 && songStore.shareAudio.currentTime - songStore.getCurSong().value.lyric[lyricIndex.value].time >= -0.2){
-        if (songStore.getCurSong().value.lyric[lyricIndex.value].content && personalFmLyricContent){
-          await nextTick()
-          let list = personalFmLyricContent.value.children
-          personalFmLyricContentWrap.value.setScrollTop(list[lyricIndex.value].offsetTop-list[lyricIndex.value].clientHeight/2-80)
+  songStore.shareAudio.addEventListener("timeupdate", () => {
+      try {
+        if (songStore.getCurSong().value.lyric && songStore.shareAudio.currentTime - songStore.getCurSong().value.lyric[lyricIndex.value].time <= 1 && songStore.shareAudio.currentTime - songStore.getCurSong().value.lyric[lyricIndex.value].time >= -0.2){
+          if (songStore.getCurSong().value.lyric[lyricIndex.value].content && personalFmLyricContent){
+            let list = personalFmLyricContent.value.children
+            personalFmLyricContentWrap.value.setScrollTop(list[lyricIndex.value].offsetTop-list[lyricIndex.value].clientHeight/2-80)
+          }
+          lyricIndex.value = lyricIndex.value <= songStore.getCurSong().value.lyric.length-1?++lyricIndex.value:songStore.getCurSong().value.lyric.length-1
         }
-        lyricIndex.value = lyricIndex.value <= songStore.getCurSong().value.lyric.length-1?++lyricIndex.value:songStore.getCurSong().value.lyric.length-1
+      }catch(err) {
+        console.log(err)
       }
-    }catch(err) {
-      console.log(err)
-    }
-  }
+  })
+
   songStore.shareAudio.onended = () => {
     playNext()
   }

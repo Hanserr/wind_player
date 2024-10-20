@@ -177,7 +177,7 @@
               <div class="preparedSongContent"
                    v-for="(i, index) in songStore.getSongList().value"
                    :key="i"
-                   @dblclick="songStore.updateCurSong(i.al.id)">
+                   @dblclick="songStore.updateCurSong(i.id)">
                 <div>
                   <span :style="{color:index == songStore.getCurIndexInList().value?'#EC4141':'#ffffff'}">{{i.name}}</span>
                 </div>

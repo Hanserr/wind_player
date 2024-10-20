@@ -48,6 +48,22 @@ body{
     overflow: hidden;
     color: #D5D5D5;
 }
+.recommendListDiv-img-wrapper {
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+}
+.recommendListDiv-img-wrapper img {
+    margin: 0 auto;
+    transition: 0.6s linear;
+}
+.recommendListDiv-img-wrapper:hover img {
+    width: 120%;
+    height: 120%;
+}
 .recommendListDivCover{
     width: 150px;
     height: 150px;

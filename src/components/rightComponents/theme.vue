@@ -7,6 +7,7 @@ import apiCollection from "@/tools/apiCollection";
 import notification from "@/tools/notification";
 import {useUserStore} from "@/store/userStore";
 import {ElMessageBox} from "element-plus";
+import {Burger} from "@element-plus/icons-vue";
 
 const themeStore = useThemeStore()
 const userStore = useUserStore()
@@ -66,11 +67,11 @@ const getTheme = () => {
   })
 }
 
-//mousedown逻辑
+//mousedown新建计时器
 const pressEvent = (i) => {
   clickTimer = setTimeout(() => {
     recheck(i)
-  },1000)
+  },800)
 }
 
 //mouseup逻辑
@@ -141,8 +142,8 @@ onUnmounted(() => {
 <template>
   <div class="theme-main">
     <p class="theme-title">个性化你的播放器（双击应用主题）*暂未适配所有页面，仅作演示</p>
+    <a href="http://localhost:8080/export" class="download-theme">导出主题excel表</a>
     <el-scrollbar height="385px">
-
       <p class="theme-title" v-show="data?.os?.length > 0">系统主题</p>
       <div class="theme-wrapper"
            v-for="i in data.os"

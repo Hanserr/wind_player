@@ -96,7 +96,7 @@ const api = {
     //删除当前用户配置颜色方案 tid uid
     DELETE_CUSTOM_COLOR: "http://localhost:8080/usertheme/delete",
     //修改当前的配色方案
-    ALTER_CUR_SET: "http://localhost:8080/usertotheme/settheme"
+    ALTER_CUR_SET: "http://localhost:8080/usertotheme/settheme",
     //---------------------------后端数据处理API------------------------------
 }
 export default api

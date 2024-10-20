@@ -13,10 +13,12 @@
 
       <div class="homePage-bottom">
         <div class="recommendListDiv" v-for="i in recommendSongsList" :key="i">
-          <img :src="i.picUrl || i.coverImgUrl || cover" class="recommendListDivCover" @click="pushingTools.toSongListDetail(i.id)" alt="">
+          <div class="recommendListDiv-img-wrapper">
+            <img :src="i.picUrl || i.coverImgUrl || cover" class="recommendListDivCover" @click="pushingTools.toSongListDetail(i.id)" alt="">
+          </div>
           {{i.name}}
         </div>
-        <p v-show="recommendSongsList.length == 0">登录后推送定制歌单～</p>
+        <p v-show="recommendSongsList.length === 0">登录后推送定制歌单～</p>
       </div>
 
     </el-scrollbar>

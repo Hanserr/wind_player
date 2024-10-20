@@ -4,7 +4,7 @@
 ## Node Version
 
 ```
-v16.14.0
+v20.18
 ```
 
 ## Project setup

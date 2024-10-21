@@ -78,7 +78,7 @@
               <span v-if="userStore.getUserInfo()" class="topBar-profile-popWindow-numberArea-p1">{{userStore.getUserInfo().value.follower}}</span>
               <span class="topBar-profile-popWindow-numberArea-p2">粉丝</span>
             </div>
-            <div class="topBar-profile-popWindow-bottomDiv" @click="router.push('/settings')">
+            <div class="topBar-profile-popWindow-bottomDiv" @click="displayUserInfo = !displayUserInfo;router.push('/settings')">
               设置
               <svg-icon name="arrowsRight" class="topBar-profile-popWindow-svg"></svg-icon>
             </div>

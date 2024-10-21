@@ -668,7 +668,7 @@ body{
 }
 .lyricContent{
     width: 380px;
-    padding: 0;
+    padding: 0 0 100px 0;
 }
 .lyricContent li{
     width: 380px;

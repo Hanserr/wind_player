@@ -20,7 +20,7 @@ export const useSongStore = defineStore('Song', () => {
         album:null,
         duration:null,
         currentTime:null,
-        lyric:null, //歌词
+        lyric:[], //歌词
         transUser:null, //翻译提供者
         total:-1, //评论数
         hotComments:[],
@@ -60,9 +60,11 @@ export const useSongStore = defineStore('Song', () => {
     }
 
     //更新当前歌曲信息
-    function updateCurSong(id){
+    const updateCurSong = async (id) => {
         //清空当前歌曲信息
-        shareAudio.value.pause()
+        if (!shareAudio.value.paused) {
+            shareAudio.value.pause()
+        }
         songHasLoaded.value = false
         clearCurSong()
         curSong.value.id = id
@@ -73,7 +75,7 @@ export const useSongStore = defineStore('Song', () => {
             axios.get(`${api.GET_SONG_URL}?id=${id}`),
             //获取并整合歌词
             axios.get(`${api.GET_LYRIC}?id=${id}`)
-        ]).then(([detail, songUrl, res]) => {
+        ]).then(async ([detail, songUrl, res]) => {
             if (detail.data.code === 200) {
                 curSong.value.cover = detail.data.songs[0].al.picUrl
                 curSong.value.artist = detail.data.songs[0].ar
@@ -89,44 +91,47 @@ export const useSongStore = defineStore('Song', () => {
                 getSongFailed()
                 return
             }
-            if (res.data.code === 200){
-                let lyric = (res.data.lrc.lyric).toString().split('\n')
-                for (let i in lyric){
+            if (res.data.code === 200) {
+                let lyric = (await res.data.lrc.lyric).toString().split('\n')
+                for (let i in lyric) {
                     let lyricList = lyric[i].split(']')
-                    lyric[i] = {time: format.lyricTimeFormat(lyricList[0]+']'),content:lyricList[1],tlyric:null}
+                    lyric[i] = {time: format.lyricTimeFormat(lyricList[0] + ']'), content: lyricList[1], tlyric: null}
                 }
                 let tempTLyric = []
-                if (res.data.tlyric && res.data.tlyric.lyric.length>=1){
+                if (res.data.tlyric && res.data.tlyric.lyric.length >= 1) {
                     let tlyric = (res.data.tlyric.lyric).toString().split('\n')
                     let tlyricReg = /^\[[0-9]{2}:[0-9]{2}\.[0-9]{2,3}$/
-                    for (let i = 0;i<tlyric.length;i++){
+                    for (let i = 0; i < tlyric.length; i++) {
                         let tlyricList = tlyric[i].split(']')
                         //去空
-                        if (tlyricReg.test(tlyricList[0])){
-                            tempTLyric.push({time: format.lyricTimeFormat(tlyricList[0]+']'),content:tlyricList[1]})
+                        if (tlyricReg.test(tlyricList[0])) {
+                            tempTLyric.push({time: format.lyricTimeFormat(tlyricList[0] + ']'), content: tlyricList[1]})
                         }
                     }
                     let tlyricSum = 0
-                    for (let a = 0;a < lyric.length-1;a++){
+                    for (let a = 0; a < lyric.length - 1; a++) {
                         if (lyric[a].time === tempTLyric[tlyricSum].time) {
-                            lyric[a].tlyric = "\n"+tempTLyric[tlyricSum].content
-                            tlyricSum === tempTLyric.length-1?tlyricSum = tempTLyric.length-1:tlyricSum++
+                            lyric[a].tlyric = "\n" + tempTLyric[tlyricSum].content
+                            tlyricSum === tempTLyric.length - 1 ? tlyricSum = tempTLyric.length - 1 : tlyricSum++
                         }
                     }
                 }
-                lyric.splice(lyric.length-1,1)
+                lyric.splice(lyric.length - 1, 1)
                 curSong.value.lyric = lyric
                 curSong.value.transUser = res.data.transUser
             } else {
                 getSongFailed()
             }
         }).catch(([err1, err2, err3]) => {
+            getSongFailed()
             console.log(err1)
             console.log(err2)
             console.log(err3)
         })
-        songHasLoaded.value = true
-        shareAudio.value.play()
+        shareAudio.value.addEventListener('canplay', () => {
+            songHasLoaded.value = true
+            shareAudio.value.play()
+        });
     }
 
     //清空当前歌曲信息
@@ -139,7 +144,7 @@ export const useSongStore = defineStore('Song', () => {
         curSong.value.album = null
         curSong.value.duration = null
         curSong.value.currentTime = null
-        curSong.value.lyric = null
+        curSong.value.lyric = []
         curSong.value.transUser = null
         curSong.value.total = -1
         curSong.value.hotComments = []

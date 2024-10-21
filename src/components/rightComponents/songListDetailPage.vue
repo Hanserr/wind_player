@@ -102,6 +102,7 @@ const playSong = (id, index) => {
 const playAll = () => {
   songStore.updateCurSong(listDetail.value.playlist.trackIds[0].id)
   songStore.updateSongList(preparedSongList.value)
+  songStore.updateIndexInList(0)
 }
 
 //收藏歌单

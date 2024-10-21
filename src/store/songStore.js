@@ -24,7 +24,8 @@ export const useSongStore = defineStore('Song', () => {
         transUser:null, //翻译提供者
         total:-1, //评论数
         hotComments:[],
-        comments:[]
+        comments:[],
+        canGetHotComment: true
     });
     //歌曲加载状态
     const songHasLoaded = ref(false);
@@ -143,6 +144,7 @@ export const useSongStore = defineStore('Song', () => {
         curSong.value.total = -1
         curSong.value.hotComments = []
         curSong.value.comments = []
+        curSong.value.canGetHotComment = true
     }
 
     //获取歌曲信息失败
@@ -152,6 +154,7 @@ export const useSongStore = defineStore('Song', () => {
     }
 
     return {
+        curSong,
         songHasLoaded,
         shareAudio,
         getSongList,
@@ -161,7 +164,6 @@ export const useSongStore = defineStore('Song', () => {
         updateSongList,
         updateCurSong,
         updateIndexInList,
-        clearCurSong,
         initAudio,
     }
 })

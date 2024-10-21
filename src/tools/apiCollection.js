@@ -14,6 +14,8 @@ const api = {
     LOGOUT:"http://localhost:3000/logout",
     //获取歌曲评论
     GET_SONG_COMMENT:"http://localhost:3000/comment/music",
+    //获取热门评论
+    GET_HOT_COMMENT: "http://localhost:3000/comment/hot",
     //点赞或取消点赞歌曲评论1
     LIKE_COMMENT:"http://localhost:3000/comment/like",
     //评论歌曲

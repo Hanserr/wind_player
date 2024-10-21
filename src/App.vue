@@ -258,7 +258,7 @@
               <div class="commentDivider"></div>
             </div>
 
-            <button id="checkMoreHotCommentsButton" v-show="songStore.getCurSong().value.total">更多精彩评论</button>
+            <button id="checkMoreHotCommentsButton" v-show="songStore.getCurSong().value?.hotComments?.length > 14" @click="getMoreHotComment(songStore.getCurSong().value.id)">更多精彩评论</button>
             <div class="songCommentContent" v-for="i in songStore.getCurSong().value.comments" :key="i">
               <img :src="i.user.avatarUrl" alt="" class="commentsUserAvatar" @click="toUserInfoPage(i.user.userId)">
               <div class="songCommentContentTop">
@@ -305,6 +305,8 @@ import {useThemeStore} from "@/store/themeStore";
 import format from "@/tools/format";
 import api from "./tools/apiCollection";
 import pushingTools from "@/tools/pushingTools";
+import apiCollection from "./tools/apiCollection";
+import notification from "@/tools/notification";
 
 const userStore = useUserStore();
 const songStore = useSongStore();
@@ -346,6 +348,7 @@ let commentsRef = ref(null)//歌曲详情页ref
 let refreshCommentTimer = null //评论刷新定时器
 let cancel = true //评论懒加载间隔时间段
 let elInfiniteScroll = ref(null) //懒加载滚动条
+let hotCommentPage = 0 //热门评论的分页
 
 //路由守卫
 router.beforeEach((to) => {
@@ -491,14 +494,6 @@ const toSpecificLyric = (time,index) => {
   playOrPause(false)
 }
 
-//清除当前所有歌曲信息
-const clearSongInfo = () => {
-  songStore.shareAudio.pause()
-  songStore.clearCurSong()
-  lyricIndex.value = 0
-  commentsOffset = 0
-}
-
 //确认是否登出
 const checkLogoutAgain = () => {
   ElMessageBox.confirm(
@@ -630,6 +625,32 @@ const getComments = (id) => {
     }
   })
 }
+
+//获取热门评论
+const getMoreHotComment = (id) => {
+  if (songStore.curSong.hotComments.length === 15) {
+    hotCommentPage++
+  }
+  if(songStore.curSong.canGetHotComment) {
+    axios.get(`${apiCollection.GET_HOT_COMMENT}?id=${id}&type=0&offset=${hotCommentPage * 20}`).then(res => {
+      if(res.data.code === 200){
+        for(let i of res.data.hotComments){
+          songStore.curSong.hotComments.push(i)
+        }
+        if(res.data.hotComments.length < 20){
+          songStore.curSong.canGetHotComment = false
+          hotCommentPage = 0
+        }
+        hotCommentPage++
+      } else {
+        notification.WARNING_INFO("获取热门评论失败")
+      }
+    }).catch(() => {
+      notification.WARNING_INFO("获取热门评论失败")
+    })
+  }
+}
+
 
 //歌曲评论懒加载
 const infiniteScroll = (e) => {
